@@ -280,15 +280,15 @@
   .app-screen.active { display:flex; }
 
   /* SESSION END */
-  .debrief-screen { padding:22px 22px 100px; overflow-y:auto; }
+  .debrief-screen { padding:20px 18px 100px; overflow-y:auto; max-width:420px; margin:0 auto; width:100%; }
   @keyframes barGrow { from{width:0%;} to{width:var(--w);} }
-  .celeb-ring-d { width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a6aed); border:2.5px solid #F5C518; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; animation:ringPulseD 2s ease-in-out infinite; }
+  .celeb-ring-d { width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a6aed); border:2px solid #F5C518; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; animation:ringPulseD 2s ease-in-out infinite; }
   @keyframes ringPulseD { 0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,0.5);} 50%{box-shadow:0 0 0 10px rgba(245,197,24,0);} }
   .debrief-phase { display:none; }
   .debrief-phase.active { display:block; }
   .db-stat-row { display:flex; gap:8px; margin-bottom:14px; }
-  .db-stat { flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:13px; padding:12px 8px; text-align:center; }
-  .db-stat-n { font-size:19px; font-weight:900; color:#F5C518; }
+  .db-stat { flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:10px 6px; text-align:center; }
+  .db-stat-n { font-size:17px; font-weight:900; color:#F5C518; }
   .db-stat-l { font-size:9px; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.8px; margin-top:2px; }
   .db-section-lbl { font-size:9px; color:rgba(255,255,255,0.3); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
   .db-section-lbl::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
@@ -954,19 +954,33 @@ function showXPFly(txt){
 }
 
 function showDebrief(){
+  // Hide all onboarding screens
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  // Show bottom nav
   var nav=document.getElementById('bottom-nav');
   if(nav) nav.classList.add('visible');
+  // Populate debrief with session data
   var dn=document.getElementById('debrief-name');
   if(dn) dn.textContent='Nurse '+nickname;
   var totalXP=parseInt(document.getElementById('s-xp').textContent)||0;
   var dxp=document.getElementById('debrief-xp');
   if(dxp) dxp.textContent='+'+totalXP+' XP';
   var correct=parseInt(document.getElementById('s-correct').textContent)||0;
+  var wrong=parseInt(document.getElementById('s-wrong').textContent)||0;
+  var total=CARDS.length;
   var dc=document.getElementById('db-correct');
-  if(dc) dc.textContent=correct+'/'+CARDS.length;
+  if(dc) dc.textContent=correct+'/'+total;
+  var acc=total>0?Math.round((correct/total)*100):0;
+  var da=document.getElementById('db-accuracy');
+  if(da) da.textContent=acc+'%';
+  // Set CCCC bars based on actual performance
+  var grade=acc>=90?'⚡ Grade A · Distinction':acc>=70?'⚡ Grade B · Proficient':acc>=50?'⚡ Grade C · Developing':'📖 Keep Practicing';
+  var gb=document.getElementById('db-grade');
+  if(gb){gb.textContent=grade;gb.style.color=acc>=70?'#4ade80':'#F5C518';}
+  // Reset to phase 1
   document.getElementById('debrief-p1').classList.add('active');
   document.getElementById('debrief-p2').classList.remove('active');
+  // Show home app screen
   document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById('app-home').classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
@@ -1031,7 +1045,7 @@ function goDebriefPhase2(){
         </div>
         <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Session Complete!</div>
         <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:8px;">You crushed it,<br><span id="debrief-name" style="color:#F5C518;">Nurse</span>! 🔥</div>
-        <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:rgba(74,222,128,0.12);border:1.5px solid rgba(74,222,128,0.35);color:#4ade80;font-size:13px;font-weight:800;margin-bottom:16px;">⚡ Grade A · Application Level</div>
+        <div id="db-grade" style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:rgba(74,222,128,0.08);border:1.5px solid rgba(74,222,128,0.2);color:#4ade80;font-size:12px;font-weight:800;margin-bottom:16px;">⚡ Grade A · Distinction</div>
       </div>
 
       <div style="text-align:center;margin-bottom:16px;">
@@ -1041,7 +1055,7 @@ function goDebriefPhase2(){
 
       <div class="db-stat-row">
         <div class="db-stat"><div class="db-stat-n" id="db-correct">3/3</div><div class="db-stat-l">Correct</div></div>
-        <div class="db-stat"><div class="db-stat-n">100%</div><div class="db-stat-l">Accuracy</div></div>
+        <div class="db-stat"><div class="db-stat-n" id="db-accuracy">100%</div><div class="db-stat-l">Accuracy</div></div>
         <div class="db-stat"><div class="db-stat-n">🔥<span id="db-streak">1</span></div><div class="db-stat-l">Streak</div></div>
       </div>
 
