@@ -254,6 +254,81 @@
   /* SCROLLABLE */
   .scrollable { overflow-y:auto; flex:1; }
   .scrollable::-webkit-scrollbar { width:0; }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-width: 420px; margin: 0 auto;
+    background: rgba(2,13,31,0.97); backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: none; justify-content: space-around; align-items: center;
+    padding: 10px 8px 20px; z-index: 100;
+  }
+  .bottom-nav.visible { display: flex; }
+  .nav-tab { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:5px 10px; border-radius:12px; transition:all 0.2s; flex:1; border:none; background:none; font-family:'Outfit',sans-serif; }
+  .nav-tab:active { transform:scale(0.93); }
+  .nav-tab-icon { font-size:20px; line-height:1; transition:all 0.2s; }
+  .nav-tab-label { font-size:9px; font-weight:700; letter-spacing:0.3px; transition:all 0.2s; }
+  .nav-tab.active .nav-tab-icon { filter:none; }
+  .nav-tab.active .nav-tab-label { color:#F5C518; }
+  .nav-tab:not(.active) .nav-tab-label { color:rgba(255,255,255,0.25); }
+  .nav-tab:not(.active) .nav-tab-icon { opacity:0.25; }
+  .nav-tab-badge { position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#f87171; border-radius:50%; border:1.5px solid #020d1f; }
+
+  /* MAIN APP SCREENS — with nav padding */
+  .app-screen { display:none; min-height:100vh; flex-direction:column; padding-bottom:80px; }
+  .app-screen.active { display:flex; }
+
+  /* SESSION END */
+  .debrief-screen { padding:22px 22px 100px; overflow-y:auto; }
+  @keyframes barGrow { from{width:0%;} to{width:var(--w);} }
+  .celeb-ring-d { width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a6aed); border:2.5px solid #F5C518; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; animation:ringPulseD 2s ease-in-out infinite; }
+  @keyframes ringPulseD { 0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,0.5);} 50%{box-shadow:0 0 0 10px rgba(245,197,24,0);} }
+  .debrief-phase { display:none; }
+  .debrief-phase.active { display:block; }
+  .db-stat-row { display:flex; gap:8px; margin-bottom:14px; }
+  .db-stat { flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:13px; padding:12px 8px; text-align:center; }
+  .db-stat-n { font-size:19px; font-weight:900; color:#F5C518; }
+  .db-stat-l { font-size:9px; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.8px; margin-top:2px; }
+  .db-section-lbl { font-size:9px; color:rgba(255,255,255,0.3); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  .db-section-lbl::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
+  .db-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:13px 15px; margin-bottom:10px; }
+  .cccc-item-d { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+  .cccc-item-d:last-child { margin-bottom:0; }
+  .cccc-name-d { font-size:11px; color:rgba(255,255,255,0.45); width:82px; flex-shrink:0; }
+  .cccc-track-d { flex:1; height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
+  .cccc-fill-d { height:100%; border-radius:3px; animation:barGrow 0.8s ease var(--d) both; }
+  .cccc-green { background:linear-gradient(90deg,#22c55e,#4ade80); }
+  .cccc-yellow { background:linear-gradient(90deg,#eab308,#F5C518); }
+  .cccc-pct-d { font-size:10px; font-weight:700; width:32px; text-align:right; flex-shrink:0; }
+  .lens-grid-d { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .lens-pill-d { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:8px 10px; }
+  .lens-pill-name-d { font-size:10px; color:rgba(255,255,255,0.45); margin-bottom:4px; font-weight:600; }
+  .lens-pill-bar-d { height:4px; background:rgba(255,255,255,0.07); border-radius:2px; overflow:hidden; margin-bottom:3px; }
+  .lens-pill-fill-d { height:100%; border-radius:2px; background:linear-gradient(90deg,#053571,#F5C518); animation:barGrow 0.8s ease both; }
+  .lens-pill-pct-d { font-size:9px; color:#F5C518; font-weight:700; }
+  .coach-card-d { background:linear-gradient(135deg,rgba(5,53,113,0.4),rgba(5,53,113,0.2)); border:1.5px solid rgba(245,197,24,0.2); border-radius:16px; padding:14px 16px; margin-bottom:10px; position:relative; overflow:hidden; }
+  .coach-card-d::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(245,197,24,0.5),transparent); }
+  .coach-hdr-d { font-size:9px; color:#F5C518; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .coach-dot-d { width:5px; height:5px; border-radius:50%; background:#F5C518; animation:dotPulse 2s ease-in-out infinite; }
+  .tomorrow-card-d { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:13px 15px; margin-bottom:10px; }
+  .tomorrow-row-d { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .tomorrow-row-d:last-child { margin-bottom:0; }
+  .t-icon-d { width:34px; height:34px; border-radius:10px; background:rgba(5,53,113,0.4); border:1px solid rgba(5,53,113,0.6); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
+  .streak-bar-d { background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.2); border-radius:10px; padding:10px 13px; display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .cliff-d { background:rgba(245,197,24,0.05); border:1px solid rgba(245,197,24,0.15); border-radius:10px; padding:10px 13px; margin-bottom:10px; font-size:11px; color:rgba(255,255,255,0.5); line-height:1.55; font-style:italic; }
+  .cliff-tag-d { font-size:8px; color:#F5C518; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .social-row-d { display:flex; gap:8px; margin-bottom:10px; }
+  .social-btn-d { flex:1; padding:10px 8px; border-radius:12px; border:1.5px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); font-size:11px; font-weight:700; color:rgba(255,255,255,0.5); cursor:pointer; font-family:'Outfit',sans-serif; text-align:center; transition:all 0.2s; }
+  .social-btn-d:hover { border-color:rgba(245,197,24,0.3); color:#fff; }
+  .btn-onemore-d { width:100%; padding:13px; background:rgba(245,197,24,0.08); border:1.5px solid rgba(245,197,24,0.25); border-radius:16px; font-size:13px; font-weight:700; color:#F5C518; cursor:pointer; font-family:'Outfit',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s; margin-bottom:8px; }
+  .xp-2x-d { background:#F5C518; color:#053571; font-size:9px; font-weight:900; padding:2px 7px; border-radius:6px; }
+
+  /* PLACEHOLDER SCREENS */
+  .placeholder-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; text-align:center; padding:40px 28px; }
+  .placeholder-icon { font-size:56px; margin-bottom:16px; }
+  .placeholder-title { font-size:22px; font-weight:900; color:#fff; margin-bottom:8px; }
+  .placeholder-sub { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.6; }
 </style>
 </head>
 <body>
@@ -853,8 +928,11 @@ function unlockLayer(n){
 }
 
 function goNextCard(){
-  if(currentCardIdx<CARDS.length-1) loadCard(currentCardIdx+1,'right');
-  else alert('Session complete! More cards coming soon. 🎉');
+  if(currentCardIdx<CARDS.length-1){
+    loadCard(currentCardIdx+1,'right');
+  } else {
+    showDebrief();
+  }
 }
 
 function navCard(dir){
@@ -874,7 +952,197 @@ function showXPFly(txt){
   document.body.appendChild(el);
   setTimeout(function(){el.remove();},1000);
 }
+
+function showDebrief(){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var nav=document.getElementById('bottom-nav');
+  if(nav) nav.classList.add('visible');
+  var dn=document.getElementById('debrief-name');
+  if(dn) dn.textContent='Nurse '+nickname;
+  var totalXP=parseInt(document.getElementById('s-xp').textContent)||0;
+  var dxp=document.getElementById('debrief-xp');
+  if(dxp) dxp.textContent='+'+totalXP+' XP';
+  var correct=parseInt(document.getElementById('s-correct').textContent)||0;
+  var dc=document.getElementById('db-correct');
+  if(dc) dc.textContent=correct+'/'+CARDS.length;
+  document.getElementById('debrief-p1').classList.add('active');
+  document.getElementById('debrief-p2').classList.remove('active');
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('app-home').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('tab-home').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  var tabMap={'home':'tab-home','study':'tab-study','compete':'tab-compete','lounge':'tab-lounge','profile':'tab-profile'};
+  var screenMap={'home':'app-home','study':'app-study','compete':'app-compete','lounge':'app-lounge','profile':'app-profile'};
+  var screen=document.getElementById(screenMap[tab]);
+  var navTab=document.getElementById(tabMap[tab]);
+  if(screen) screen.classList.add('active');
+  if(navTab) navTab.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goDebriefPhase2(){
+  document.getElementById('debrief-p1').classList.remove('active');
+  document.getElementById('debrief-p2').classList.add('active');
+  window.scrollTo(0,0);
+}
 </script>
+
+<!-- BOTTOM NAVIGATION BAR -->
+<div class="bottom-nav" id="bottom-nav">
+  <button class="nav-tab active" id="tab-home" onclick="switchTab('home')">
+    <span class="nav-tab-icon">🏠</span>
+    <span class="nav-tab-label">Home</span>
+  </button>
+  <button class="nav-tab" id="tab-study" onclick="switchTab('study')">
+    <span class="nav-tab-icon">⚡</span>
+    <span class="nav-tab-label">Study</span>
+  </button>
+  <button class="nav-tab" id="tab-compete" onclick="switchTab('compete')">
+    <span class="nav-tab-icon">⚔️</span>
+    <span class="nav-tab-label">Compete</span>
+  </button>
+  <button class="nav-tab" id="tab-lounge" onclick="switchTab('lounge')">
+    <span class="nav-tab-icon">💜</span>
+    <span class="nav-tab-label">Lounge</span>
+  </button>
+  <button class="nav-tab" id="tab-profile" onclick="switchTab('profile')">
+    <span class="nav-tab-icon">👤</span>
+    <span class="nav-tab-label">Profile</span>
+  </button>
+</div>
+
+<!-- APP SCREENS (shown after onboarding) -->
+
+<!-- HOME (session debrief lives here after first session) -->
+<div class="app-screen active" id="app-home">
+  <div class="debrief-screen">
+
+    <!-- PHASE 1: CELEBRATE -->
+    <div class="debrief-phase active" id="debrief-p1">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div class="celeb-ring-d">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M5 15l7 7L25 8" stroke="#F5C518" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Session Complete!</div>
+        <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:8px;">You crushed it,<br><span id="debrief-name" style="color:#F5C518;">Nurse</span>! 🔥</div>
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:rgba(74,222,128,0.12);border:1.5px solid rgba(74,222,128,0.35);color:#4ade80;font-size:13px;font-weight:800;margin-bottom:16px;">⚡ Grade A · Application Level</div>
+      </div>
+
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:38px;font-weight:900;color:#F5C518;" id="debrief-xp">+85 XP</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:2px;margin-bottom:16px;">earned this session</div>
+      </div>
+
+      <div class="db-stat-row">
+        <div class="db-stat"><div class="db-stat-n" id="db-correct">3/3</div><div class="db-stat-l">Correct</div></div>
+        <div class="db-stat"><div class="db-stat-n">100%</div><div class="db-stat-l">Accuracy</div></div>
+        <div class="db-stat"><div class="db-stat-n">🔥<span id="db-streak">1</span></div><div class="db-stat-l">Streak</div></div>
+      </div>
+
+      <div class="db-section-lbl">SNL Method Performance</div>
+      <div class="db-card">
+        <div class="cccc-item-d"><div class="cccc-name-d">Core Problem</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-green" style="--w:100%;--d:0.5s;width:100%;"></div></div><div class="cccc-pct-d" style="color:#4ade80;">100%</div></div>
+        <div class="cccc-item-d"><div class="cccc-name-d">Complication</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-green" style="--w:100%;--d:0.65s;width:100%;"></div></div><div class="cccc-pct-d" style="color:#4ade80;">100%</div></div>
+        <div class="cccc-item-d"><div class="cccc-name-d">Connection</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-yellow" style="--w:67%;--d:0.8s;width:67%;"></div></div><div class="cccc-pct-d" style="color:#F5C518;">67%</div></div>
+        <div class="cccc-item-d"><div class="cccc-name-d">Confirmation</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-yellow" style="--w:67%;--d:0.95s;width:67%;"></div></div><div class="cccc-pct-d" style="color:#F5C518;">67%</div></div>
+      </div>
+
+      <div class="db-section-lbl">Clinical Lens Breakdown</div>
+      <div class="lens-grid-d" style="margin-bottom:14px;">
+        <div class="lens-pill-d"><div class="lens-pill-name-d">Assessment vs Intervention</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:100%;"></div></div><div class="lens-pill-pct-d">100%</div></div>
+        <div class="lens-pill-d"><div class="lens-pill-name-d">Stable vs Unstable</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:100%;"></div></div><div class="lens-pill-pct-d">100%</div></div>
+        <div class="lens-pill-d"><div class="lens-pill-name-d">ABCs</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:67%;"></div></div><div class="lens-pill-pct-d">67%</div></div>
+        <div class="lens-pill-d"><div class="lens-pill-name-d">Maslow's</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:50%;"></div></div><div class="lens-pill-pct-d">50%</div></div>
+      </div>
+
+      <button class="btn-gold" onclick="goDebriefPhase2()">See My Coaching Debrief →</button>
+    </div>
+
+    <!-- PHASE 2: COACH + HOOK -->
+    <div class="debrief-phase" id="debrief-p2">
+      <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">Your Debrief</div>
+
+      <div class="coach-card-d">
+        <div class="coach-hdr-d"><div class="coach-dot-d"></div>Coach's Assessment</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.65;">You're strong on <span style="color:#F5C518;font-weight:700;">Core Problem</span> and <span style="color:#F5C518;font-weight:700;">Complication</span>. Your gap is <span style="color:#F5C518;font-weight:700;">Connection and Confirmation</span> — linking the intervention to the outcome. That's exactly where NCLEX tests hardest. Tomorrow we target that gap.</div>
+      </div>
+
+      <div class="tomorrow-card-d">
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Tomorrow's Session</div>
+        <div class="tomorrow-row-d"><div class="t-icon-d">🫀</div><div><div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;">Heart Failure — Fluid Management</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">15 cards · Connection + Confirmation focus</div></div></div>
+        <div class="tomorrow-row-d"><div class="t-icon-d">💊</div><div><div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;">Cardiac Pharmacology</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">10 cards · SNL Method deep dive</div></div></div>
+      </div>
+
+      <div class="streak-bar-d">
+        <span style="font-size:20px;">🔥</span>
+        <div style="font-size:11px;color:rgba(255,255,255,0.55);line-height:1.5;">You're on a <span style="font-weight:800;color:#f97316;" id="db-streak-msg">1-day streak</span>. Come back tomorrow to keep it alive — you're in the top 15% of all PassLounge students.</div>
+      </div>
+
+      <div class="cliff-d">
+        <div class="cliff-tag-d">Tomorrow's Pearl</div>
+        "Tomorrow's pearl covers the one cardiac intervention most nurses get wrong on NCLEX — even after studying. You'll know it first."
+      </div>
+
+      <div class="db-section-lbl">Share Your Win</div>
+      <div class="social-row-d">
+        <div class="social-btn-d">📱 TikTok</div>
+        <div class="social-btn-d">⚔️ Challenge</div>
+        <div class="social-btn-d">🏆 Victory Wall</div>
+      </div>
+
+      <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:8px;font-weight:600;">One more round?</div>
+      <button class="btn-onemore-d" onclick="switchTab('study')">⚡ 5 Bonus Cards &nbsp;<span class="xp-2x-d">2x XP</span></button>
+      <button class="btn-gold" onclick="switchTab('study')">Back To Study</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- STUDY -->
+<div class="app-screen" id="app-study">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">⚡</div>
+    <div class="placeholder-title">Study Mode</div>
+    <div class="placeholder-sub">Your adaptive study plan,<br>Sharpen Mode and card library<br>are being built here.</div>
+    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
+  </div>
+</div>
+
+<!-- COMPETE -->
+<div class="app-screen" id="app-compete">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">⚔️</div>
+    <div class="placeholder-title">Compete</div>
+    <div class="placeholder-sub">PvP Duels, Weekly Tournaments<br>and Leaderboard are<br>being built here.</div>
+    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
+  </div>
+</div>
+
+<!-- LOUNGE -->
+<div class="app-screen" id="app-lounge">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">💜</div>
+    <div class="placeholder-title">The Lounge</div>
+    <div class="placeholder-sub">Victory Wall, Study Squads<br>and TikTok share are<br>being built here.</div>
+    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="app-screen" id="app-profile">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">👤</div>
+    <div class="placeholder-title">Profile</div>
+    <div class="placeholder-sub">Your avatar, XP, badges,<br>weakness map and subscription<br>are being built here.</div>
+    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
+  </div>
+</div>
+
 </body>
 </html>
-
