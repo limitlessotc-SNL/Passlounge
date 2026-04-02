@@ -196,6 +196,34 @@
   .placeholder-icon { font-size:56px; margin-bottom:16px; }
   .placeholder-title { font-size:22px; font-weight:900; color:#fff; margin-bottom:8px; }
   .placeholder-sub { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.6; }
+  /* MODE SELECTION */
+  .mode-card { width:100%; background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); border-radius:20px; padding:20px 18px; cursor:pointer; margin-bottom:12px; transition:all 0.25s; position:relative; overflow:hidden; }
+  .mode-card:active { transform:scale(0.98); }
+  .mode-card.selected { border-color:#F5C518; background:rgba(245,197,24,0.07); }
+  .mode-card.selected::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,#F5C518,#e6b800); }
+  .mode-icon-wrap { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:12px; }
+  .mode-title { font-size:17px; font-weight:900; color:#fff; margin-bottom:4px; }
+  .mode-sub { font-size:12px; color:rgba(255,255,255,0.4); line-height:1.5; margin-bottom:12px; }
+  .mode-tags { display:flex; gap:6px; flex-wrap:wrap; }
+  .mode-tag { font-size:10px; font-weight:700; padding:3px 9px; border-radius:8px; }
+  .mode-tag-gold { background:rgba(245,197,24,0.1); border:1px solid rgba(245,197,24,0.25); color:#F5C518; }
+  .mode-tag-blue { background:rgba(96,165,250,0.1); border:1px solid rgba(96,165,250,0.25); color:#60a5fa; }
+  .mode-tag-green { background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.25); color:#4ade80; }
+  .mode-tag-gray { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.4); }
+  .mode-check { position:absolute; top:16px; right:16px; width:22px; height:22px; border-radius:50%; border:2px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .mode-card.selected .mode-check { background:#F5C518; border-color:#F5C518; }
+  .mode-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(245,197,24,0.1); border:1px solid rgba(245,197,24,0.2); border-radius:20px; padding:5px 14px; margin-bottom:16px; font-size:11px; color:#F5C518; font-weight:700; letter-spacing:1px; }
+  /* SNL REVIEW LIST */
+  .review-list-item { width:100%; display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; border:1.5px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.03); margin-bottom:8px; cursor:pointer; transition:all 0.2s; }
+  .review-list-item:hover { border-color:rgba(245,197,24,0.3); background:rgba(245,197,24,0.05); }
+  .review-list-item.wrong-item { border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.04); }
+  .review-indicator { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .review-card-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:2px; flex:1; }
+  .review-card-sub { font-size:11px; color:rgba(255,255,255,0.35); }
+  .review-btn { font-size:10px; font-weight:700; color:#F5C518; background:rgba(245,197,24,0.1); border:1px solid rgba(245,197,24,0.25); padding:4px 10px; border-radius:8px; white-space:nowrap; flex-shrink:0; cursor:pointer; }
+  .mode-indicator { display:inline-flex; align-items:center; gap:5px; font-size:9px; font-weight:700; padding:2px 9px; border-radius:8px; letter-spacing:0.5px; }
+  .mode-indicator-test { background:rgba(245,197,24,0.1); border:1px solid rgba(245,197,24,0.25); color:#F5C518; }
+  .mode-indicator-study { background:rgba(96,165,250,0.1); border:1px solid rgba(96,165,250,0.25); color:#60a5fa; }
 </style>
 </head>
 <body>
@@ -332,7 +360,47 @@
         <div class="pearl-from"><div class="pearl-dot"></div>A Note From Your Coach</div>
         <div class="pearl-text">"Thank you for allowing me on this journey with you! Now let's cross the finish line and <span style="color:#F5C518;font-weight:800;">PASS</span> the NCLEX."</div>
       </div>
-      <button class="btn-gold" onclick="startSession()">Start My Diagnostic Challenge</button>
+      <button class="btn-gold" onclick="goTo('s-mode')">Start My Diagnostic Challenge</button>
+    </div>
+  </div>
+
+
+  <!-- S7: MODE SELECTION -->
+  <div class="screen" id="s-mode">
+    <div class="content">
+      <div style="margin-bottom:24px;">
+        <div class="mode-badge">🎯 Diagnostic Assessment · 3 Cards</div>
+        <div class="screen-title" style="font-size:24px;">How Do You Want<br>To Study Today?</div>
+        <div class="screen-sub" style="margin-bottom:0;">Choose your mode. You can't switch mid-session — just like the real NCLEX.</div>
+      </div>
+
+      <div class="mode-card selected" id="mode-test" onclick="selectMode('test')">
+        <div class="mode-check" id="check-test">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2" stroke="#053571" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="mode-icon-wrap" style="background:rgba(245,197,24,0.1);">🎯</div>
+        <div class="mode-title">Test Mode</div>
+        <div class="mode-sub">Answer questions the way you will on the real NCLEX. No framework, no hints — just your clinical judgment.</div>
+        <div class="mode-tags">
+          <span class="mode-tag mode-tag-gold">Fast Paced</span>
+          <span class="mode-tag mode-tag-gold">No CCCC</span>
+          <span class="mode-tag mode-tag-green">SNL Review After</span>
+        </div>
+      </div>
+
+      <div class="mode-card" id="mode-study" onclick="selectMode('study')">
+        <div class="mode-check" id="check-study"></div>
+        <div class="mode-icon-wrap" style="background:rgba(96,165,250,0.1);">📚</div>
+        <div class="mode-title">Study Mode</div>
+        <div class="mode-sub">Answer questions then unlock the full SNL Method framework — Core Problem, Complication, Connection, Confirmation — after every card.</div>
+        <div class="mode-tags">
+          <span class="mode-tag mode-tag-blue">Full CCCC</span>
+          <span class="mode-tag mode-tag-blue">Clinical Lens</span>
+          <span class="mode-tag mode-tag-blue">Coach's Pearl</span>
+        </div>
+      </div>
+
+      <button class="btn-gold" id="start-mode-btn" onclick="startSession()" style="margin-top:8px;">Start Test Mode →</button>
     </div>
   </div>
 
@@ -386,11 +454,12 @@
         </div>
         <div id="result-display"></div>
         <div class="q-card" style="padding:12px 14px;margin-bottom:10px;"><div class="q-type-label">Your Answer</div><div id="answer-recap" style="font-size:13px;color:#fff;font-weight:600;line-height:1.4;"></div></div>
-        <div class="snl-section-title">SNL Method Breakdown</div>
+        <div id="snl-breakdown-section"><div class="snl-section-title">SNL Method Breakdown</div>
         <div class="layer-btn unlocked" id="ly-1"><div class="layer-dot lit" id="ld-1"></div><div style="flex:1;"><div class="layer-name layer-name-open">Core Problem</div><div class="layer-content" id="lc-1"></div></div></div>
         <div class="layer-btn next-up" id="ly-2" onclick="unlockLayer(2)"><div class="layer-dot next" id="ld-2"></div><div style="flex:1;"><div class="layer-name layer-name-next" id="ln-2">Complication</div><div class="layer-hint" id="lh-2">Tap to unlock →</div><div class="layer-content" id="lc-2" style="display:none;"></div></div></div>
         <div class="layer-btn" id="ly-3"><div class="layer-dot" id="ld-3"></div><div style="flex:1;"><div class="layer-name layer-name-locked" id="ln-3">Connection</div><div class="layer-locked-text" id="lh-3">🔒 Unlock Complication first</div><div class="layer-content" id="lc-3" style="display:none;"></div></div></div>
         <div class="layer-btn" id="ly-4"><div class="layer-dot" id="ld-4"></div><div style="flex:1;"><div class="layer-name layer-name-locked" id="ln-4">Confirmation</div><div class="layer-locked-text" id="lh-4">🔒 Unlock Connection first</div><div class="layer-content" id="lc-4" style="display:none;"></div></div></div>
+        </div><!-- end snl-breakdown-section -->
         <div id="pearl-reveal" style="display:none;">
           <div class="lens-reveal"><div class="lens-hdr">Clinical Lens Identified</div><div class="lens-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#60a5fa" stroke-width="1.2"/><circle cx="5" cy="5" r="1.5" fill="#60a5fa"/></svg><span class="lens-name" id="lens-name">Assessment vs Intervention</span></div></div>
           <div class="pearl-section"><div class="pearl-hdr"><div class="pearl-anim-dot"></div>Coach's Pearl</div><div class="pearl-content" id="pearl-text"></div><div class="mnemonic" id="mnemonic-wrap"></div></div>
@@ -400,6 +469,34 @@
     </div>
   </div>
 
+</div>
+
+
+<!-- SNL REVIEW SCREEN -->
+<div class="screen" id="s-review">
+  <div class="content scrollable" style="padding-top:28px;">
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Session Complete</div>
+      <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px;">Review With<br>SNL Method 📚</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:16px;">Tap any card to review the CCCC framework. Wrong answers are highlighted — start there.</div>
+      <div style="display:flex;gap:10px;margin-bottom:18px;">
+        <div style="flex:1;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:20px;font-weight:900;color:#4ade80;" id="review-correct-count">0</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;">Correct</div>
+        </div>
+        <div style="flex:1;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:20px;font-weight:900;color:#f87171;" id="review-wrong-count">0</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;">Review</div>
+        </div>
+        <div style="flex:1;background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.2);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:20px;font-weight:900;color:#F5C518;" id="review-xp-count">0</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;">XP</div>
+        </div>
+      </div>
+    </div>
+    <div id="review-card-list"></div>
+    <button class="btn-ghost" onclick="finishSession()" style="margin-top:8px;">I'm Done — Go To Home</button>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -445,6 +542,7 @@
 <script>
 var nickname='',testerType='',confidence='',testDays=0,dailyCards=20;
 var currentCardIdx=0,currentLayer=1,sessionResults=[];
+var sessionMode='test';
 
 var CARDS=[
   {cat:'Cardiac',bloom:'Apply',xp:20,title:'MI Priority Intervention',type:'Multiple Choice · Cardiac',
@@ -486,6 +584,29 @@ function goTo(id){
   document.getElementById(id).classList.add('active');
   if(id==='s-plan') launchConfetti();
   window.scrollTo(0,0);
+}
+
+
+function selectMode(mode){
+  sessionMode=mode;
+  var testCard=document.getElementById('mode-test');
+  var studyCard=document.getElementById('mode-study');
+  var checkTest=document.getElementById('check-test');
+  var checkStudy=document.getElementById('check-study');
+  var startBtn=document.getElementById('start-mode-btn');
+  if(mode==='test'){
+    testCard.classList.add('selected');
+    studyCard.classList.remove('selected');
+    checkTest.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2" stroke="#053571" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    checkStudy.innerHTML='';
+    startBtn.textContent='Start Test Mode →';
+  } else {
+    studyCard.classList.add('selected');
+    testCard.classList.remove('selected');
+    checkStudy.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2" stroke="#053571" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    checkTest.innerHTML='';
+    startBtn.textContent='Start Study Mode →';
+  }
 }
 
 function startSession(){
@@ -744,8 +865,73 @@ function goNextCard(){
   if(currentCardIdx<CARDS.length-1){
     loadCard(currentCardIdx+1,'right');
   } else {
-    switchTab('home');
+    if(sessionMode==='test'){
+      showReviewScreen();
+    } else {
+      showSessionComplete();
+    }
   }
+}
+
+function showReviewScreen(){
+  var correct=parseInt(document.getElementById('s-correct').textContent)||0;
+  var wrong=parseInt(document.getElementById('s-wrong').textContent)||0;
+  var xp=parseInt(document.getElementById('s-xp').textContent)||0;
+  document.getElementById('review-correct-count').textContent=correct;
+  document.getElementById('review-wrong-count').textContent=wrong;
+  document.getElementById('review-xp-count').textContent=xp;
+  var list=document.getElementById('review-card-list');
+  list.innerHTML='';
+  CARDS.forEach(function(card,idx){
+    var isCorrect=sessionResults[idx];
+    var item=document.createElement('div');
+    item.className='review-list-item'+(isCorrect===false?' wrong-item':'');
+    var dot='<div class="review-indicator" style="background:'+(isCorrect?'#4ade80':'#f87171')+';border-radius:50%;width:10px;height:10px;flex-shrink:0;"></div>';
+    var info='<div style="flex:1;"><div class="review-card-title">'+card.title+'</div><div class="review-card-sub">'+card.cat+' · Bloom: '+card.bloom+(isCorrect===false?' · ❌ Priority Review':'')+'</div></div>';
+    var btn='<div class="review-btn" onclick="reviewCardSNL('+idx+')">Review →</div>';
+    item.innerHTML=dot+info+btn;
+    item.style.display='flex';
+    item.style.alignItems='center';
+    item.style.gap='12px';
+    list.appendChild(item);
+  });
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s-review').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function reviewCardSNL(idx){
+  var prevMode=sessionMode;
+  sessionMode='study';
+  currentCardIdx=idx;
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s-cards').classList.add('active');
+  loadCard(idx,'right');
+  setTimeout(function(){
+    var btn=document.getElementById('next-card-btn');
+    if(btn){
+      btn.textContent='Back To Review →';
+      btn.onclick=function(){
+        sessionMode=prevMode;
+        document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+        document.getElementById('s-review').classList.add('active');
+        window.scrollTo(0,0);
+      };
+    }
+  },300);
+}
+
+function showSessionComplete(){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bottom-nav').classList.add('visible');
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('app-home').classList.add('active');
+  document.getElementById('tab-home').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function finishSession(){
+  showSessionComplete();
 }
 
 function navCard(dir){
