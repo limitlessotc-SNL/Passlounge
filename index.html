@@ -6,92 +6,46 @@
 <title>PassLounge — Student Nurse Lounge</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #053571;
-    --gold: #F5C518;
-    --gold-dark: #e6b800;
-    --bg: #020d1f;
-    --bg2: #031428;
-    --white: #ffffff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    font-family: 'Outfit', sans-serif;
-    background: linear-gradient(135deg, #020b18 0%, #031428 50%, #020b18 100%);
-    min-height: 100vh;
-    color: #fff;
-    overflow-x: hidden;
-  }
-
-  /* SCREEN SYSTEM */
-  .screen { display: none; min-height: 100vh; flex-direction: column; padding: 0; }
-  .screen.active { display: flex; }
-
-  /* APP SHELL */
-  .app-shell {
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* AMBIENT ORBS */
-  .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; }
-  .orb1 { top: -100px; left: -100px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(5,53,113,0.5) 0%, transparent 70%); animation: orbPulse 4s ease-in-out infinite; }
-  .orb2 { bottom: -80px; right: -80px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(245,197,24,0.08) 0%, transparent 70%); animation: orbPulse 3s ease-in-out infinite 1.5s; }
+  :root { --navy:#053571; --gold:#F5C518; --gold-dark:#e6b800; }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body { font-family:'Outfit',sans-serif; background:linear-gradient(135deg,#020b18 0%,#031428 50%,#020b18 100%); min-height:100vh; color:#fff; overflow-x:hidden; }
+  .orb { position:fixed; border-radius:50%; pointer-events:none; z-index:0; }
+  .orb1 { top:-100px; left:-100px; width:350px; height:350px; background:radial-gradient(circle,rgba(5,53,113,0.5) 0%,transparent 70%); animation:orbPulse 4s ease-in-out infinite; }
+  .orb2 { bottom:-80px; right:-80px; width:280px; height:280px; background:radial-gradient(circle,rgba(245,197,24,0.08) 0%,transparent 70%); animation:orbPulse 3s ease-in-out infinite 1.5s; }
   @keyframes orbPulse { 0%,100%{transform:scale(1);opacity:0.7;} 50%{transform:scale(1.15);opacity:1;} }
-
-  /* PARTICLES */
-  .particle { position: fixed; border-radius: 50%; opacity: 0; animation: pFloat linear infinite; pointer-events: none; z-index: 0; }
+  .particle { position:fixed; border-radius:50%; opacity:0; animation:pFloat linear infinite; pointer-events:none; z-index:0; }
   @keyframes pFloat { 0%{opacity:0;transform:translateY(0) scale(0);} 20%{opacity:0.5;} 80%{opacity:0.2;} 100%{opacity:0;transform:translateY(-100vh) scale(1);} }
-
-  /* CONTENT WRAPPER */
-  .content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; padding: 32px 24px 40px; }
-
-  /* PROGRESS */
-  .progress-wrap { margin-bottom: 28px; }
-  .progress-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
-  .progress-meta span { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-  .progress-bar { width: 100%; height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, #053571, #F5C518); border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
-  .step-pill { display: inline-block; font-size: 10px; letter-spacing: 2px; color: #F5C518; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.2); padding: 5px 14px; border-radius: 20px; }
-
-  /* TYPOGRAPHY */
-  .screen-title { font-size: 28px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 8px; }
-  .screen-sub { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 24px; }
-
-  /* BUTTONS */
-  .btn-gold {
-    width: 100%; padding: 17px; background: linear-gradient(135deg, #F5C518, #e6b800);
-    color: #053571; border: none; border-radius: 16px; font-size: 16px; font-weight: 800;
-    cursor: pointer; font-family: 'Outfit', sans-serif; position: relative; overflow: hidden;
-    animation: btnPulse 2.5s ease-in-out infinite; margin-bottom: 12px; letter-spacing: 0.3px;
-  }
+  .screen { display:none; min-height:100vh; flex-direction:column; }
+  .screen.active { display:flex; }
+  .app-shell { width:100%; max-width:420px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+  .content { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; padding:32px 24px 40px; }
+  .scrollable { overflow-y:auto; flex:1; }
+  .scrollable::-webkit-scrollbar { width:0; }
+  .progress-wrap { margin-bottom:28px; }
+  .progress-meta { display:flex; justify-content:space-between; margin-bottom:8px; }
+  .progress-meta span { font-size:11px; color:rgba(255,255,255,0.35); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+  .progress-bar { width:100%; height:3px; background:rgba(255,255,255,0.07); border-radius:2px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,#053571,#F5C518); border-radius:2px; transition:width 0.5s cubic-bezier(.4,0,.2,1); }
+  .step-pill { display:inline-block; font-size:10px; letter-spacing:2px; color:#F5C518; font-weight:700; text-transform:uppercase; margin-bottom:20px; background:rgba(245,197,24,0.08); border:1px solid rgba(245,197,24,0.2); padding:5px 14px; border-radius:20px; }
+  .screen-title { font-size:28px; font-weight:900; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .screen-sub { font-size:14px; color:rgba(255,255,255,0.4); line-height:1.6; margin-bottom:24px; }
+  .btn-gold { width:100%; padding:17px; background:linear-gradient(135deg,#F5C518,#e6b800); color:#053571; border:none; border-radius:16px; font-size:16px; font-weight:800; cursor:pointer; font-family:'Outfit',sans-serif; position:relative; overflow:hidden; animation:btnPulse 2.5s ease-in-out infinite; margin-bottom:12px; letter-spacing:0.3px; }
   @keyframes btnPulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,0.5),0 4px 20px rgba(245,197,24,0.3);} 50%{box-shadow:0 0 0 10px rgba(245,197,24,0),0 4px 30px rgba(245,197,24,0.5);} }
   .btn-gold::after { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent); animation:shimmer 2.5s ease-in-out infinite; }
   @keyframes shimmer { 0%{left:-100%;} 100%{left:200%;} }
   .btn-ghost { width:100%; padding:14px; background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.45); border:1.5px solid rgba(255,255,255,0.1); border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; font-family:'Outfit',sans-serif; margin-bottom:12px; transition:all 0.2s; }
   .btn-ghost:hover { background:rgba(255,255,255,0.1); color:#fff; }
-
-  /* INPUT */
   .pl-input { width:100%; padding:16px 18px; border-radius:16px; border:2px solid rgba(245,197,24,0.15); background:rgba(255,255,255,0.04); color:#fff; font-size:16px; font-family:'Outfit',sans-serif; font-weight:600; outline:none; transition:all 0.3s; margin-bottom:10px; }
   .pl-input:focus { border-color:rgba(245,197,24,0.55); background:rgba(245,197,24,0.04); }
   .pl-input::placeholder { color:rgba(255,255,255,0.18); font-weight:400; }
   .char-count { font-size:11px; color:rgba(255,255,255,0.2); text-align:right; margin-top:-6px; margin-bottom:14px; }
   .err-msg { color:#f87171; font-size:13px; text-align:center; margin-bottom:10px; display:none; }
-
-  /* PREVIEW BADGE */
+  input[type="date"] { color-scheme:dark; }
   .preview-badge { background:rgba(245,197,24,0.07); border:1.5px solid rgba(245,197,24,0.2); border-radius:14px; padding:13px 16px; margin-bottom:16px; display:none; }
   .preview-inner { display:flex; align-items:center; gap:12px; }
   .preview-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#053571,#F5C518); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#053571; flex-shrink:0; }
   .preview-text { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5; }
   .preview-name { color:#F5C518; font-weight:700; }
-
-  /* OPTION CARDS */
   .opt-card { width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:18px; padding:18px; cursor:pointer; margin-bottom:12px; transition:all 0.25s; display:flex; align-items:center; gap:14px; }
   .opt-card:hover { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.18); transform:translateY(-1px); }
   .opt-card:active { transform:scale(0.98); }
@@ -100,13 +54,9 @@
   .opt-title { font-size:15px; font-weight:700; color:#fff; margin-bottom:3px; }
   .opt-sub { font-size:12px; color:rgba(255,255,255,0.38); line-height:1.4; }
   .opt-detail { font-size:11px; color:rgba(255,255,255,0.3); line-height:1.5; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.07); }
-
-  /* DIVIDER */
   .divider { display:flex; align-items:center; gap:12px; margin:4px 0 12px; }
   .divider-line { flex:1; height:1px; background:rgba(255,255,255,0.07); }
   .divider-text { font-size:11px; color:rgba(255,255,255,0.2); font-weight:600; }
-
-  /* CONFIDENCE OPTIONS */
   .conf-row { width:100%; display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.07); border-radius:14px; padding:13px 15px; cursor:pointer; margin-bottom:9px; transition:all 0.2s; }
   .conf-row:hover { background:rgba(245,197,24,0.05); border-color:rgba(245,197,24,0.2); }
   .conf-row:active { transform:scale(0.98); }
@@ -114,25 +64,16 @@
   .conf-icon { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px; }
   .conf-label { font-size:14px; font-weight:700; color:#fff; }
   .conf-sub { font-size:11px; color:rgba(255,255,255,0.3); line-height:1.4; margin-top:2px; }
-
-  /* DATE INPUT */
-  input[type="date"] { color-scheme: dark; }
-
-  /* COUNTDOWN BOX */
   .cd-box { width:100%; background:rgba(245,197,24,0.07); border:1.5px solid rgba(245,197,24,0.2); border-radius:14px; padding:15px 18px; margin-bottom:14px; display:none; }
   .cd-label { font-size:10px; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
   .cd-val { font-size:28px; font-weight:900; color:#F5C518; }
   .cd-sub { font-size:12px; color:rgba(255,255,255,0.3); margin-top:3px; }
-
-  /* COMMITMENT OPTIONS */
   .commit-card { width:100%; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px 18px; cursor:pointer; margin-bottom:10px; transition:all 0.25s; }
   .commit-card:hover { background:rgba(245,197,24,0.05); border-color:rgba(245,197,24,0.25); transform:translateY(-1px); }
   .commit-card.selected { border-color:#F5C518; background:rgba(245,197,24,0.08); }
   .commit-title { font-size:15px; font-weight:700; color:#fff; margin-bottom:3px; }
   .commit-sub { font-size:12px; color:rgba(255,255,255,0.35); }
-
-  /* PLAN REVEAL */
-  .check-ring { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a6aed); border:2.5px solid #F5C518; display:flex; align-items:center; justify-content:center; margin-bottom:14px; animation:celebBounce 0.8s cubic-bezier(.4,0,.2,1) both, ringExpand 1s ease 0.8s both; }
+  .check-ring { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a6aed); border:2.5px solid #F5C518; display:flex; align-items:center; justify-content:center; margin-bottom:14px; animation:celebBounce 0.8s cubic-bezier(.4,0,.2,1) both,ringExpand 1s ease 0.8s both; }
   @keyframes celebBounce { 0%{transform:scale(0) rotate(-180deg);opacity:0;} 60%{transform:scale(1.2) rotate(10deg);} 80%{transform:scale(0.95);} 100%{transform:scale(1) rotate(0);opacity:1;} }
   @keyframes ringExpand { 0%{box-shadow:0 0 0 0 rgba(245,197,24,0.6);} 100%{box-shadow:0 0 0 20px rgba(245,197,24,0);} }
   .xp-burst { display:inline-flex; align-items:center; gap:8px; background:rgba(245,197,24,0.1); border:1.5px solid rgba(245,197,24,0.3); border-radius:20px; padding:6px 16px; margin-bottom:18px; animation:xpPop 0.5s cubic-bezier(.4,0,.2,1) 0.5s both; }
@@ -155,23 +96,21 @@
   .pearl-dot { width:6px; height:6px; border-radius:50%; background:#F5C518; flex-shrink:0; animation:pDot 2s ease-in-out infinite; }
   @keyframes pDot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
   .pearl-text { font-size:13px; color:rgba(255,255,255,0.75); line-height:1.65; }
-
-  /* CONFETTI */
   .confetti-piece { position:fixed; opacity:0; animation:confettiFall linear forwards; pointer-events:none; z-index:999; }
   @keyframes confettiFall { 0%{opacity:1;transform:translateY(-20px) rotate(0deg);} 100%{opacity:0;transform:translateY(105vh) rotate(720deg);} }
-
-  /* LOGO */
   .logo-ring { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a4d99); border:2.5px solid rgba(245,197,24,0.5); display:flex; align-items:center; justify-content:center; margin-bottom:10px; animation:logoPulse 2.5s ease-in-out infinite; }
   @keyframes logoPulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,0.5),0 0 20px rgba(245,197,24,0.2);} 50%{box-shadow:0 0 0 18px rgba(245,197,24,0),0 0 50px rgba(245,197,24,0.4);} }
-
-  /* ANIMATIONS */
   @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
   @keyframes slideInRight { from{opacity:0;transform:translateX(30px);} to{opacity:1;transform:translateX(0);} }
   @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px);} to{opacity:1;transform:translateX(0);} }
   .anim { animation:fadeUp 0.5s ease both; }
-
-  /* CARD EXPERIENCE */
-  .card-screen { padding:20px 20px 32px; }
+  .welcome-screen { align-items:center; justify-content:center; text-align:center; padding:40px 28px; }
+  .brand-tag { font-size:10px; letter-spacing:3px; color:#F5C518; font-weight:700; text-transform:uppercase; margin-bottom:14px; }
+  .welcome-tagline { font-size:13px; color:rgba(255,255,255,0.35); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
+  .welcome-title { font-size:32px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:6px; }
+  .welcome-subtitle { font-size:21px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:32px; }
+  .powered-by { margin-top:14px; font-size:11px; color:rgba(255,255,255,0.18); }
+  .card-screen { padding:20px 20px 100px; }
   .card-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
   .tag { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 9px; border-radius:10px; }
   .tag-cat { background:rgba(5,53,113,0.4); border:1px solid rgba(5,53,113,0.7); color:rgba(255,255,255,0.6); }
@@ -239,92 +178,20 @@
   .pearl-content { font-size:12px; color:rgba(255,255,255,0.75); line-height:1.65; }
   .mnemonic { display:flex; gap:5px; flex-wrap:wrap; margin-top:8px; }
   .m-letter { background:rgba(245,197,24,0.15); border:1px solid rgba(245,197,24,0.3); border-radius:7px; padding:4px 8px; font-size:12px; font-weight:800; color:#F5C518; }
-  .m-word { font-size:11px; color:rgba(255,255,255,0.4); padding:4px 4px; font-weight:500; }
+  .m-word { font-size:11px; color:rgba(255,255,255,0.4); padding:4px; font-weight:500; }
   .reviewed-badge { display:none; align-items:center; gap:6px; background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:9px; padding:5px 12px; margin-bottom:10px; }
   .reviewed-text { font-size:11px; color:#4ade80; font-weight:600; }
-
-  /* WELCOME SPECIFIC */
-  .welcome-screen { align-items:center; justify-content:center; text-align:center; padding:40px 28px; }
-  .brand-tag { font-size:10px; letter-spacing:3px; color:#F5C518; font-weight:700; text-transform:uppercase; margin-bottom:14px; }
-  .welcome-tagline { font-size:13px; color:rgba(255,255,255,0.35); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
-  .welcome-title { font-size:32px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:6px; }
-  .welcome-subtitle { font-size:21px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:32px; }
-  .powered-by { margin-top:14px; font-size:11px; color:rgba(255,255,255,0.18); }
-
-  /* SCROLLABLE */
-  .scrollable { overflow-y:auto; flex:1; }
-  .scrollable::-webkit-scrollbar { width:0; }
-
-  /* BOTTOM NAV */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    max-width: 420px; margin: 0 auto;
-    background: rgba(2,13,31,0.97); backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    display: none; justify-content: space-around; align-items: center;
-    padding: 10px 8px 20px; z-index: 100;
-  }
-  .bottom-nav.visible { display: flex; }
+  .bottom-nav { position:fixed; bottom:0; left:0; right:0; max-width:420px; margin:0 auto; background:rgba(2,13,31,0.97); backdrop-filter:blur(20px); border-top:1px solid rgba(255,255,255,0.06); display:none; justify-content:space-around; align-items:center; padding:10px 8px 20px; z-index:100; }
+  .bottom-nav.visible { display:flex; }
   .nav-tab { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:5px 10px; border-radius:12px; transition:all 0.2s; flex:1; border:none; background:none; font-family:'Outfit',sans-serif; }
   .nav-tab:active { transform:scale(0.93); }
-  .nav-tab-icon { font-size:20px; line-height:1; transition:all 0.2s; }
+  .nav-tab-icon { font-size:20px; line-height:1; }
   .nav-tab-label { font-size:9px; font-weight:700; letter-spacing:0.3px; transition:all 0.2s; }
-  .nav-tab.active .nav-tab-icon { filter:none; }
   .nav-tab.active .nav-tab-label { color:#F5C518; }
   .nav-tab:not(.active) .nav-tab-label { color:rgba(255,255,255,0.25); }
   .nav-tab:not(.active) .nav-tab-icon { opacity:0.25; }
-  .nav-tab-badge { position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#f87171; border-radius:50%; border:1.5px solid #020d1f; }
-
-  /* MAIN APP SCREENS — with nav padding */
   .app-screen { display:none; min-height:100vh; flex-direction:column; padding-bottom:80px; }
   .app-screen.active { display:flex; }
-
-  /* SESSION END */
-  .debrief-screen { padding:20px 18px 100px; overflow-y:auto; max-width:420px; margin:0 auto; width:100%; }
-  @keyframes barGrow { from{width:0%;} to{width:var(--w);} }
-  .celeb-ring-d { width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,#053571,#0a6aed); border:2px solid #F5C518; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; animation:ringPulseD 2s ease-in-out infinite; }
-  @keyframes ringPulseD { 0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,0.5);} 50%{box-shadow:0 0 0 10px rgba(245,197,24,0);} }
-  .debrief-phase { display:none; }
-  .debrief-phase.active { display:block; }
-  .db-stat-row { display:flex; gap:8px; margin-bottom:14px; }
-  .db-stat { flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:10px 6px; text-align:center; }
-  .db-stat-n { font-size:17px; font-weight:900; color:#F5C518; }
-  .db-stat-l { font-size:9px; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.8px; margin-top:2px; }
-  .db-section-lbl { font-size:9px; color:rgba(255,255,255,0.3); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
-  .db-section-lbl::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
-  .db-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:13px 15px; margin-bottom:10px; }
-  .cccc-item-d { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
-  .cccc-item-d:last-child { margin-bottom:0; }
-  .cccc-name-d { font-size:11px; color:rgba(255,255,255,0.45); width:82px; flex-shrink:0; }
-  .cccc-track-d { flex:1; height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
-  .cccc-fill-d { height:100%; border-radius:3px; animation:barGrow 0.8s ease var(--d) both; }
-  .cccc-green { background:linear-gradient(90deg,#22c55e,#4ade80); }
-  .cccc-yellow { background:linear-gradient(90deg,#eab308,#F5C518); }
-  .cccc-pct-d { font-size:10px; font-weight:700; width:32px; text-align:right; flex-shrink:0; }
-  .lens-grid-d { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-  .lens-pill-d { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:8px 10px; }
-  .lens-pill-name-d { font-size:10px; color:rgba(255,255,255,0.45); margin-bottom:4px; font-weight:600; }
-  .lens-pill-bar-d { height:4px; background:rgba(255,255,255,0.07); border-radius:2px; overflow:hidden; margin-bottom:3px; }
-  .lens-pill-fill-d { height:100%; border-radius:2px; background:linear-gradient(90deg,#053571,#F5C518); animation:barGrow 0.8s ease both; }
-  .lens-pill-pct-d { font-size:9px; color:#F5C518; font-weight:700; }
-  .coach-card-d { background:linear-gradient(135deg,rgba(5,53,113,0.4),rgba(5,53,113,0.2)); border:1.5px solid rgba(245,197,24,0.2); border-radius:16px; padding:14px 16px; margin-bottom:10px; position:relative; overflow:hidden; }
-  .coach-card-d::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(245,197,24,0.5),transparent); }
-  .coach-hdr-d { font-size:9px; color:#F5C518; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-  .coach-dot-d { width:5px; height:5px; border-radius:50%; background:#F5C518; animation:dotPulse 2s ease-in-out infinite; }
-  .tomorrow-card-d { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:13px 15px; margin-bottom:10px; }
-  .tomorrow-row-d { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-  .tomorrow-row-d:last-child { margin-bottom:0; }
-  .t-icon-d { width:34px; height:34px; border-radius:10px; background:rgba(5,53,113,0.4); border:1px solid rgba(5,53,113,0.6); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
-  .streak-bar-d { background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.2); border-radius:10px; padding:10px 13px; display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-  .cliff-d { background:rgba(245,197,24,0.05); border:1px solid rgba(245,197,24,0.15); border-radius:10px; padding:10px 13px; margin-bottom:10px; font-size:11px; color:rgba(255,255,255,0.5); line-height:1.55; font-style:italic; }
-  .cliff-tag-d { font-size:8px; color:#F5C518; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
-  .social-row-d { display:flex; gap:8px; margin-bottom:10px; }
-  .social-btn-d { flex:1; padding:10px 8px; border-radius:12px; border:1.5px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); font-size:11px; font-weight:700; color:rgba(255,255,255,0.5); cursor:pointer; font-family:'Outfit',sans-serif; text-align:center; transition:all 0.2s; }
-  .social-btn-d:hover { border-color:rgba(245,197,24,0.3); color:#fff; }
-  .btn-onemore-d { width:100%; padding:13px; background:rgba(245,197,24,0.08); border:1.5px solid rgba(245,197,24,0.25); border-radius:16px; font-size:13px; font-weight:700; color:#F5C518; cursor:pointer; font-family:'Outfit',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s; margin-bottom:8px; }
-  .xp-2x-d { background:#F5C518; color:#053571; font-size:9px; font-weight:900; padding:2px 7px; border-radius:6px; }
-
-  /* PLACEHOLDER SCREENS */
   .placeholder-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh; text-align:center; padding:40px 28px; }
   .placeholder-icon { font-size:56px; margin-bottom:16px; }
   .placeholder-title { font-size:22px; font-weight:900; color:#fff; margin-bottom:8px; }
@@ -335,10 +202,9 @@
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 <div id="particles"></div>
-
 <div class="app-shell">
 
-  <!-- SCREEN 1: WELCOME -->
+  <!-- S1: WELCOME -->
   <div class="screen active" id="s-welcome">
     <div class="content welcome-screen">
       <div class="logo-ring anim">
@@ -350,8 +216,6 @@
           <line x1="58" y1="26" x2="58" y2="44" stroke="#F5C518" stroke-width="2.5" stroke-linecap="round"/>
           <circle cx="58" cy="46" r="3" fill="#F5C518"/>
           <text x="36" y="33" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="900" font-size="11" fill="#053571" letter-spacing="1">SNL</text>
-          
-          
         </svg>
       </div>
       <div class="brand-tag anim">PassLounge</div>
@@ -363,25 +227,17 @@
     </div>
   </div>
 
-  <!-- SCREEN 2: NICKNAME -->
+  <!-- S2: NICKNAME -->
   <div class="screen" id="s-nickname">
     <div class="content">
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Step 1 Of 5</span><span>20%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-meta"><span>Step 1 Of 5</span><span>20%</span></div><div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div></div>
       <div class="step-pill">Step 1 Of 5</div>
       <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(5,53,113,0.8),rgba(10,77,153,0.6));border:1.5px solid rgba(245,197,24,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:logoPulse 3s ease-in-out infinite;">
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="5" stroke="#F5C518" stroke-width="1.8"/><path d="M4 23c0-5 4-8 9-8s9 3 9 8" stroke="#F5C518" stroke-width="1.8" stroke-linecap="round"/></svg>
       </div>
       <div class="screen-title">What Do They<br>Call You, Nurse?</div>
       <div class="screen-sub">This is your identity inside the lounge.</div>
-      <div id="preview-badge" class="preview-badge">
-        <div class="preview-inner">
-          <div class="preview-avatar" id="prev-init">N</div>
-          <div class="preview-text">Welcome to the lounge, <span class="preview-name" id="prev-name">Nurse</span>. Let's get you that license. 💛</div>
-        </div>
-      </div>
+      <div id="preview-badge" class="preview-badge"><div class="preview-inner"><div class="preview-avatar" id="prev-init">N</div><div class="preview-text">Welcome to the lounge, <span class="preview-name" id="prev-name">Nurse</span>. Let's get you that license. 💛</div></div></div>
       <input class="pl-input" id="nn-input" type="text" placeholder="Your nickname..." maxlength="20" oninput="onNNType(this)" />
       <div class="char-count"><span id="nn-cc">0</span>/20</div>
       <div class="err-msg" id="nn-err">Please enter a nickname to continue</div>
@@ -389,131 +245,74 @@
     </div>
   </div>
 
-  <!-- SCREEN 3: TESTER TYPE -->
+  <!-- S3: TESTER TYPE -->
   <div class="screen" id="s-tester">
     <div class="content">
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Step 2 Of 5</span><span>40%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-meta"><span>Step 2 Of 5</span><span>40%</span></div><div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div></div>
       <div class="step-pill">Step 2 Of 5</div>
       <div class="screen-title">Is This Your<br>First Time At<br>The NCLEX?</div>
       <div class="screen-sub">This shapes your entire experience, <span id="tester-name" style="color:#F5C518;font-weight:700;">Nurse</span>.</div>
       <div class="opt-card" id="opt-ret" onclick="pickType('ret')">
-        <div class="opt-icon" style="background:rgba(245,197,24,0.1);">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11a7 7 0 1 1 7 7" stroke="#F5C518" stroke-width="2" stroke-linecap="round"/><path d="M4 11l2.5-2.5M4 11l2.5 2.5" stroke="#F5C518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div style="flex:1;">
-          <div class="opt-title">Coming Back Stronger 🔥</div>
-          <div class="opt-sub">I have tested before</div>
-          <div class="opt-detail">Upload your Candidate Performance Report for a study plan built around your exact weak areas.</div>
-        </div>
+        <div class="opt-icon" style="background:rgba(245,197,24,0.1);"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11a7 7 0 1 1 7 7" stroke="#F5C518" stroke-width="2" stroke-linecap="round"/><path d="M4 11l2.5-2.5M4 11l2.5 2.5" stroke="#F5C518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex:1;"><div class="opt-title">Coming Back Stronger 🔥</div><div class="opt-sub">I have tested before</div><div class="opt-detail">Upload your Candidate Performance Report for a study plan built around your exact weak areas.</div></div>
       </div>
       <div class="divider"><div class="divider-line"></div><div class="divider-text">OR</div><div class="divider-line"></div></div>
       <div class="opt-card" id="opt-first" onclick="pickType('first')">
-        <div class="opt-icon" style="background:rgba(255,255,255,0.06);">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2l2.5 6.5H21l-5.5 4 2.5 6.5L11 15l-7 4 2.5-6.5L1 8.5h7.5z" fill="rgba(255,255,255,0.5)"/></svg>
-        </div>
-        <div style="flex:1;">
-          <div class="opt-title">First Timer 🌟</div>
-          <div class="opt-sub">Fresh out of nursing school and ready</div>
-          <div class="opt-detail">Take our 50-question diagnostic to build your personalized study plan from scratch.</div>
-        </div>
+        <div class="opt-icon" style="background:rgba(255,255,255,0.06);"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2l2.5 6.5H21l-5.5 4 2.5 6.5L11 15l-7 4 2.5-6.5L1 8.5h7.5z" fill="rgba(255,255,255,0.5)"/></svg></div>
+        <div style="flex:1;"><div class="opt-title">First Timer 🌟</div><div class="opt-sub">Fresh out of nursing school and ready</div><div class="opt-detail">Take our 50-question diagnostic to build your personalized study plan from scratch.</div></div>
       </div>
     </div>
   </div>
 
-  <!-- SCREEN 4: CONFIDENCE -->
+  <!-- S4: CONFIDENCE -->
   <div class="screen" id="s-confidence">
     <div class="content">
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Step 3 Of 5</span><span>60%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-meta"><span>Step 3 Of 5</span><span>60%</span></div><div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div></div>
       <div class="step-pill">Step 3 Of 5</div>
       <div class="screen-title">How Are You<br>Feeling About<br>The NCLEX?</div>
       <div class="screen-sub">Your answer helps us coach you properly.</div>
-      <div class="conf-row" onclick="pickConf(this,'terrified','rgba(248,113,113,0.12)','#f87171')">
-        <div class="conf-icon" style="background:rgba(248,113,113,0.1);">😰</div>
-        <div><div class="conf-label">Terrified</div><div class="conf-sub">I don't even know where to start</div></div>
-      </div>
-      <div class="conf-row" onclick="pickConf(this,'nervous','rgba(251,146,60,0.12)','#fb923c')">
-        <div class="conf-icon" style="background:rgba(251,146,60,0.1);">😟</div>
-        <div><div class="conf-label">Nervous</div><div class="conf-sub">I've studied but I'm not sure it's enough</div></div>
-      </div>
-      <div class="conf-row" onclick="pickConf(this,'unsure','rgba(250,204,21,0.12)','#facc15')">
-        <div class="conf-icon" style="background:rgba(250,204,21,0.1);">😐</div>
-        <div><div class="conf-label">Unsure</div><div class="conf-sub">Some topics I get — others not so much</div></div>
-      </div>
-      <div class="conf-row" onclick="pickConf(this,'confident','rgba(74,222,128,0.12)','#4ade80')">
-        <div class="conf-icon" style="background:rgba(74,222,128,0.1);">🙂</div>
-        <div><div class="conf-label">Confident</div><div class="conf-sub">I'm putting in the work — feeling good</div></div>
-      </div>
-      <div class="conf-row" onclick="pickConf(this,'ready','rgba(245,197,24,0.12)','#F5C518')">
-        <div class="conf-icon" style="background:rgba(245,197,24,0.1);">💪</div>
-        <div><div class="conf-label">Ready To Dominate</div><div class="conf-sub">Let's get it — I was born for this</div></div>
-      </div>
+      <div class="conf-row" onclick="pickConf(this,'terrified','rgba(248,113,113,0.12)','#f87171')"><div class="conf-icon" style="background:rgba(248,113,113,0.1);">😰</div><div><div class="conf-label">Terrified</div><div class="conf-sub">I don't even know where to start</div></div></div>
+      <div class="conf-row" onclick="pickConf(this,'nervous','rgba(251,146,60,0.12)','#fb923c')"><div class="conf-icon" style="background:rgba(251,146,60,0.1);">😟</div><div><div class="conf-label">Nervous</div><div class="conf-sub">I've studied but I'm not sure it's enough</div></div></div>
+      <div class="conf-row" onclick="pickConf(this,'unsure','rgba(250,204,21,0.12)','#facc15')"><div class="conf-icon" style="background:rgba(250,204,21,0.1);">😐</div><div><div class="conf-label">Unsure</div><div class="conf-sub">Some topics I get — others not so much</div></div></div>
+      <div class="conf-row" onclick="pickConf(this,'confident','rgba(74,222,128,0.12)','#4ade80')"><div class="conf-icon" style="background:rgba(74,222,128,0.1);">🙂</div><div><div class="conf-label">Confident</div><div class="conf-sub">I'm putting in the work — feeling good</div></div></div>
+      <div class="conf-row" onclick="pickConf(this,'ready','rgba(245,197,24,0.12)','#F5C518')"><div class="conf-icon" style="background:rgba(245,197,24,0.1);">💪</div><div><div class="conf-label">Ready To Dominate</div><div class="conf-sub">Let's get it — I was born for this</div></div></div>
     </div>
   </div>
 
-  <!-- SCREEN 5: TEST DATE -->
+  <!-- S5: TEST DATE -->
   <div class="screen" id="s-testdate">
     <div class="content">
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Step 4 Of 5</span><span>80%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-meta"><span>Step 4 Of 5</span><span>80%</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
       <div class="step-pill">Step 4 Of 5</div>
       <div class="screen-title">When's Test<br>Day, <span id="testdate-name" style="color:#F5C518;">Nurse</span>?</div>
       <div class="screen-sub">Enter your date — we activate your countdown clock immediately. Every day counts.</div>
       <input type="date" class="pl-input" id="test-date" onchange="showCountdown()" />
-      <div class="cd-box" id="cd-box">
-        <div class="cd-label">Your Countdown Is Live 🔥</div>
-        <div class="cd-val" id="cd-val">— days</div>
-        <div class="cd-sub">until The NCLEX</div>
-      </div>
+      <div class="cd-box" id="cd-box"><div class="cd-label">Your Countdown Is Live 🔥</div><div class="cd-val" id="cd-val">— days</div><div class="cd-sub">until The NCLEX</div></div>
       <button class="btn-gold" onclick="goTo('s-commitment')">Lock It In — Let's Get To Work</button>
       <button class="btn-ghost" onclick="goTo('s-commitment')">I don't have a date yet</button>
     </div>
   </div>
 
-  <!-- SCREEN 5B: DAILY COMMITMENT -->
+  <!-- S5B: COMMITMENT -->
   <div class="screen" id="s-commitment">
     <div class="content">
-      <div class="progress-wrap">
-        <div class="progress-meta"><span>Step 5 Of 5</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
-      </div>
+      <div class="progress-wrap"><div class="progress-meta"><span>Step 5 Of 5</span><span>90%</span></div><div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div></div>
       <div class="step-pill">Step 5 Of 5</div>
       <div class="screen-title">How Much Can<br>You Commit Daily?</div>
       <div class="screen-sub">Nurses are busy. We get it. Consistency beats intensity every time.</div>
-      <div class="commit-card" onclick="pickCommit(this,'10')">
-        <div class="commit-title">Busy But Consistent</div>
-        <div class="commit-sub">10 cards · ~8 minutes · I'm juggling a lot right now</div>
-      </div>
-      <div class="commit-card" onclick="pickCommit(this,'20')">
-        <div class="commit-title">Steady And Focused</div>
-        <div class="commit-sub">20 cards · ~15 minutes · My sweet spot</div>
-      </div>
-      <div class="commit-card" onclick="pickCommit(this,'35')">
-        <div class="commit-title">Ready To Grind</div>
-        <div class="commit-sub">35 cards · ~25 minutes · I'm locking in</div>
-      </div>
-      <div class="commit-card" onclick="pickCommit(this,'?')">
-        <div class="commit-title">I'll Set My Own Pace</div>
-        <div class="commit-sub">Custom daily number — I know what works for me</div>
-      </div>
+      <div class="commit-card" onclick="pickCommit(this,'10')"><div class="commit-title">Busy But Consistent</div><div class="commit-sub">10 cards · ~8 minutes · I'm juggling a lot right now</div></div>
+      <div class="commit-card" onclick="pickCommit(this,'20')"><div class="commit-title">Steady And Focused</div><div class="commit-sub">20 cards · ~15 minutes · My sweet spot</div></div>
+      <div class="commit-card" onclick="pickCommit(this,'35')"><div class="commit-title">Ready To Grind</div><div class="commit-sub">35 cards · ~25 minutes · I'm locking in</div></div>
+      <div class="commit-card" onclick="pickCommit(this,'?')"><div class="commit-title">I'll Set My Own Pace</div><div class="commit-sub">Custom daily number — I know what works for me</div></div>
     </div>
   </div>
 
-  <!-- SCREEN 6: PLAN REVEAL -->
+  <!-- S6: PLAN REVEAL -->
   <div class="screen" id="s-plan">
     <div class="content scrollable">
       <div id="confetti-container" style="position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;"></div>
       <div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:16px;">
-        <div class="check-ring">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 14l6 6L22 8" stroke="#F5C518" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
+        <div class="check-ring"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 14l6 6L22 8" stroke="#F5C518" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">You're In The Lounge!</div>
         <div style="font-size:24px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px;">Welcome, <span id="plan-name" style="color:#F5C518;">Nurse</span>! 🎉</div>
         <div class="xp-burst"><span class="xp-num">+50 XP</span><span class="xp-lbl">Onboarding Complete!</span></div>
@@ -533,14 +332,13 @@
         <div class="pearl-from"><div class="pearl-dot"></div>A Note From Your Coach</div>
         <div class="pearl-text">"Thank you for allowing me on this journey with you! Now let's cross the finish line and <span style="color:#F5C518;font-weight:800;">PASS</span> the NCLEX."</div>
       </div>
-      <button class="btn-gold" onclick="goTo('s-cards')">Start My Diagnostic Challenge</button>
+      <button class="btn-gold" onclick="startSession()">Start My Diagnostic Challenge</button>
     </div>
   </div>
 
-  <!-- SCREEN 7: CARD EXPERIENCE -->
+  <!-- S7: CARDS -->
   <div class="screen" id="s-cards">
     <div class="content card-screen scrollable" id="card-main">
-
       <div id="card-state-q">
         <div class="card-hdr">
           <div style="display:flex;gap:6px;"><span class="tag tag-cat" id="c-cat">Cardiac</span><span class="tag tag-bloom" id="c-bloom">Apply</span></div>
@@ -551,13 +349,9 @@
           <div class="card-prog-bar"><div class="card-prog-fill" id="c-prog-fill" style="width:33%;"></div></div>
         </div>
         <div class="nav-row">
-          <div class="nav-btn disabled" id="nav-prev" onclick="navCard(-1)">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+          <div class="nav-btn disabled" id="nav-prev" onclick="navCard(-1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="nav-center"><div class="nav-title-text" id="c-title">MI Priority Intervention</div><div class="nav-sub-text" id="c-reviewed"></div></div>
-          <div class="nav-btn" id="nav-next" onclick="navCard(1)">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+          <div class="nav-btn" id="nav-next" onclick="navCard(1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
         <div class="stats-row">
           <div class="stat-mini"><div class="stat-n" id="s-correct">0</div><div class="stat-l">Correct</div></div>
@@ -568,10 +362,7 @@
         <div id="reviewed-ind" class="reviewed-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="reviewed-text" id="reviewed-txt">Previously answered</span></div>
         <div class="q-card">
           <div class="q-type-label" id="c-type">Multiple Choice · Cardiac</div>
-          <div class="scenario-box" id="c-scenario-wrap">
-            <div class="scenario-tag-label">📋 Scenario</div>
-            <div id="c-scenario"></div>
-          </div>
+          <div class="scenario-box"><div class="scenario-tag-label">📋 Scenario</div><div id="c-scenario"></div></div>
           <div class="q-text-main" id="c-question"></div>
         </div>
         <button class="ans-opt" id="ao-a" onclick="answer(0)"></button>
@@ -579,7 +370,6 @@
         <button class="ans-opt" id="ao-c" onclick="answer(2)"></button>
         <button class="ans-opt" id="ao-d" onclick="answer(3)"></button>
       </div>
-
       <div id="card-state-r" style="display:none;">
         <div class="card-hdr">
           <div style="display:flex;gap:6px;"><span class="tag tag-cat" id="r-cat">Cardiac</span><span class="tag tag-bloom" id="r-bloom">Apply</span></div>
@@ -590,89 +380,93 @@
           <div class="card-prog-bar"><div class="card-prog-fill" id="r-prog-fill" style="width:33%;"></div></div>
         </div>
         <div class="nav-row">
-          <div class="nav-btn" id="r-nav-prev" onclick="navFromResult(-1)">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+          <div class="nav-btn" id="r-nav-prev" onclick="navFromResult(-1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="nav-center"><div class="nav-title-text" id="r-title">MI Priority Intervention</div></div>
-          <div class="nav-btn" id="r-nav-next" onclick="navFromResult(1)">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+          <div class="nav-btn" id="r-nav-next" onclick="navFromResult(1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
         <div id="result-display"></div>
-        <div class="q-card" style="padding:12px 14px;margin-bottom:10px;">
-          <div class="q-type-label">Your Answer</div>
-          <div id="answer-recap" style="font-size:13px;color:#fff;font-weight:600;line-height:1.4;"></div>
-        </div>
+        <div class="q-card" style="padding:12px 14px;margin-bottom:10px;"><div class="q-type-label">Your Answer</div><div id="answer-recap" style="font-size:13px;color:#fff;font-weight:600;line-height:1.4;"></div></div>
         <div class="snl-section-title">SNL Method Breakdown</div>
-        <div class="layer-btn unlocked" id="ly-1">
-          <div class="layer-dot lit" id="ld-1"></div>
-          <div style="flex:1;"><div class="layer-name layer-name-open">Core Problem</div><div class="layer-content" id="lc-1"></div></div>
-        </div>
-        <div class="layer-btn next-up" id="ly-2" onclick="unlockLayer(2)">
-          <div class="layer-dot next" id="ld-2"></div>
-          <div style="flex:1;"><div class="layer-name layer-name-next" id="ln-2">Complication</div><div class="layer-hint" id="lh-2">Tap to unlock →</div><div class="layer-content" id="lc-2" style="display:none;"></div></div>
-        </div>
-        <div class="layer-btn" id="ly-3">
-          <div class="layer-dot" id="ld-3"></div>
-          <div style="flex:1;"><div class="layer-name layer-name-locked" id="ln-3">Connection</div><div class="layer-locked-text" id="lh-3">🔒 Unlock Complication first</div><div class="layer-content" id="lc-3" style="display:none;"></div></div>
-        </div>
-        <div class="layer-btn" id="ly-4">
-          <div class="layer-dot" id="ld-4"></div>
-          <div style="flex:1;"><div class="layer-name layer-name-locked" id="ln-4">Confirmation</div><div class="layer-locked-text" id="lh-4">🔒 Unlock Connection first</div><div class="layer-content" id="lc-4" style="display:none;"></div></div>
-        </div>
+        <div class="layer-btn unlocked" id="ly-1"><div class="layer-dot lit" id="ld-1"></div><div style="flex:1;"><div class="layer-name layer-name-open">Core Problem</div><div class="layer-content" id="lc-1"></div></div></div>
+        <div class="layer-btn next-up" id="ly-2" onclick="unlockLayer(2)"><div class="layer-dot next" id="ld-2"></div><div style="flex:1;"><div class="layer-name layer-name-next" id="ln-2">Complication</div><div class="layer-hint" id="lh-2">Tap to unlock →</div><div class="layer-content" id="lc-2" style="display:none;"></div></div></div>
+        <div class="layer-btn" id="ly-3"><div class="layer-dot" id="ld-3"></div><div style="flex:1;"><div class="layer-name layer-name-locked" id="ln-3">Connection</div><div class="layer-locked-text" id="lh-3">🔒 Unlock Complication first</div><div class="layer-content" id="lc-3" style="display:none;"></div></div></div>
+        <div class="layer-btn" id="ly-4"><div class="layer-dot" id="ld-4"></div><div style="flex:1;"><div class="layer-name layer-name-locked" id="ln-4">Confirmation</div><div class="layer-locked-text" id="lh-4">🔒 Unlock Connection first</div><div class="layer-content" id="lc-4" style="display:none;"></div></div></div>
         <div id="pearl-reveal" style="display:none;">
-          <div class="lens-reveal">
-            <div class="lens-hdr">Clinical Lens Identified</div>
-            <div class="lens-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#60a5fa" stroke-width="1.2"/><circle cx="5" cy="5" r="1.5" fill="#60a5fa"/></svg><span class="lens-name" id="lens-name">Assessment vs Intervention</span></div>
-          </div>
-          <div class="pearl-section">
-            <div class="pearl-hdr"><div class="pearl-anim-dot"></div>Coach's Pearl</div>
-            <div class="pearl-content" id="pearl-text"></div>
-            <div class="mnemonic" id="mnemonic-wrap"></div>
-          </div>
-          <button class="btn-gold" onclick="goNextCard()">Next Card →</button>
+          <div class="lens-reveal"><div class="lens-hdr">Clinical Lens Identified</div><div class="lens-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#60a5fa" stroke-width="1.2"/><circle cx="5" cy="5" r="1.5" fill="#60a5fa"/></svg><span class="lens-name" id="lens-name">Assessment vs Intervention</span></div></div>
+          <div class="pearl-section"><div class="pearl-hdr"><div class="pearl-anim-dot"></div>Coach's Pearl</div><div class="pearl-content" id="pearl-text"></div><div class="mnemonic" id="mnemonic-wrap"></div></div>
+          <button class="btn-gold" id="next-card-btn" onclick="goNextCard()">Next Card →</button>
         </div>
       </div>
-
     </div>
   </div>
 
 </div>
 
-<script>
-// STATE
-var nickname='', testerType='', confidence='', testDays=0, dailyCards=20;
-var currentCardIdx=0, currentLayer=1, sessionResults=[];
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav">
+  <button class="nav-tab" id="tab-home" onclick="switchTab('home')"><span class="nav-tab-icon">🏠</span><span class="nav-tab-label">Home</span></button>
+  <button class="nav-tab active" id="tab-study" onclick="switchTab('study')"><span class="nav-tab-icon">⚡</span><span class="nav-tab-label">Study</span></button>
+  <button class="nav-tab" id="tab-compete" onclick="switchTab('compete')"><span class="nav-tab-icon">⚔️</span><span class="nav-tab-label">Compete</span></button>
+  <button class="nav-tab" id="tab-lounge" onclick="switchTab('lounge')"><span class="nav-tab-icon">💜</span><span class="nav-tab-label">Lounge</span></button>
+  <button class="nav-tab" id="tab-profile" onclick="switchTab('profile')"><span class="nav-tab-icon">👤</span><span class="nav-tab-label">Profile</span></button>
+</div>
 
-// CARDS DATA
+<!-- APP SCREENS -->
+<div class="app-screen" id="app-home">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">🏠</div>
+    <div class="placeholder-title">Home Dashboard</div>
+    <div class="placeholder-sub">Your daily plan, streak,<br>countdown and quick start<br>are being built here.</div>
+    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('study')">Study Now ⚡</button>
+  </div>
+</div>
+<div class="app-screen" id="app-compete">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">⚔️</div>
+    <div class="placeholder-title">Compete</div>
+    <div class="placeholder-sub">PvP Duels, Tournaments<br>and Leaderboard<br>are being built here.</div>
+  </div>
+</div>
+<div class="app-screen" id="app-lounge">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">💜</div>
+    <div class="placeholder-title">The Lounge</div>
+    <div class="placeholder-sub">Victory Wall, Study Squads<br>and TikTok share<br>are being built here.</div>
+  </div>
+</div>
+<div class="app-screen" id="app-profile">
+  <div class="placeholder-screen">
+    <div class="placeholder-icon">👤</div>
+    <div class="placeholder-title">Profile</div>
+    <div class="placeholder-sub">Avatar, XP, badges,<br>weakness map and subscription<br>are being built here.</div>
+  </div>
+</div>
+
+<script>
+var nickname='',testerType='',confidence='',testDays=0,dailyCards=20;
+var currentCardIdx=0,currentLayer=1,sessionResults=[];
+
 var CARDS=[
   {cat:'Cardiac',bloom:'Apply',xp:20,title:'MI Priority Intervention',type:'Multiple Choice · Cardiac',
    scenario:'Patient arrives by ambulance with crushing chest pain 10/10 radiating to the left arm. Diaphoresis noted. EKG shows ST elevation in leads II, III, aVF.',
    question:'Which intervention is the PRIORITY for this patient right now?',
    opts:['A. Administer Morphine (MONA protocol)','B. Obtain cardiac catheterization consent','C. Establish large bore IV access','D. Notify the cardiologist on call'],
-   correct:0,
-   layers:['Coronary artery 100% occluded → myocardial ischemia → cell death beginning','Decreased cardiac perfusion → pain increases O2 demand → accelerates infarction','Morphine → vasodilates + reduces pain → decreases cardiac workload → buys time','Pain scale decreases → HR stabilizes → patient comfortable → ready for cath lab'],
-   lens:'Assessment vs Intervention',pearl:'Pain increases cardiac workload and accelerates infarction. Prioritize in order:',
-   mnemonic:[['M','Morphine'],['O','Oxygen'],['N','Nitrate'],['A','Aspirin']]},
+   correct:0,layers:['Coronary artery 100% occluded → myocardial ischemia → cell death beginning','Decreased cardiac perfusion → pain increases O2 demand → accelerates infarction','Morphine → vasodilates + reduces pain → decreases cardiac workload → buys time','Pain scale decreases → HR stabilizes → patient comfortable → ready for cath lab'],
+   lens:'Assessment vs Intervention',pearl:'Pain increases cardiac workload and accelerates infarction. Prioritize in order:',mnemonic:[['M','Morphine'],['O','Oxygen'],['N','Nitrate'],['A','Aspirin']]},
   {cat:'Cardiac',bloom:'Analyze',xp:25,title:'Troponin & MI Diagnosis',type:'Multiple Choice · Cardiac',
    scenario:'A patient presents with chest tightness and diaphoresis. EKG is non-diagnostic. Lab results are pending.',
    question:'Which lab value is the MOST specific indicator of myocardial infarction?',
    opts:['A. Troponin I','B. CK-MB','C. LDH','D. BNP'],
-   correct:0,
-   layers:['Myocardial cell death releases intracellular proteins into the bloodstream','Troponin I is released exclusively from cardiac muscle — no other tissue produces it','Elevated troponin = myocardial infarction — it is the gold standard diagnostic marker','Serial troponins q6h confirm infarction and peak levels indicate damage extent'],
-   lens:'Assessment vs Intervention',pearl:'Troponin I is cardiac-specific. Elevated = MI. No other cause elevates it. Remember:',
-   mnemonic:[['T','Troponin'],['=','equals'],['M','Myocardial'],['I','Infarction']]},
+   correct:0,layers:['Myocardial cell death releases intracellular proteins into the bloodstream','Troponin I is released exclusively from cardiac muscle — no other tissue produces it','Elevated troponin = myocardial infarction — it is the gold standard diagnostic marker','Serial troponins q6h confirm infarction and peak levels indicate damage extent'],
+   lens:'Assessment vs Intervention',pearl:'Troponin I is cardiac-specific. Elevated = MI. No other cause elevates it. Remember:',mnemonic:[['T','Troponin'],['=','equals'],['M','Myocardial'],['I','Infarction']]},
   {cat:'Cardiac',bloom:'Evaluate',xp:30,title:'Heart Failure — Priority Action',type:'Multiple Choice · Cardiac',
    scenario:'Patient with known heart failure presents with bilateral crackles, O2 sat 88%, and reports sleeping on 3 pillows at night. BP 158/94.',
    question:'Which nursing intervention is the PRIORITY?',
    opts:['A. Elevate HOB and administer prescribed diuretic','B. Obtain a 12-lead EKG immediately','C. Administer prescribed antihypertensive','D. Restrict oral fluids to 500ml per day'],
-   correct:0,
-   layers:['Core problem in heart failure is fluid overload → backup into pulmonary circulation','Pulmonary edema develops → fluid in alveoli → impaired gas exchange → hypoxia','HOB elevation uses gravity to reduce preload + diuretic eliminates excess fluid','O2 saturation improves, crackles decrease, urine output increases — intervention working'],
-   lens:'Stable vs Unstable',pearl:'Fluid overload → pulmonary edema. Two immediate actions:',
-   mnemonic:[['HOB','Head of Bed Up'],['D','Diuretic']]}
+   correct:0,layers:['Core problem in heart failure is fluid overload → backup into pulmonary circulation','Pulmonary edema develops → fluid in alveoli → impaired gas exchange → hypoxia','HOB elevation uses gravity to reduce preload + diuretic eliminates excess fluid','O2 saturation improves, crackles decrease, urine output increases — intervention working'],
+   lens:'Stable vs Unstable',pearl:'Fluid overload → pulmonary edema. Two immediate actions:',mnemonic:[['HOB','Head of Bed Up'],['D','Diuretic']]}
 ];
 
-// PARTICLES
 (function(){
   var p=document.getElementById('particles');
   var colors=['#F5C518','rgba(245,197,24,0.4)','rgba(10,77,153,0.8)','rgba(255,255,255,0.4)'];
@@ -687,17 +481,48 @@ var CARDS=[
   }
 })();
 
-// SCREEN NAV
 function goTo(id){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  var el=document.getElementById(id);
-  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
   if(id==='s-plan') launchConfetti();
-  if(id==='s-cards') loadCard(0,'right');
   window.scrollTo(0,0);
 }
 
-// CONFETTI
+function startSession(){
+  sessionResults=[];currentCardIdx=0;currentLayer=1;
+  document.getElementById('s-correct').textContent='0';
+  document.getElementById('s-wrong').textContent='0';
+  document.getElementById('s-xp').textContent='50';
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bottom-nav').classList.add('visible');
+  document.getElementById('s-cards').classList.add('active');
+  document.getElementById('card-state-q').style.display='block';
+  document.getElementById('card-state-r').style.display='none';
+  document.getElementById('pearl-reveal').style.display='none';
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('tab-study').classList.add('active');
+  loadCard(0,'right');
+  window.scrollTo(0,0);
+}
+
+function switchTab(tab){
+  var screenMap={'home':'app-home','compete':'app-compete','lounge':'app-lounge','profile':'app-profile'};
+  var tabMap={'home':'tab-home','study':'tab-study','compete':'tab-compete','lounge':'tab-lounge','profile':'tab-profile'};
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  if(tab==='study'){
+    document.getElementById('s-cards').classList.add('active');
+    document.getElementById('tab-study').classList.add('active');
+  } else {
+    var sc=document.getElementById(screenMap[tab]);
+    if(sc) sc.classList.add('active');
+    var tb=document.getElementById(tabMap[tab]);
+    if(tb) tb.classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
 function launchConfetti(){
   var c=document.getElementById('confetti-container');c.innerHTML='';
   var colors=['#F5C518','#fff','#053571','#4ade80','#f87171','#a78bfa'];
@@ -713,20 +538,14 @@ function launchConfetti(){
   }
 }
 
-// NICKNAME
 function onNNType(el){
   var v=el.value.trim();
   document.getElementById('nn-cc').textContent=el.value.length;
   var btn=document.getElementById('nn-btn');
   var pb=document.getElementById('preview-badge');
   btn.disabled=!v;btn.style.opacity=v?'1':'0.4';
-  if(v){
-    pb.style.display='block';
-    document.getElementById('prev-name').textContent=v;
-    document.getElementById('prev-init').textContent=v.charAt(0).toUpperCase();
-  } else {
-    pb.style.display='none';
-  }
+  if(v){pb.style.display='block';document.getElementById('prev-name').textContent=v;document.getElementById('prev-init').textContent=v.charAt(0).toUpperCase();}
+  else pb.style.display='none';
   document.getElementById('nn-err').style.display='none';
 }
 
@@ -739,10 +558,8 @@ function saveNN(){
   document.getElementById('plan-name').textContent='Nurse '+nickname;
   goTo('s-tester');
 }
-
 document.getElementById('nn-input').addEventListener('keydown',function(e){if(e.key==='Enter')saveNN();});
 
-// TESTER TYPE
 function pickType(t){
   testerType=t;
   document.getElementById('opt-first').classList.remove('selected');
@@ -751,7 +568,6 @@ function pickType(t){
   setTimeout(function(){goTo('s-confidence');},320);
 }
 
-// CONFIDENCE
 function pickConf(el,level,bg,border){
   document.querySelectorAll('.conf-row').forEach(function(r){r.classList.remove('selected');r.style.borderColor='';r.style.background='';});
   el.classList.add('selected');el.style.borderColor=border;el.style.background=bg;
@@ -759,7 +575,6 @@ function pickConf(el,level,bg,border){
   setTimeout(function(){goTo('s-testdate');},320);
 }
 
-// TEST DATE
 function showCountdown(){
   var d=document.getElementById('test-date').value;
   if(!d)return;
@@ -772,7 +587,6 @@ function showCountdown(){
   }
 }
 
-// COMMITMENT
 function pickCommit(el,num){
   document.querySelectorAll('.commit-card').forEach(function(c){c.classList.remove('selected');});
   el.classList.add('selected');
@@ -781,7 +595,6 @@ function pickCommit(el,num){
   setTimeout(function(){goTo('s-plan');},320);
 }
 
-// CARD SYSTEM
 function loadCard(idx,dir){
   currentCardIdx=idx;currentLayer=1;
   var card=CARDS[idx];
@@ -796,8 +609,7 @@ function loadCard(idx,dir){
   document.getElementById('c-prog-pct').textContent=pct+'%';
   document.getElementById('c-prog-fill').style.width=pct+'%';
   document.getElementById('c-title').textContent=card.title;
-  var opts=['a','b','c','d'];
-  opts.forEach(function(o,i){
+  ['a','b','c','d'].forEach(function(o,i){
     var el=document.getElementById('ao-'+o);
     el.textContent=card.opts[i]||'';
     el.className='ans-opt';
@@ -809,9 +621,9 @@ function loadCard(idx,dir){
     ri.style.display='flex';
     document.getElementById('reviewed-txt').textContent=res?'Previously answered correctly':'Previously marked for review';
     ri.style.background=res?'rgba(74,222,128,0.08)':'rgba(248,113,113,0.08)';
-    ri.style.borderColor=res?'rgba(74,222,128,0.2)':'rgba(248,113,113,0.2)';
+    ri.style.borderColor=res?'rgba(74,222,128,0.2)':'rgba(248,113,133,0.2)';
     ri.querySelector('.reviewed-text').style.color=res?'#4ade80':'#f87171';
-  } else {ri.style.display='none';}
+  } else ri.style.display='none';
   document.getElementById('nav-prev').className='nav-btn'+(idx===0?' disabled':'');
   document.getElementById('nav-next').className='nav-btn'+(idx===CARDS.length-1?' disabled':'');
   document.getElementById('card-state-r').style.display='none';
@@ -828,13 +640,10 @@ function resetLayers(){
   var card=CARDS[currentCardIdx];
   document.getElementById('lc-1').textContent=card.layers[0];
   for(var i=2;i<=4;i++){
-    var ly=document.getElementById('ly-'+i);
-    var ld=document.getElementById('ld-'+i);
-    var lh=document.getElementById('lh-'+i);
-    var lc=document.getElementById('lc-'+i);
-    var ln=document.getElementById('ln-'+i);
+    var ly=document.getElementById('ly-'+i);var ld=document.getElementById('ld-'+i);
+    var lh=document.getElementById('lh-'+i);var lc=document.getElementById('lc-'+i);var ln=document.getElementById('ln-'+i);
     if(ly){ly.className='layer-btn';ly.onclick=null;ly.style.cursor='default';}
-    if(ld){ld.classList.remove('lit','next');}
+    if(ld) ld.classList.remove('lit','next');
     if(lc){lc.style.display='none';lc.textContent='';}
   }
   document.getElementById('ld-2').classList.add('next');
@@ -890,6 +699,8 @@ function showResult(isCorrect,optIdx){
   resetLayers();
   document.getElementById('card-state-q').style.display='none';
   document.getElementById('card-state-r').style.display='block';
+  var btn=document.getElementById('next-card-btn');
+  if(btn) btn.textContent=currentCardIdx===CARDS.length-1?'Complete Session →':'Next Card →';
   window.scrollTo(0,0);
 }
 
@@ -927,11 +738,13 @@ function unlockLayer(n){
   }
 }
 
+// After last card completes all CCCC — goes to Home tab
+// Debrief will be added as its own dedicated screen in next build
 function goNextCard(){
   if(currentCardIdx<CARDS.length-1){
     loadCard(currentCardIdx+1,'right');
   } else {
-    showDebrief();
+    switchTab('home');
   }
 }
 
@@ -952,211 +765,6 @@ function showXPFly(txt){
   document.body.appendChild(el);
   setTimeout(function(){el.remove();},1000);
 }
-
-function showDebrief(){
-  // Hide all onboarding screens
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  // Show bottom nav
-  var nav=document.getElementById('bottom-nav');
-  if(nav) nav.classList.add('visible');
-  // Populate debrief with session data
-  var dn=document.getElementById('debrief-name');
-  if(dn) dn.textContent='Nurse '+nickname;
-  var totalXP=parseInt(document.getElementById('s-xp').textContent)||0;
-  var dxp=document.getElementById('debrief-xp');
-  if(dxp) dxp.textContent='+'+totalXP+' XP';
-  var correct=parseInt(document.getElementById('s-correct').textContent)||0;
-  var wrong=parseInt(document.getElementById('s-wrong').textContent)||0;
-  var total=CARDS.length;
-  var dc=document.getElementById('db-correct');
-  if(dc) dc.textContent=correct+'/'+total;
-  var acc=total>0?Math.round((correct/total)*100):0;
-  var da=document.getElementById('db-accuracy');
-  if(da) da.textContent=acc+'%';
-  // Set CCCC bars based on actual performance
-  var grade=acc>=90?'⚡ Grade A · Distinction':acc>=70?'⚡ Grade B · Proficient':acc>=50?'⚡ Grade C · Developing':'📖 Keep Practicing';
-  var gb=document.getElementById('db-grade');
-  if(gb){gb.textContent=grade;gb.style.color=acc>=70?'#4ade80':'#F5C518';}
-  // Reset to phase 1
-  document.getElementById('debrief-p1').classList.add('active');
-  document.getElementById('debrief-p2').classList.remove('active');
-  // Show home app screen
-  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('app-home').classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-  document.getElementById('tab-home').classList.add('active');
-  window.scrollTo(0,0);
-}
-
-function switchTab(tab){
-  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-  var tabMap={'home':'tab-home','study':'tab-study','compete':'tab-compete','lounge':'tab-lounge','profile':'tab-profile'};
-  var screenMap={'home':'app-home','study':'app-study','compete':'app-compete','lounge':'app-lounge','profile':'app-profile'};
-  var screen=document.getElementById(screenMap[tab]);
-  var navTab=document.getElementById(tabMap[tab]);
-  if(screen) screen.classList.add('active');
-  if(navTab) navTab.classList.add('active');
-  window.scrollTo(0,0);
-}
-
-function goDebriefPhase2(){
-  document.getElementById('debrief-p1').classList.remove('active');
-  document.getElementById('debrief-p2').classList.add('active');
-  window.scrollTo(0,0);
-}
 </script>
-
-<!-- BOTTOM NAVIGATION BAR -->
-<div class="bottom-nav" id="bottom-nav">
-  <button class="nav-tab active" id="tab-home" onclick="switchTab('home')">
-    <span class="nav-tab-icon">🏠</span>
-    <span class="nav-tab-label">Home</span>
-  </button>
-  <button class="nav-tab" id="tab-study" onclick="switchTab('study')">
-    <span class="nav-tab-icon">⚡</span>
-    <span class="nav-tab-label">Study</span>
-  </button>
-  <button class="nav-tab" id="tab-compete" onclick="switchTab('compete')">
-    <span class="nav-tab-icon">⚔️</span>
-    <span class="nav-tab-label">Compete</span>
-  </button>
-  <button class="nav-tab" id="tab-lounge" onclick="switchTab('lounge')">
-    <span class="nav-tab-icon">💜</span>
-    <span class="nav-tab-label">Lounge</span>
-  </button>
-  <button class="nav-tab" id="tab-profile" onclick="switchTab('profile')">
-    <span class="nav-tab-icon">👤</span>
-    <span class="nav-tab-label">Profile</span>
-  </button>
-</div>
-
-<!-- APP SCREENS (shown after onboarding) -->
-
-<!-- HOME (session debrief lives here after first session) -->
-<div class="app-screen active" id="app-home">
-  <div class="debrief-screen">
-
-    <!-- PHASE 1: CELEBRATE -->
-    <div class="debrief-phase active" id="debrief-p1">
-      <div style="text-align:center;margin-bottom:16px;">
-        <div class="celeb-ring-d">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M5 15l7 7L25 8" stroke="#F5C518" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Session Complete!</div>
-        <div style="font-size:22px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:8px;">You crushed it,<br><span id="debrief-name" style="color:#F5C518;">Nurse</span>! 🔥</div>
-        <div id="db-grade" style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:rgba(74,222,128,0.08);border:1.5px solid rgba(74,222,128,0.2);color:#4ade80;font-size:12px;font-weight:800;margin-bottom:16px;">⚡ Grade A · Distinction</div>
-      </div>
-
-      <div style="text-align:center;margin-bottom:16px;">
-        <div style="font-size:38px;font-weight:900;color:#F5C518;" id="debrief-xp">+85 XP</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:2px;margin-bottom:16px;">earned this session</div>
-      </div>
-
-      <div class="db-stat-row">
-        <div class="db-stat"><div class="db-stat-n" id="db-correct">3/3</div><div class="db-stat-l">Correct</div></div>
-        <div class="db-stat"><div class="db-stat-n" id="db-accuracy">100%</div><div class="db-stat-l">Accuracy</div></div>
-        <div class="db-stat"><div class="db-stat-n">🔥<span id="db-streak">1</span></div><div class="db-stat-l">Streak</div></div>
-      </div>
-
-      <div class="db-section-lbl">SNL Method Performance</div>
-      <div class="db-card">
-        <div class="cccc-item-d"><div class="cccc-name-d">Core Problem</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-green" style="--w:100%;--d:0.5s;width:100%;"></div></div><div class="cccc-pct-d" style="color:#4ade80;">100%</div></div>
-        <div class="cccc-item-d"><div class="cccc-name-d">Complication</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-green" style="--w:100%;--d:0.65s;width:100%;"></div></div><div class="cccc-pct-d" style="color:#4ade80;">100%</div></div>
-        <div class="cccc-item-d"><div class="cccc-name-d">Connection</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-yellow" style="--w:67%;--d:0.8s;width:67%;"></div></div><div class="cccc-pct-d" style="color:#F5C518;">67%</div></div>
-        <div class="cccc-item-d"><div class="cccc-name-d">Confirmation</div><div class="cccc-track-d"><div class="cccc-fill-d cccc-yellow" style="--w:67%;--d:0.95s;width:67%;"></div></div><div class="cccc-pct-d" style="color:#F5C518;">67%</div></div>
-      </div>
-
-      <div class="db-section-lbl">Clinical Lens Breakdown</div>
-      <div class="lens-grid-d" style="margin-bottom:14px;">
-        <div class="lens-pill-d"><div class="lens-pill-name-d">Assessment vs Intervention</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:100%;"></div></div><div class="lens-pill-pct-d">100%</div></div>
-        <div class="lens-pill-d"><div class="lens-pill-name-d">Stable vs Unstable</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:100%;"></div></div><div class="lens-pill-pct-d">100%</div></div>
-        <div class="lens-pill-d"><div class="lens-pill-name-d">ABCs</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:67%;"></div></div><div class="lens-pill-pct-d">67%</div></div>
-        <div class="lens-pill-d"><div class="lens-pill-name-d">Maslow's</div><div class="lens-pill-bar-d"><div class="lens-pill-fill-d" style="width:50%;"></div></div><div class="lens-pill-pct-d">50%</div></div>
-      </div>
-
-      <button class="btn-gold" onclick="goDebriefPhase2()">See My Coaching Debrief →</button>
-    </div>
-
-    <!-- PHASE 2: COACH + HOOK -->
-    <div class="debrief-phase" id="debrief-p2">
-      <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">Your Debrief</div>
-
-      <div class="coach-card-d">
-        <div class="coach-hdr-d"><div class="coach-dot-d"></div>Coach's Assessment</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.65;">You're strong on <span style="color:#F5C518;font-weight:700;">Core Problem</span> and <span style="color:#F5C518;font-weight:700;">Complication</span>. Your gap is <span style="color:#F5C518;font-weight:700;">Connection and Confirmation</span> — linking the intervention to the outcome. That's exactly where NCLEX tests hardest. Tomorrow we target that gap.</div>
-      </div>
-
-      <div class="tomorrow-card-d">
-        <div style="font-size:9px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Tomorrow's Session</div>
-        <div class="tomorrow-row-d"><div class="t-icon-d">🫀</div><div><div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;">Heart Failure — Fluid Management</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">15 cards · Connection + Confirmation focus</div></div></div>
-        <div class="tomorrow-row-d"><div class="t-icon-d">💊</div><div><div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;">Cardiac Pharmacology</div><div style="font-size:10px;color:rgba(255,255,255,0.35);">10 cards · SNL Method deep dive</div></div></div>
-      </div>
-
-      <div class="streak-bar-d">
-        <span style="font-size:20px;">🔥</span>
-        <div style="font-size:11px;color:rgba(255,255,255,0.55);line-height:1.5;">You're on a <span style="font-weight:800;color:#f97316;" id="db-streak-msg">1-day streak</span>. Come back tomorrow to keep it alive — you're in the top 15% of all PassLounge students.</div>
-      </div>
-
-      <div class="cliff-d">
-        <div class="cliff-tag-d">Tomorrow's Pearl</div>
-        "Tomorrow's pearl covers the one cardiac intervention most nurses get wrong on NCLEX — even after studying. You'll know it first."
-      </div>
-
-      <div class="db-section-lbl">Share Your Win</div>
-      <div class="social-row-d">
-        <div class="social-btn-d">📱 TikTok</div>
-        <div class="social-btn-d">⚔️ Challenge</div>
-        <div class="social-btn-d">🏆 Victory Wall</div>
-      </div>
-
-      <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:8px;font-weight:600;">One more round?</div>
-      <button class="btn-onemore-d" onclick="switchTab('study')">⚡ 5 Bonus Cards &nbsp;<span class="xp-2x-d">2x XP</span></button>
-      <button class="btn-gold" onclick="switchTab('study')">Back To Study</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- STUDY -->
-<div class="app-screen" id="app-study">
-  <div class="placeholder-screen">
-    <div class="placeholder-icon">⚡</div>
-    <div class="placeholder-title">Study Mode</div>
-    <div class="placeholder-sub">Your adaptive study plan,<br>Sharpen Mode and card library<br>are being built here.</div>
-    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
-  </div>
-</div>
-
-<!-- COMPETE -->
-<div class="app-screen" id="app-compete">
-  <div class="placeholder-screen">
-    <div class="placeholder-icon">⚔️</div>
-    <div class="placeholder-title">Compete</div>
-    <div class="placeholder-sub">PvP Duels, Weekly Tournaments<br>and Leaderboard are<br>being built here.</div>
-    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
-  </div>
-</div>
-
-<!-- LOUNGE -->
-<div class="app-screen" id="app-lounge">
-  <div class="placeholder-screen">
-    <div class="placeholder-icon">💜</div>
-    <div class="placeholder-title">The Lounge</div>
-    <div class="placeholder-sub">Victory Wall, Study Squads<br>and TikTok share are<br>being built here.</div>
-    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
-  </div>
-</div>
-
-<!-- PROFILE -->
-<div class="app-screen" id="app-profile">
-  <div class="placeholder-screen">
-    <div class="placeholder-icon">👤</div>
-    <div class="placeholder-title">Profile</div>
-    <div class="placeholder-sub">Your avatar, XP, badges,<br>weakness map and subscription<br>are being built here.</div>
-    <button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('home')">Back To Home</button>
-  </div>
-</div>
-
 </body>
 </html>
