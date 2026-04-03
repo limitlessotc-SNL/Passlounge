@@ -195,6 +195,68 @@ input[type="date"]{color-scheme:dark;}
 .review-card-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
 .review-card-sub{font-size:11px;color:rgba(255,255,255,0.35);}
 .review-btn{font-size:10px;font-weight:700;color:#F5C518;background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.25);padding:4px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0;cursor:pointer;}
+
+
+/* DEV SKIP */
+.dev-btn{position:fixed;bottom:12px;right:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:rgba(255,255,255,0.25);font-size:10px;font-weight:700;padding:5px 10px;cursor:pointer;font-family:'Outfit',sans-serif;z-index:999;letter-spacing:1px;}
+.dev-btn:active{background:rgba(255,255,255,0.12);}
+/* BACK ARROW */
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:rgba(255,255,255,0.4);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:20px;}
+.back-btn:active{opacity:0.6;}
+/* EXIT BUTTON */
+.exit-btn{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;}
+/* EXIT MODAL */
+.exit-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;}
+.exit-modal-overlay.visible{display:flex;}
+.exit-modal{background:#031428;border:1.5px solid rgba(245,197,24,0.2);border-radius:20px;padding:24px;width:calc(100% - 48px);max-width:320px;text-align:center;}
+.exit-modal-title{font-size:18px;font-weight:900;color:#fff;margin-bottom:8px;}
+.exit-modal-sub{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:20px;}
+.exit-modal-btns{display:flex;gap:10px;}
+.exit-modal-cancel{flex:1;padding:13px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;font-size:14px;font-weight:700;color:rgba(255,255,255,0.6);cursor:pointer;font-family:'Outfit',sans-serif;}
+.exit-modal-confirm{flex:1;padding:13px;background:linear-gradient(135deg,#F5C518,#e6b800);border:none;border-radius:14px;font-size:14px;font-weight:800;color:#053571;cursor:pointer;font-family:'Outfit',sans-serif;}
+/* DASHBOARD */
+.dash-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.dash-greeting{font-size:16px;font-weight:900;color:#fff;}
+.dash-greeting span{color:#F5C518;}
+.streak-pill{display:flex;align-items:center;gap:4px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#f97316;}
+.cat-score-card{background:linear-gradient(135deg,rgba(5,53,113,0.6),rgba(5,53,113,0.3));border:1.5px solid rgba(245,197,24,0.2);border-radius:16px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden;}
+.cat-score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#053571,#F5C518);}
+.cat-score-label{font-size:9px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.cat-score-row{display:flex;align-items:flex-end;gap:10px;margin-bottom:12px;}
+.cat-score-number{font-size:38px;font-weight:900;color:#F5C518;line-height:1;}
+.cat-score-desc{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.5;}
+.cat-score-desc strong{color:#fff;display:block;font-size:13px;margin-bottom:2px;}
+.cat-prog-track{width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:visible;margin-bottom:5px;position:relative;}
+.cat-prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#053571,#F5C518);transition:width 1s ease;}
+.cat-prog-marker{position:absolute;top:-4px;width:2px;height:16px;background:#f87171;border-radius:1px;}
+.cat-prog-labels{display:flex;justify-content:space-between;font-size:8px;color:rgba(255,255,255,0.3);}
+.cat-prog-labels .pass-lbl{color:#f87171;font-weight:700;}
+.dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.dash-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:10px 12px;}
+.dash-stat-val{font-size:20px;font-weight:900;color:#F5C518;margin-bottom:2px;}
+.dash-stat-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;}
+.dash-section-lbl{font-size:9px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.dash-section-lbl::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07);}
+.sw-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:12px;margin-bottom:12px;}
+.sw-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.sw-row:last-child{margin-bottom:0;}
+.sw-name{font-size:10px;color:rgba(255,255,255,0.5);width:76px;flex-shrink:0;}
+.sw-bar{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+.sw-fill{height:100%;border-radius:3px;}
+.sw-pct{font-size:9px;font-weight:700;width:28px;text-align:right;flex-shrink:0;}
+.focus-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:12px;margin-bottom:12px;}
+.focus-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.focus-row:last-child{margin-bottom:0;}
+.focus-icon{width:30px;height:30px;border-radius:8px;background:rgba(5,53,113,0.5);border:1px solid rgba(5,53,113,0.8);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.focus-title{font-size:12px;font-weight:700;color:#fff;}
+.focus-sub{font-size:10px;color:rgba(255,255,255,0.35);}
+.priority-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:auto;flex-shrink:0;}
+.pr-red{background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
+.pr-yellow{background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.2);color:#F5C518;}
+.pr-green{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);color:#4ade80;}
+.diag-review-btn{width:100%;padding:11px;background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;margin-bottom:10px;}
+.dash-start-btn{width:100%;padding:15px;background:linear-gradient(135deg,#F5C518,#e6b800);color:#053571;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;position:relative;overflow:hidden;animation:btnPulse 2.5s ease-in-out infinite;margin-bottom:10px;}
+.dash-start-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2.5s ease-in-out infinite;}
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;max-width:420px;margin:0 auto;background:rgba(2,13,31,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);display:none;justify-content:space-around;align-items:center;padding:10px 8px 20px;z-index:100;}
 .bottom-nav.visible{display:flex;}
@@ -206,8 +268,8 @@ input[type="date"]{color-scheme:dark;}
 .nav-tab:not(.active) .nav-tab-label{color:rgba(255,255,255,0.25);}
 .nav-tab:not(.active) .nav-tab-icon{opacity:0.25;}
 /* APP SCREENS */
-.app-screen{display:none;min-height:100vh;flex-direction:column;padding-bottom:80px;}
-.app-screen.active{display:flex;}
+.app-screen{display:none;flex-direction:column;}
+.app-screen.active{display:block;position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:linear-gradient(135deg,#020b18 0%,#031428 50%,#020b18 100%);z-index:50;}
 .placeholder-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;padding:40px 28px;}
 .placeholder-icon{font-size:56px;margin-bottom:16px;}
 .placeholder-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:8px;}
@@ -250,6 +312,7 @@ input[type="date"]{color-scheme:dark;}
       <div class="progress-meta"><span>Step 1 Of 5</span><span>20%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
     </div>
+    <button class="back-btn" onclick="goTo('s-welcome')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
     <div class="step-pill">Step 1 Of 5</div>
     <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(5,53,113,0.8),rgba(10,77,153,0.6));border:1.5px solid rgba(245,197,24,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:logoPulse 3s ease-in-out infinite;">
       <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="5" stroke="#F5C518" stroke-width="1.8"/><path d="M4 23c0-5 4-8 9-8s9 3 9 8" stroke="#F5C518" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -276,6 +339,7 @@ input[type="date"]{color-scheme:dark;}
       <div class="progress-meta"><span>Step 2 Of 5</span><span>40%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
     </div>
+    <button class="back-btn" onclick="goTo('s-nickname')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
     <div class="step-pill">Step 2 Of 5</div>
     <div class="screen-title">Is This Your<br>First Time At<br>The NCLEX?</div>
     <div class="screen-sub">This shapes your entire experience, <span id="tester-name" style="color:#F5C518;font-weight:700;">Nurse</span>.</div>
@@ -298,6 +362,7 @@ input[type="date"]{color-scheme:dark;}
       <div class="progress-meta"><span>Step 3 Of 5</span><span>60%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
     </div>
+    <button class="back-btn" onclick="goTo('s-tester')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
     <div class="step-pill">Step 3 Of 5</div>
     <div class="screen-title">How Are You<br>Feeling About<br>The NCLEX?</div>
     <div class="screen-sub">Your answer helps us coach you properly.</div>
@@ -316,6 +381,7 @@ input[type="date"]{color-scheme:dark;}
       <div class="progress-meta"><span>Step 4 Of 5</span><span>80%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
     </div>
+    <button class="back-btn" onclick="goTo('s-confidence')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
     <div class="step-pill">Step 4 Of 5</div>
     <div class="screen-title">When's Test<br>Day, <span id="testdate-name" style="color:#F5C518;">Nurse</span>?</div>
     <div class="screen-sub">Enter your date — we activate your countdown clock immediately.</div>
@@ -333,6 +399,7 @@ input[type="date"]{color-scheme:dark;}
       <div class="progress-meta"><span>Step 5 Of 5</span><span>90%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
     </div>
+    <button class="back-btn" onclick="goTo('s-testdate')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
     <div class="step-pill">Step 5 Of 5</div>
     <div class="screen-title">How Much Can<br>You Commit Daily?</div>
     <div class="screen-sub">Nurses are busy. Consistency beats intensity every time.</div>
@@ -430,6 +497,12 @@ input[type="date"]{color-scheme:dark;}
 <div class="screen" id="s-cards">
   <div class="content card-screen scrollable" id="card-main">
     <div id="card-state-q">
+      <div style="position:relative;">
+  <button class="exit-btn" onclick="showExitModal()" title="Exit session">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+</div>
+
       <div class="card-hdr">
         <div style="display:flex;gap:6px;"><span class="tag tag-cat" id="c-cat">Cardiac</span><span class="tag tag-bloom" id="c-bloom">Apply</span></div>
         <span class="xp-tag" id="c-xp">+20 XP</span>
@@ -487,6 +560,7 @@ input[type="date"]{color-scheme:dark;}
 </div>
 
 </div><!-- end app-shell -->
+<button class="dev-btn" id="dev-btn" onclick="devSkip()">DEV</button>
 
 <!-- SNL REVIEW SCREEN (outside app-shell) -->
 <div class="screen" id="s-review">
@@ -532,6 +606,7 @@ input[type="date"]{color-scheme:dark;}
       <div id="dr-missed-list" style="margin-bottom:16px;"></div>
     </div>
     <button class="btn-gold" onclick="showPlanReady()">Start My Study Plan 🚀</button>
+    <button class="btn-ghost" onclick="goToLounge()" style="margin-top:0;">Go To Dashboard</button>
     <div id="dr-review-btn-wrap"><button class="btn-ghost" onclick="document.getElementById('dr-review-section').scrollIntoView({behavior:'smooth'})">Review Missed Cards With SNL Method</button></div>
   </div>
 </div>
@@ -551,6 +626,19 @@ input[type="date"]{color-scheme:dark;}
   </div>
 </div>
 
+
+<!-- EXIT MODAL -->
+<div class="exit-modal-overlay" id="exit-modal">
+  <div class="exit-modal">
+    <div class="exit-modal-title">Exit Session?</div>
+    <div class="exit-modal-sub">Your answers so far have been saved. You can review them anytime from your dashboard.</div>
+    <div class="exit-modal-btns">
+      <button class="exit-modal-cancel" onclick="hideExitModal()">Keep Going</button>
+      <button class="exit-modal-confirm" onclick="exitSession()">Exit</button>
+    </div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav">
   <button class="nav-tab" id="tab-home" onclick="switchTab('home')"><span class="nav-tab-icon">🏠</span><span class="nav-tab-label">Home</span></button>
@@ -561,7 +649,61 @@ input[type="date"]{color-scheme:dark;}
 </div>
 
 <!-- APP SCREENS -->
-<div class="app-screen" id="app-home"><div class="placeholder-screen"><div class="placeholder-icon">🏠</div><div class="placeholder-title">Home Dashboard</div><div class="placeholder-sub">Your daily plan, streak and countdown<br>are being built here.</div><button class="btn-gold" style="margin-top:24px;width:auto;padding:14px 28px;" onclick="switchTab('study')">Study Now ⚡</button></div></div>
+<div class="app-screen" id="app-home">
+  <div class="content scrollable" style="padding-top:20px;padding-bottom:100px;">
+
+    <!-- TOP BAR -->
+    <div class="dash-top">
+      <div class="dash-greeting">Hey, <span id="dash-name">Nurse</span> 👋</div>
+      <div class="streak-pill">🔥 <span id="dash-streak">1</span> day streak</div>
+    </div>
+
+    <!-- CAT SCORE -->
+    <div class="cat-score-card">
+      <div class="cat-score-label">Your CAT Score</div>
+      <div class="cat-score-row">
+        <div class="cat-score-number" id="dash-cat">—</div>
+        <div class="cat-score-desc"><strong id="dash-cat-label">Complete your diagnostic</strong><span id="dash-cat-sub">to see your score</span></div>
+      </div>
+      <div class="cat-prog-track">
+        <div class="cat-prog-fill" id="dash-cat-fill" style="width:0%;"></div>
+        <div class="cat-prog-marker" style="left:60%;"></div>
+      </div>
+      <div class="cat-prog-labels">
+        <span>Level 1</span>
+        <span class="pass-lbl">← Passing Line (Level 3)</span>
+        <span>Level 5</span>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="dash-stat-val" id="dash-cards-studied">0</div><div class="dash-stat-lbl">Cards Studied</div></div>
+      <div class="dash-stat"><div class="dash-stat-val" id="dash-accuracy">—</div><div class="dash-stat-lbl">Avg Accuracy</div></div>
+      <div class="dash-stat"><div class="dash-stat-val" id="dash-xp-total">50</div><div class="dash-stat-lbl">XP Earned</div></div>
+      <div class="dash-stat"><div class="dash-stat-val" id="dash-sessions">0</div><div class="dash-stat-lbl">Sessions Done</div></div>
+    </div>
+
+    <!-- STRENGTHS & WEAKNESSES -->
+    <div class="dash-section-lbl">Strengths & Weaknesses</div>
+    <div class="sw-card" id="dash-sw-card">
+      <div style="font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:8px 0;">Complete your diagnostic to see your breakdown.</div>
+    </div>
+
+    <!-- TODAY'S FOCUS -->
+    <div class="dash-section-lbl">Today's Focus</div>
+    <div class="focus-card" id="dash-focus-card">
+      <div style="font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:8px 0;">Complete your diagnostic to see recommendations.</div>
+    </div>
+
+    <!-- VIEW DIAGNOSTIC RESULTS -->
+    <button class="diag-review-btn" id="dash-diag-btn" onclick="showDiagResultsFromDash()" style="display:none;">📋 View My Diagnostic Results</button>
+
+    <!-- START SESSION -->
+    <button class="dash-start-btn" onclick="startWeightedSession()">Start Today's Session ⚡</button>
+
+  </div>
+</div>
 <div class="app-screen" id="app-study">
   <div class="content" style="padding-top:28px;">
     <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;">Study Session</div>
@@ -595,7 +737,7 @@ var currentShuffled=null;
 var sessionAnswers=[]; // stores which option index student picked
 var sessionShuffles=[]; // stores shuffle for each card so review matches
 
-var CARDS=[
+var DIAGNOSTIC_CARDS=[
   {cat:'Cardiac',bloom:'Apply',xp:20,title:'MI — Priority Intervention',type:'Multiple Choice · Cardiac',
    scenario:'A patient arrives by ambulance with crushing chest pain 9/10 radiating to the left arm and jaw. Diaphoresis noted. EKG shows ST elevation in leads II, III, aVF.',
    question:'Which nursing intervention is the PRIORITY for this patient?',
@@ -731,6 +873,155 @@ var CARDS=[
    lens:'Stable vs Unstable',pearl:'Alcohol withdrawal peaks 24-72 hours. Seizures kill. Benzos first. Know the timeline. Remember:',
    mnemonic:[['6-12hrs','Tremors and anxiety'],['24-48hrs','Seizure peak risk'],['48-72hrs','Delirium tremens possible']]}
 ];
+var STUDY_CARDS=[
+  {cat:'Cardiac',bloom:'Apply',xp:20,title:'Pericarditis — Priority Finding',type:'Multiple Choice · Cardiac',
+   scenario:'A patient presents with sharp chest pain that worsens when lying flat and improves when leaning forward. A friction rub is heard on auscultation.',
+   question:'Which position should the nurse help the patient assume for COMFORT?',
+   opts:['A. Supine with legs elevated','B. Sitting upright leaning forward','C. Left lateral recumbent','D. High Fowler with arms at sides'],
+   correct:1,
+   layers:['Pericarditis is inflammation of the pericardial sac surrounding the heart — fluid accumulation creates pressure','When supine the inflamed pericardium presses against surrounding structures — pain intensifies','Leaning forward shifts the heart away from the inflamed pericardium — dramatically reduces friction and pain','Classic pericarditis posture: sitting up and leaning over a bedside table — pain relief confirms the diagnosis'],
+   lens:'Assessment vs Intervention',pearl:'Pericarditis pain worsens lying flat, improves leaning forward. Friction rub on auscultation is the hallmark. Remember:',
+   mnemonic:[['P','Pericarditis = positional pain'],['F','Forward lean = relief'],['R','Rub = classic finding']]},
+
+  {cat:'Cardiac',bloom:'Analyze',xp:25,title:'Atrial Fibrillation — Priority Risk',type:'Multiple Choice · Cardiac',
+   scenario:'A patient is admitted with new-onset atrial fibrillation. Rate is 112 bpm and irregular. The provider is notified.',
+   question:'Which complication is the PRIORITY concern with atrial fibrillation?',
+   opts:['A. Hypertensive crisis from increased rate','B. Stroke from clot formation in the atria','C. Ventricular fibrillation converting from AFib','D. Pulmonary edema from decreased cardiac output'],
+   correct:1,
+   layers:['In atrial fibrillation the atria quiver instead of contracting — blood pools and stagnates in the atrial appendage','Pooled blood forms clots — these can travel to the brain causing embolic stroke','Stroke is the number one life-threatening complication of AFib — anticoagulation is initiated to prevent it','Rate control, rhythm control, and anticoagulation are the three pillars of AFib management'],
+   lens:'Safety & Delegation',pearl:'AFib = pooled blood = clots = stroke risk. Anticoagulation is the priority intervention. Remember:',
+   mnemonic:[['A','AFib = atria not contracting'],['C','Clots form in left atrium'],['S','Stroke is the danger']]},
+
+  {cat:'Pharmacology',bloom:'Apply',xp:20,title:'Beta Blockers — Contraindication',type:'Multiple Choice · Pharmacology',
+   scenario:'A provider orders Metoprolol 25mg PO for a patient with hypertension. The nurse reviews the chart and notes the patient has a history of acute bronchospasm.',
+   question:'Which action should the nurse take FIRST?',
+   opts:['A. Administer as ordered — the dose is low','B. Hold the medication and notify the provider','C. Administer with a bronchodilator to prevent spasm','D. Crush and mix with food to reduce side effects'],
+   correct:1,
+   layers:['Beta blockers work by blocking beta-1 receptors in the heart to slow rate and reduce blood pressure','Beta-1 selective blockers can also affect beta-2 receptors in the lungs — causing bronchoconstriction','In patients with asthma or bronchospasm history beta blockers can trigger life-threatening bronchospasm','The nurse must hold and notify — this is a contraindication that requires provider awareness before administration'],
+   lens:'Safety & Delegation',pearl:'Beta blockers are contraindicated in bronchospasm and asthma. Hold and call. Never administer blind. Remember:',
+   mnemonic:[['B','Beta blockers block bronchodilation'],['A','Asthma = absolute contraindication'],['H','Hold and notify provider']]},
+
+  {cat:'Pharmacology',bloom:'Evaluate',xp:30,title:'Heparin — Therapeutic Monitoring',type:'Multiple Choice · Pharmacology',
+   scenario:'A patient is on a continuous heparin infusion for DVT. The nurse reviews the latest aPTT result which is 142 seconds.',
+   question:'Which action is CORRECT based on this result?',
+   opts:['A. Therapeutic — no change needed','B. Hold infusion and notify provider — level is too high','C. Increase infusion rate — level is subtherapeutic','D. Switch to oral anticoagulation immediately'],
+   correct:1,
+   layers:['Heparin prevents clot extension by enhancing antithrombin III activity — aPTT monitors its effect','Therapeutic aPTT range is 60-100 seconds (1.5-2.5 times the normal of 30-40 seconds)','An aPTT of 142 seconds is supratherapeutic — significantly above the therapeutic range','Holding the infusion and notifying the provider prevents serious bleeding complications'],
+   lens:'Safety & Delegation',pearl:'Heparin therapeutic aPTT is 60-100 seconds. Above 100 = hold and call. Below 60 = subtherapeutic. Remember:',
+   mnemonic:[['T','Therapeutic = 60-100 seconds'],['H','High = hold and notify'],['L','Low = increase rate per protocol']]},
+
+  {cat:'Respiratory',bloom:'Apply',xp:20,title:'Chest Tube — Priority Assessment',type:'Multiple Choice · Respiratory',
+   scenario:'A patient has a chest tube in place after hemothorax. The nurse notes the water seal chamber is no longer fluctuating (tidaling) with respirations.',
+   question:'Which is the MOST likely explanation?',
+   opts:['A. The lung has fully re-expanded — expected finding','B. The chest tube is kinked or obstructed','C. The suction is set too high','D. The drainage system needs to be replaced'],
+   correct:0,
+   layers:['Tidaling in the water seal chamber reflects pressure changes during breathing — it indicates the tube is patent and the lung is not fully expanded','When the lung fully re-expands it fills the pleural space — there is no longer negative pressure fluctuation','Absence of tidaling in a patient who is clinically improving = lung re-expansion — this is a positive sign','If the patient is deteriorating and tidaling stops = obstruction — clinical context determines the interpretation'],
+   lens:'Assessment vs Intervention',pearl:'No tidaling = lung re-expanded OR tube obstructed. Clinical status tells you which. Improving = good. Deteriorating = problem. Remember:',
+   mnemonic:[['T','Tidaling stops = two possibilities'],['R','Re-expanded = positive'],['O','Obstructed = problem']]},
+
+  {cat:'Respiratory',bloom:'Evaluate',xp:30,title:'Pulmonary Embolism — Priority Action',type:'Multiple Choice · Respiratory',
+   scenario:'A patient 2 days post total hip replacement suddenly develops sharp pleuritic chest pain, dyspnea, tachycardia at 118, and O2 sat drops to 88%.',
+   question:'Which action is the IMMEDIATE priority?',
+   opts:['A. Obtain a STAT CT pulmonary angiogram','B. Administer supplemental oxygen and notify the provider immediately','C. Reposition the patient and encourage deep breathing','D. Draw a D-dimer level and await results'],
+   correct:1,
+   layers:['Post-surgical immobility creates the perfect conditions for DVT — a clot can dislodge and travel to the pulmonary vasculature','Sudden pleuritic chest pain + dyspnea + tachycardia + hypoxia after hip surgery = pulmonary embolism until proven otherwise','Oxygen immediately addresses the life-threatening hypoxia — provider notification activates the emergency response','CT pulmonary angiogram confirms PE but oxygen comes first — you treat the hypoxia while preparing for diagnostics'],
+   lens:'ABCs',pearl:'Post-surgical sudden hypoxia + pleuritic pain + tachycardia = PE. Oxygen first. Call immediately. Remember:',
+   mnemonic:[['O','Oxygen first'],['N','Notify immediately'],['C','CT confirms it']]},
+
+  {cat:'OB/Maternity',bloom:'Apply',xp:20,title:'Fetal Heart Rate — Late Decelerations',type:'Multiple Choice · OB/Maternity',
+   scenario:'During labor monitoring the nurse notes a pattern of fetal heart rate decelerations that begin after the peak of contractions and return to baseline after the contraction ends.',
+   question:'Which type of deceleration is this and what does it indicate?',
+   opts:['A. Early decelerations — head compression — reassuring','B. Variable decelerations — cord compression — may be benign','C. Late decelerations — uteroplacental insufficiency — non-reassuring','D. Prolonged deceleration — requires position change only'],
+   correct:2,
+   layers:['Fetal heart rate decelerations are classified by their timing relative to uterine contractions','Late decelerations begin after the peak of contractions — reflecting delayed response to decreased placental blood flow','Uteroplacental insufficiency means the placenta cannot deliver adequate oxygen during contractions — fetal hypoxia results','Late decelerations are ALWAYS non-reassuring — notify the provider and initiate interventions immediately'],
+   lens:'Stable vs Unstable',pearl:'Late decelerations = uteroplacental insufficiency = fetal hypoxia. Always non-reassuring. Act immediately. Remember:',
+   mnemonic:[['E','Early = head compression = OK'],['V','Variable = cord compression = monitor'],['L','Late = placental problem = act NOW']]},
+
+  {cat:'Mental Health',bloom:'Apply',xp:20,title:'Suicide Risk — Priority Response',type:'Multiple Choice · Mental Health',
+   scenario:'A patient with depression tells the nurse: "I have been thinking that everyone would be better off without me. I have a plan."',
+   question:'Which nursing response is the PRIORITY?',
+   opts:['A. Notify the provider and stay with the patient','B. Document the statement and continue the assessment','C. Reassure the patient that things will improve','D. Ask the patient to sign a no-harm contract'],
+   correct:0,
+   layers:['The patient has expressed suicidal ideation AND has a plan — this is high acuity and represents immediate risk','Staying with the patient prevents an attempt — the nurse must never leave a patient with active suicidal ideation alone','Provider notification initiates psychiatric evaluation and safe environment protocols immediately','No-harm contracts are not evidence-based and do not prevent suicide — immediate safety measures are the priority'],
+   lens:'Safety & Delegation',pearl:'Suicidal plan = immediate risk. Stay with the patient. Notify now. Remove means. No-harm contracts do not work. Remember:',
+   mnemonic:[['S','Stay with the patient'],['N','Notify immediately'],['R','Remove all means'],['S','Safety is the only priority']]},
+
+  {cat:'Mental Health',bloom:'Analyze',xp:25,title:'Antipsychotics — Tardive Dyskinesia',type:'Multiple Choice · Mental Health',
+   scenario:'A patient who has been on haloperidol for 2 years develops involuntary repetitive movements of the tongue, lips, and face.',
+   question:'Which condition does this MOST indicate?',
+   opts:['A. Acute dystonia — administer Benadryl IM immediately','B. Tardive dyskinesia — notify the provider for medication review','C. Neuroleptic malignant syndrome — this is life-threatening','D. Akathisia — the patient needs a dose reduction'],
+   correct:1,
+   layers:['Long-term antipsychotic use blocks dopamine receptors — over time the receptors upregulate causing hypersensitivity','Tardive dyskinesia develops after months to years — involuntary repetitive movements of face, lips, tongue, and extremities','Unlike acute EPS which is reversible, tardive dyskinesia may be permanent — early recognition is critical','Provider notification is urgent — the medication may need to be reduced, changed, or valbenazine added'],
+   lens:'Assessment vs Intervention',pearl:'Tardive dyskinesia = long-term antipsychotics = involuntary face and tongue movements. May be permanent. Notify now. Remember:',
+   mnemonic:[['T','Tardive = late onset'],['D','Dyskinesia = involuntary movements'],['P','Permanent if not caught early']]},
+
+  {cat:'Renal / GU',bloom:'Apply',xp:20,title:'Foley Catheter — Preventing CAUTI',type:'Multiple Choice · Renal / GU',
+   scenario:'A nurse is caring for a patient with an indwelling urinary catheter. During morning care the nurse assesses the catheter system.',
+   question:'Which finding requires IMMEDIATE correction?',
+   opts:['A. Urine is dark yellow — patient needs more fluids','B. The drainage bag is resting on the floor','C. The tubing has a small dependent loop','D. Urine output is 45 mL for the past hour'],
+   correct:1,
+   layers:['CAUTIs are the most common hospital-acquired infection — catheter care bundles exist to prevent them','The drainage bag must always remain BELOW the level of the bladder — gravity dependent drainage prevents backflow','A bag on the floor allows backflow of contaminated urine into the bladder — introducing bacteria directly into the sterile urinary tract','Immediate correction: hang the bag on the bed frame below bladder level — never allow it to touch the floor'],
+   lens:'Safety & Delegation',pearl:'Drainage bag on the floor = backflow risk = CAUTI. Always below the bladder, never on the floor. Remember:',
+   mnemonic:[['B','Bag below the bladder always'],['N','Never on the floor'],['F','Backflow = infection']]},
+
+  {cat:'Infection Control',bloom:'Apply',xp:20,title:'Blood Transfusion Reaction',type:'Multiple Choice · Infection Control',
+   scenario:'15 minutes into a blood transfusion a patient develops fever, chills, back pain, and hematuria.',
+   question:'Which action is the PRIORITY?',
+   opts:['A. Slow the transfusion rate and administer diphenhydramine','B. Stop the transfusion immediately and maintain IV access with normal saline','C. Stop the transfusion and remove the IV catheter','D. Notify the provider before stopping the transfusion'],
+   correct:1,
+   layers:['Fever + chills + back pain + hematuria = hemolytic transfusion reaction — ABO incompatibility causing red blood cell destruction','This is a life-threatening emergency — continued transfusion causes massive hemolysis leading to renal failure and death','Stop the transfusion IMMEDIATELY — maintain IV access with normal saline to protect the kidneys and maintain hemodynamics','Never remove the IV — blood cultures need to be drawn and emergency medications may need to be administered'],
+   lens:'Safety & Delegation',pearl:'Hemolytic reaction: STOP the blood, keep the IV, hang normal saline, notify provider, send blood to lab. Remember:',
+   mnemonic:[['S','Stop transfusion immediately'],['S','Saline into the line'],['N','Notify provider'],['S','Send blood and urine to lab']]},
+
+  {cat:'Endocrine',bloom:'Apply',xp:20,title:'SIADH vs Diabetes Insipidus',type:'Multiple Choice · Endocrine',
+   scenario:'Two patients are admitted. Patient A: serum sodium 122, concentrated urine, weight gain, confusion. Patient B: serum sodium 158, dilute urine, extreme thirst, weight loss.',
+   question:'Which statement CORRECTLY distinguishes these two conditions?',
+   opts:['A. Both conditions cause hypernatremia and concentrated urine','B. SIADH causes fluid retention and low sodium — DI causes fluid loss and high sodium','C. DI causes fluid retention — SIADH causes fluid loss','D. Both are treated with fluid restriction'],
+   correct:1,
+   layers:['ADH controls water reabsorption in the kidneys — too much or too little creates opposite problems','SIADH = too much ADH = too much water retained = dilutional hyponatremia = concentrated urine + fluid overload','DI = too little ADH = water pours out = hypernatremia = extremely dilute urine + dehydration','Treatment opposites: SIADH = fluid restrict. DI = fluid replacement + vasopressin'],
+   lens:'Assessment vs Intervention',pearl:'SIADH = too much ADH = retain water = low sodium. DI = no ADH = lose water = high sodium. Total opposites. Remember:',
+   mnemonic:[['S','SIADH = Sodium low, fluid retained'],['D','DI = Dehydrated, sodium high'],['O','Opposite conditions, opposite treatment']]},
+
+  {cat:'GI / Nutrition',bloom:'Apply',xp:20,title:'Dumping Syndrome — Teaching',type:'Multiple Choice · GI / Nutrition',
+   scenario:'A patient post-gastrectomy reports dizziness, diaphoresis, and palpitations 15-20 minutes after eating. The nurse suspects dumping syndrome.',
+   question:'Which dietary instruction should the nurse provide?',
+   opts:['A. Eat large meals three times daily to reduce frequency of symptoms','B. Drink fluids freely with meals to aid digestion','C. Eat small frequent meals and avoid drinking fluids with meals','D. Increase simple carbohydrates to maintain blood sugar'],
+   correct:2,
+   layers:['Post-gastrectomy the pyloric sphincter is absent — food dumps rapidly into the small intestine without normal digestion','Rapid entry of hyperosmolar contents draws fluid into the intestine — reducing blood volume and causing vasomotor symptoms','Small frequent meals reduce the volume entering the intestine at once — limiting the osmotic shift and symptom severity','Fluids with meals accelerate gastric emptying — delaying fluids 30-45 minutes after eating reduces dumping'],
+   lens:'Assessment vs Intervention',pearl:'Dumping syndrome: small meals, no fluids with food, avoid simple carbs, lie down after eating. Remember:',
+   mnemonic:[['S','Small frequent meals'],['N','No fluids with meals'],['L','Lie down after eating']]},
+
+  {cat:'Neurology',bloom:'Apply',xp:20,title:'Glasgow Coma Scale',type:'Multiple Choice · Neurology',
+   scenario:'A nurse assesses a patient with a head injury. The patient opens eyes to voice, uses inappropriate words, and withdraws from pain.',
+   question:'What is this patient Glasgow Coma Scale score?',
+   opts:['A. GCS 9 — eyes 3, verbal 3, motor 4','B. GCS 10 — eyes 3, verbal 4, motor 3','C. GCS 7 — eyes 2, verbal 3, motor 2','D. GCS 11 — eyes 3, verbal 3, motor 5'],
+   correct:0,
+   layers:['The GCS measures level of consciousness across three domains: eye opening, verbal response, and motor response','Eye opening: spontaneous=4, to voice=3, to pain=2, none=1. Opens to voice = 3','Verbal: oriented=5, confused=4, inappropriate words=3, sounds=2, none=1. Inappropriate words = 3','Motor: obeys=6, localizes=5, withdraws=4, flexion=3, extension=2, none=1. Withdraws = 4. Total = 10... wait: 3+3+4=10'],
+   lens:'Assessment vs Intervention',pearl:'GCS: Eyes(4) + Verbal(5) + Motor(6) = 15 max. Below 8 = severe TBI = intubation consideration. Remember:',
+   mnemonic:[['E','Eyes max 4'],['V','Verbal max 5'],['M','Motor max 6'],['8','Below 8 = intubate']]},
+
+  {cat:'Cardiac',bloom:'Evaluate',xp:30,title:'Cardiac Tamponade — Recognition',type:'Multiple Choice · Cardiac',
+   scenario:'A post-cardiac surgery patient develops hypotension, muffled heart sounds, and JVD. BP is 78/60 and HR is 128.',
+   question:'Which condition does this triad INDICATE and what is the priority?',
+   opts:['A. Tension pneumothorax — needle decompression immediately','B. Cardiac tamponade — notify provider for emergency pericardiocentesis','C. Cardiogenic shock — initiate vasopressors immediately','D. Hypovolemic shock — aggressive IV fluid resuscitation'],
+   correct:1,
+   layers:['Post-cardiac surgery bleeding into the pericardial sac compresses the heart — preventing adequate filling','Beck Triad: hypotension + muffled heart sounds + JVD = cardiac tamponade — classic presentation','Compressed heart cannot fill properly — severely decreased cardiac output leads to cardiovascular collapse','Emergency pericardiocentesis (needle drainage of the pericardial sac) is the definitive treatment — notify provider stat'],
+   lens:'Stable vs Unstable',pearl:'Beck Triad = cardiac tamponade: hypotension + muffled sounds + JVD. Emergency pericardiocentesis needed. Remember:',
+   mnemonic:[['H','Hypotension'],['M','Muffled heart sounds'],['J','JVD'],['=','Tamponade']]},
+
+  {cat:'Mental Health',bloom:'Evaluate',xp:30,title:'Eating Disorders — Priority Concern',type:'Multiple Choice · Mental Health',
+   scenario:'A patient with anorexia nervosa is admitted for medical stabilization. Weight is 78 lbs at 5 foot 4 inches. Labs show K+ 2.8, sodium 132, and EKG shows QT prolongation.',
+   question:'Which lab finding is the PRIORITY concern?',
+   opts:['A. Sodium 132 — hyponatremia requires fluid correction','B. Weight loss — nutritional rehabilitation must begin immediately','C. Potassium 2.8 — hypokalemia with QT prolongation risks fatal dysrhythmia','D. QT prolongation alone — administer magnesium sulfate'],
+   correct:2,
+   layers:['Anorexia causes severe electrolyte imbalances from starvation and purging behaviors — potassium is critically depleted','Hypokalemia directly affects cardiac conduction — potassium is required for myocardial repolarization','K+ of 2.8 + QT prolongation = imminent risk of torsades de pointes and ventricular fibrillation — this is a cardiac emergency','IV potassium replacement with continuous cardiac monitoring is the immediate priority — this is a life-threatening emergency'],
+   lens:'Stable vs Unstable',pearl:'Eating disorders + low K+ + QT prolongation = cardiac emergency. Potassium replacement first. Remember:',
+   mnemonic:[['K','Potassium is the priority'],['Q','QT prolongation = dysrhythmia risk'],['T','Torsades = fatal if untreated']]}
+];
+
+var CARDS=DIAGNOSTIC_CARDS; // active card bank
+var diagnosticStore={completed:false,results:[],correct:0,total:0}; // permanent diagnostic save
+
 
 // PARTICLES
 (function(){
@@ -823,6 +1114,7 @@ function pickCommit(el,num){
 
 // DIAGNOSTIC
 function startDiagnostic(){
+  CARDS=DIAGNOSTIC_CARDS;
   sessionMode='test';
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
   document.getElementById('s-correct').textContent='0';
@@ -876,6 +1168,7 @@ function setStudyMode(mode){
   else{sc.classList.add('selected');tc.classList.remove('selected');sck.innerHTML=chkSvg;tck.innerHTML='';btn.textContent='Start Study Mode →';}
 }
 function startStudySession(){
+  CARDS=STUDY_CARDS;
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
@@ -1026,7 +1319,18 @@ function showResult(isCorrect,optIdx){
   rd.innerHTML=isCorrect
     ?'<div class="result-bar result-correct"><span style="font-size:18px;">⚡</span><span class="result-text-correct">Correct! +'+card.xp+' XP Earned</span></div>'
     :'<div class="result-bar result-wrong"><span style="font-size:18px;">📖</span><span class="result-text-wrong">Review — Correct: '+currentShuffled.opts[currentShuffled.correct]+'</span></div>';
-  document.getElementById('answer-recap').textContent=currentShuffled.opts[optIdx];
+  // Show scenario + question + student answer + correct answer
+  var studentAns=currentShuffled.opts[optIdx];
+  var correctAns=currentShuffled.opts[currentShuffled.correct];
+  var ansHtml=
+    '<div style="font-size:9px;color:#F5C518;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">📋 Scenario</div>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.55;margin-bottom:10px;">'+card.scenario+'</div>'+
+    '<div style="font-size:9px;color:#F5C518;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">Question</div>'+
+    '<div style="font-size:13px;color:#fff;font-weight:700;line-height:1.5;margin-bottom:10px;">'+card.question+'</div>'+
+    '<div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">Your Answer</div>'+
+    '<div style="padding:8px 12px;border-radius:10px;font-size:12px;font-weight:600;margin-bottom:'+(isCorrect?'0':'8px')+';border:1.5px solid '+(isCorrect?'rgba(74,222,128,0.4)':'rgba(248,113,113,0.4)')+';background:'+(isCorrect?'rgba(74,222,128,0.1)':'rgba(248,113,113,0.1)')+';color:'+(isCorrect?'#4ade80':'#f87171')+';">'+studentAns+'</div>'+
+    (!isCorrect?'<div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">Correct Answer</div><div style="padding:8px 12px;border-radius:10px;font-size:12px;font-weight:600;border:1.5px solid rgba(74,222,128,0.4);background:rgba(74,222,128,0.1);color:#4ade80;">'+correctAns+'</div>':'');
+  document.getElementById('answer-recap').innerHTML=ansHtml;
   document.getElementById('snl-section').style.display='block';
   document.getElementById('lc-1').textContent=card.layers[0];
   resetLayers();
@@ -1130,8 +1434,13 @@ function finishSession(){showSessionComplete();}
 
 // DIAGNOSTIC RESULTS
 function showDiagnosticResults(){
+  // Save diagnostic results permanently — survives all navigation
   var correct=parseInt(document.getElementById('s-correct').textContent)||0;
-  var total=CARDS.length;
+  var total=DIAGNOSTIC_CARDS.length;
+  diagnosticStore.completed=true;
+  diagnosticStore.correct=correct;
+  diagnosticStore.total=total;
+  diagnosticStore.results=sessionResults.slice(); // copy the array
   var pct=Math.round((correct/total)*100);
   var catLevel,gradeIcon,gradeText;
   if(pct>=90){catLevel='4.5';gradeIcon='🌟';gradeText='Excellent. You are operating well above the NCLEX passing line. Daily sessions will sharpen your edges.';}
@@ -1203,6 +1512,8 @@ function showReviewResult(idx, backFn){
 
   var pct=Math.round(((idx+1)/CARDS.length)*100);
   var studentPick=sessionAnswers[idx]; // which option index they chose
+  // Use permanent store for correct/wrong — not affected by review navigation
+  var wasCorrectStored=diagnosticStore.results[idx];
 
   // Populate the QUESTION view (card-state-q) with options highlighted
   document.getElementById('c-cat').textContent=card.cat;
@@ -1300,31 +1611,232 @@ function goToLounge(){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById('bottom-nav').classList.add('visible');
-  document.getElementById('app-home').classList.add('active');
+  var _ah=document.getElementById('app-home');_ah.classList.add('active');_ah.scrollTop=0;
   document.getElementById('tab-home').classList.add('active');
+  updateDashboard();
   window.scrollTo(0,0);
 }
 
 function showSessionComplete(){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');s.scrollTop=0;});
   document.getElementById('bottom-nav').classList.add('visible');
-  document.getElementById('app-home').classList.add('active');
+  var _ah3=document.getElementById('app-home');_ah3.classList.add('active');_ah3.scrollTop=0;
   document.getElementById('tab-home').classList.add('active');
   window.scrollTo(0,0);
 }
 
 function switchTab(tab){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){
+    s.classList.remove('active');
+    s.scrollTop=0; // reset inner scroll on every screen
+  });
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
   var sm={home:'app-home',study:'app-study',compete:'app-compete',lounge:'app-lounge',profile:'app-profile'};
   var tm={home:'tab-home',study:'tab-study',compete:'tab-compete',lounge:'tab-lounge',profile:'tab-profile'};
   var s=document.getElementById(sm[tab]);var t=document.getElementById(tm[tab]);
-  if(s) s.classList.add('active');
+  if(s){s.classList.add('active');s.scrollTop=0;}
   if(t) t.classList.add('active');
+  if(tab==='home'){var dn=document.getElementById('dash-name');if(dn&&nickname)dn.textContent='Nurse '+nickname;}
   window.scrollTo(0,0);
 }
+// EXIT MODAL
+function showExitModal(){
+  document.getElementById('exit-modal').classList.add('visible');
+}
+function hideExitModal(){
+  document.getElementById('exit-modal').classList.remove('visible');
+}
+function exitSession(){
+  hideExitModal();
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bottom-nav').classList.add('visible');
+  var _ah2=document.getElementById('app-home');_ah2.classList.add('active');_ah2.scrollTop=0;
+  document.getElementById('tab-home').classList.add('active');
+  // Restore CARDS to diagnostic bank in case we exited during review
+  CARDS=DIAGNOSTIC_CARDS;
+  // Update dashboard from permanent store — safe even if sessionResults was modified
+  updateDashboard();
+  window.scrollTo(0,0);
+}
+
+// UPDATE DASHBOARD with diagnostic results
+function updateDashboard(){
+  // Read from permanent store — not affected by navigation or review sessions
+  if(!diagnosticStore.completed) return;
+  var total=diagnosticStore.total;
+  var correct=diagnosticStore.correct;
+  var pct=total>0?Math.round((correct/total)*100):0;
+
+  // CAT level
+  var catLevel,catLabel,catSub;
+  if(pct>=90){catLevel='4.5';catLabel='Distinguished';catSub='Well above the passing line';}
+  else if(pct>=70){catLevel='3.5';catLabel='Proficient';catSub='Above the passing line';}
+  else if(pct>=50){catLevel='2.5';catLabel='Developing';catSub='Approaching the passing line';}
+  else{catLevel='1.5';catLabel='Foundational';catSub='Below the passing line';}
+
+  document.getElementById('dash-name').textContent='Nurse '+nickname;
+  var catNum=document.getElementById('dash-cat');
+  if(catNum) catNum.textContent=catLevel;
+  var catLbl=document.getElementById('dash-cat-label');
+  if(catLbl) catLbl.textContent=catLabel;
+  var catSb=document.getElementById('dash-cat-sub');
+  if(catSb) catSb.textContent=catSub;
+  // Progress bar width — level 1=10%, 2=30%, 3=60%(passing), 4=80%, 5=100%
+  var fillPct=parseFloat(catLevel)/5*100;
+  var fill=document.getElementById('dash-cat-fill');
+  if(fill) fill.style.width=fillPct+'%';
+
+  // Stats
+  var cs=document.getElementById('dash-cards-studied');if(cs)cs.textContent=total;
+  var acc=document.getElementById('dash-accuracy');if(acc)acc.textContent=pct+'%';
+  var xpEl=document.getElementById('dash-xp-total');if(xpEl)xpEl.textContent=(50+correct*20)+'';
+  var sess=document.getElementById('dash-sessions');if(sess)sess.textContent='1';
+
+  // Category breakdown
+  var cats={};
+  var catIcons={'Cardiac':'🫀','Pharmacology':'💊','Respiratory':'🫁','OB/Maternity':'🤱','Mental Health':'🧠'};
+  DIAGNOSTIC_CARDS.forEach(function(card,i){
+    if(!cats[card.cat]) cats[card.cat]={total:0,correct:0};
+    cats[card.cat].total++;
+    if(diagnosticStore.results[i]) cats[card.cat].correct++;
+  });
+  var swHtml='';
+  Object.keys(cats).sort(function(a,b){
+    return(cats[b].correct/cats[b].total)-(cats[a].correct/cats[a].total);
+  }).forEach(function(cat){
+    var d=cats[cat];
+    var p=Math.round((d.correct/d.total)*100);
+    var color=p>=80?'#4ade80':p>=50?'#F5C518':'#f87171';
+    swHtml+='<div class="sw-row"><div class="sw-name">'+(catIcons[cat]||'')+'&nbsp;'+cat+'</div>'+
+      '<div class="sw-bar"><div class="sw-fill" style="width:'+p+'%;background:'+color+';"></div></div>'+
+      '<div class="sw-pct" style="color:'+color+';">'+p+'%</div></div>';
+  });
+  var swCard=document.getElementById('dash-sw-card');
+  if(swCard) swCard.innerHTML=swHtml;
+
+  // Today's focus — top 2 weakest
+  var sortedCats=Object.keys(cats).sort(function(a,b){
+    return(cats[a].correct/cats[a].total)-(cats[b].correct/cats[b].total);
+  });
+  var focusHtml='';
+  sortedCats.slice(0,3).forEach(function(cat){
+    var d=cats[cat];
+    var p=Math.round((d.correct/d.total)*100);
+    var badge=p<50?'<div class="priority-badge pr-red">Priority</div>':
+              p<80?'<div class="priority-badge pr-yellow">Review</div>':
+                   '<div class="priority-badge pr-green">Maintain</div>';
+    focusHtml+='<div class="focus-row">'+
+      '<div class="focus-icon">'+(catIcons[cat]||'📋')+'</div>'+
+      '<div><div class="focus-title">'+cat+'</div>'+
+      '<div class="focus-sub">'+d.correct+'/'+d.total+' correct · Focus here</div></div>'+
+      badge+'</div>';
+  });
+  var focusCard=document.getElementById('dash-focus-card');
+  if(focusCard) focusCard.innerHTML=focusHtml;
+
+  // Show diagnostic review button
+  var diagBtn=document.getElementById('dash-diag-btn');
+  if(diagBtn) diagBtn.style.display='block';
+}
+
+function showDiagResultsFromDash(){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s-diag-results').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+
+function devSkip(){
+  // Pre-load mock data so full app is testable
+  nickname='Dev';
+  // Mock diagnostic results — mix of correct and wrong across all 5 categories
+  diagnosticStore.completed=true;
+  diagnosticStore.total=DIAGNOSTIC_CARDS.length;
+  diagnosticStore.correct=10;
+  diagnosticStore.results=DIAGNOSTIC_CARDS.map(function(c,i){
+    // Cardiac=all correct, Pharma=2/3, Respiratory=1/3, OB=2/3, Mental=2/3
+    var catResults={'Cardiac':[true,true,true],'Pharmacology':[true,true,false],'Respiratory':[true,false,false],'OB/Maternity':[true,true,false],'Mental Health':[true,true,false]};
+    var catCards=DIAGNOSTIC_CARDS.filter(function(c2){return c2.cat===c.cat;});
+    var posInCat=catCards.indexOf(c);
+    var res=catResults[c.cat];
+    return res&&res[posInCat]!==undefined?res[posInCat]:true;
+  });
+  // Set session answers for review testing
+  sessionAnswers=DIAGNOSTIC_CARDS.map(function(){return 0;});
+  sessionShuffles=DIAGNOSTIC_CARDS.map(function(c){return shuffleOpts(c);});
+  // Show app
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bottom-nav').classList.add('visible');
+  var _ahd=document.getElementById('app-home');_ahd.classList.add('active');_ahd.scrollTop=0;
+  document.getElementById('tab-home').classList.add('active');
+  document.getElementById('dash-name').textContent='Nurse Dev';
+  // Hide dev button once inside app
+  document.getElementById('dev-btn').style.display='none';
+  updateDashboard();
+  window.scrollTo(0,0);
+}
+
+function startWeightedSession(){
+  // Build weighted card array from diagnostic weakness map
+  if(!diagnosticStore.completed){
+    // No diagnostic yet — use all study cards
+    CARDS=STUDY_CARDS;
+    switchTab('study');
+    return;
+  }
+
+  // Calculate accuracy per category from diagnostic
+  var cats={};
+  DIAGNOSTIC_CARDS.forEach(function(card,i){
+    if(!cats[card.cat]) cats[card.cat]={total:0,correct:0};
+    cats[card.cat].total++;
+    if(diagnosticStore.results[i]) cats[card.cat].correct++;
+  });
+
+  // Sort categories weakest to strongest
+  var sorted=Object.keys(cats).sort(function(a,b){
+    return(cats[a].correct/cats[a].total)-(cats[b].correct/cats[b].total);
+  });
+
+  // Group study cards by category
+  var cardsByCat={};
+  STUDY_CARDS.forEach(function(card){
+    if(!cardsByCat[card.cat]) cardsByCat[card.cat]=[];
+    cardsByCat[card.cat].push(card);
+  });
+
+  // Build weighted pool: weakest=40%, 2nd=30%, 3rd=20%, rest=10%
+  var weights=[0.4,0.3,0.2,0.1];
+  var pool=[];
+  var totalCards=STUDY_CARDS.length;
+
+  sorted.forEach(function(cat,i){
+    var cards=cardsByCat[cat]||[];
+    if(cards.length===0) return;
+    var weight=weights[i]||0.1;
+    var count=Math.max(1,Math.round(totalCards*weight));
+    // Shuffle this category's cards and take up to count
+    var shuffled=cards.slice().sort(function(){return Math.random()-0.5;});
+    pool=pool.concat(shuffled.slice(0,Math.min(count,shuffled.length)));
+  });
+
+  // Deduplicate and shuffle the final pool
+  var seen={};
+  var unique=pool.filter(function(c){
+    if(seen[c.title]) return false;
+    seen[c.title]=true;return true;
+  });
+  CARDS=unique.sort(function(){return Math.random()-0.5;});
+
+  // Go to study tab for mode selection
+  switchTab('study');
+}
+
 </script>
 </body>
 </html>
