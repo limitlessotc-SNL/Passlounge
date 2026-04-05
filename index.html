@@ -311,6 +311,13 @@ input[type="date"]{color-scheme:dark;}
 .session-name-btns{display:flex;gap:8px;}
 .session-name-skip{flex:1;padding:11px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;font-size:12px;font-weight:700;color:rgba(255,255,255,0.35);cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;}
 .session-name-start{flex:2;padding:11px;background:linear-gradient(135deg,#F5C518,#e6b800);border:none;border-radius:12px;font-size:13px;font-weight:800;color:#053571;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;}
+
+.ans-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.strike-btn{width:28px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:11px;color:rgba(255,255,255,0.3);font-family:'Outfit',sans-serif;font-weight:700;}
+.strike-btn.struck{border-color:rgba(248,113,113,0.4);background:rgba(248,113,113,0.1);color:#f87171;}
+.ans-opt.struck{text-decoration:line-through;color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);}
+.ans-opt.selected-opt{border-color:#F5C518;background:rgba(245,197,24,0.1);color:#F5C518;}
+.submit-answer-btn{width:100%;padding:15px;background:linear-gradient(135deg,#F5C518,#e6b800);color:#053571;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;display:none;margin-top:4px;animation:btnPulse 2.5s ease-in-out infinite;}
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;box-sizing:border-box;background:rgba(2,13,31,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);display:none;justify-content:space-around;align-items:center;padding:10px 8px 20px;z-index:100;}
 .bottom-nav.visible{display:flex;}
@@ -550,6 +557,11 @@ input[type="date"]{color-scheme:dark;}
 <!-- SCREEN 10: CARDS -->
 <div class="screen" id="s-cards">
   <div class="content card-screen scrollable" id="card-main">
+    <div class="nav-row" style="margin-bottom:8px;">
+      <div class="nav-btn disabled" id="nav-prev" onclick="navCard(-1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="nav-center"><div class="nav-title-text" id="c-title" style="opacity:0;"></div></div>
+      <div class="nav-btn disabled" id="nav-next" onclick="navCard(1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
     <div id="card-state-q">
       <div style="position:relative;">
   <button class="exit-btn" onclick="showExitModal()" title="Exit session">
@@ -565,11 +577,6 @@ input[type="date"]{color-scheme:dark;}
         <div class="card-prog-meta"><span id="c-prog-count">Card 1 of 15</span><span id="c-prog-pct">7%</span></div>
         <div class="card-prog-bar"><div class="card-prog-fill" id="c-prog-fill" style="width:7%;"></div></div>
       </div>
-      <div class="nav-row">
-        <div class="nav-btn disabled" id="nav-prev" onclick="navCard(-1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="nav-center"><div class="nav-title-text" id="c-title" style="opacity:0;"></div></div>
-        <div class="nav-btn disabled" id="nav-next" onclick="navCard(1)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      </div>
       <div class="stats-row">
         <div class="stat-mini"><div class="stat-n" id="s-correct">0</div><div class="stat-l">Correct</div></div>
         <div class="stat-mini"><div class="stat-n" id="s-wrong">0</div><div class="stat-l">Review</div></div>
@@ -581,10 +588,11 @@ input[type="date"]{color-scheme:dark;}
         <div class="scenario-box"><div class="scenario-tag-label">📋 Scenario</div><div id="c-scenario"></div></div>
         <div class="q-text-main" id="c-question"></div>
       </div>
-      <button class="ans-opt" id="ao-a" onclick="answer(0)"></button>
-      <button class="ans-opt" id="ao-b" onclick="answer(1)"></button>
-      <button class="ans-opt" id="ao-c" onclick="answer(2)"></button>
-      <button class="ans-opt" id="ao-d" onclick="answer(3)"></button>
+      <div class="ans-row"><button class="strike-btn" id="sb-0" onclick="toggleStrike(0)">✕</button><button class="ans-opt" id="ao-a" onclick="selectAnswer(0)"></button></div>
+      <div class="ans-row"><button class="strike-btn" id="sb-1" onclick="toggleStrike(1)">✕</button><button class="ans-opt" id="ao-b" onclick="selectAnswer(1)"></button></div>
+      <div class="ans-row"><button class="strike-btn" id="sb-2" onclick="toggleStrike(2)">✕</button><button class="ans-opt" id="ao-c" onclick="selectAnswer(2)"></button></div>
+      <div class="ans-row"><button class="strike-btn" id="sb-3" onclick="toggleStrike(3)">✕</button><button class="ans-opt" id="ao-d" onclick="selectAnswer(3)"></button></div>
+      <button class="submit-answer-btn" id="submit-answer-btn" onclick="submitAnswer()">Submit Answer →</button>
     </div>
     <div id="card-state-r" style="display:none;">
       <div class="card-hdr">
@@ -1306,6 +1314,7 @@ function startDiagnostic(){
   CARDS=DIAGNOSTIC_CARDS;
   sessionMode='test';
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
+  cardShuffles={};cardAnswers={};revealedCards={};
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
   document.getElementById('s-xp').textContent='50';
@@ -1334,6 +1343,7 @@ function selectMode(mode){
 function startSession(){
   isDiagnosticSession=false;
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
+  cardShuffles={};cardAnswers={};revealedCards={};
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
   document.getElementById('s-xp').textContent='50';
@@ -1361,6 +1371,7 @@ function setStudyMode(mode){
 }
 function launchStudySession(){
   isDiagnosticSession=false;
+  reviewingFromProgress=false;
   sessionActive=true;
 
   // Build card pool based on selection
@@ -1392,6 +1403,7 @@ function launchStudySession(){
   CARDS=pool.slice(0,count);
 
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
+  cardShuffles={};cardAnswers={};revealedCards={};
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
   document.getElementById('s-xp').textContent='50';
@@ -1433,7 +1445,13 @@ function shuffleOpts(card){
 function loadCard(idx,dir){
   currentCardIdx=idx;currentLayer=1;
   var card=CARDS[idx];
-  currentShuffled=shuffleOpts(card);
+  // Use stored shuffle if navigating back, generate new one on first visit
+  if(cardShuffles[idx]){
+    currentShuffled=cardShuffles[idx];
+  } else {
+    currentShuffled=shuffleOpts(card);
+    cardShuffles[idx]=currentShuffled;
+  }
   var pct=Math.round(((idx+1)/CARDS.length)*100);
   document.getElementById('c-cat').textContent=card.cat;
   document.getElementById('c-bloom').textContent=card.bloom;
@@ -1453,13 +1471,38 @@ function loadCard(idx,dir){
     el.style.background='';
     el.style.opacity='';
     el.style.display=currentShuffled.opts[i]?'block':'none';
+    el.classList.remove('selected-opt','struck');
+    var sb=document.getElementById('sb-'+i);
+    if(sb) sb.classList.remove('struck');
   });
+  selectedOptIdx=-1;
+  struckOpts={};
+  var submitBtn=document.getElementById('submit-answer-btn');
+  if(submitBtn) submitBtn.style.display='none';
   document.getElementById('nav-prev').className='nav-btn'+(idx===0?' disabled':'');
-  document.getElementById('nav-next').className='nav-btn disabled';
+  // Enable next if student has already answered this card
+  var hasNext=(idx<CARDS.length-1)&&(cardAnswers[idx]!==undefined||sessionResults[idx]!==undefined);
+  document.getElementById('nav-next').className='nav-btn'+(hasNext?'':' disabled');
+  // Restore previous answer if student navigates back
+  if(cardAnswers[idx]!==undefined){
+    var prevPick=cardAnswers[idx];
+    var prevEl=document.getElementById('ao-'+['a','b','c','d'][prevPick]);
+    if(prevEl) prevEl.classList.add('selected-opt');
+    selectedOptIdx=prevPick;
+    var sb2=document.getElementById('submit-answer-btn');
+    if(sb2) sb2.style.display='block';
+  }
   document.getElementById('card-state-r').style.display='none';
   document.getElementById('card-state-q').style.display='block';
   document.getElementById('pearl-reveal').style.display='none';
-  if(sessionMode==='study') resetLayers();
+  // Study mode: if card was already revealed show full CCCC
+  if(sessionMode==='study'){
+    if(revealedCards[idx]){
+      showFullCCCC(idx);
+    } else {
+      resetLayers();
+    }
+  }
   var cm=document.getElementById('card-main');
   cm.style.animation='none';cm.offsetHeight;
   cm.style.animation=(dir==='right'?'slideInRight':'slideInLeft')+' 0.3s ease';
@@ -1499,14 +1542,16 @@ function answer(optIdx){
     sessionShuffles[currentCardIdx]={opts:currentShuffled.opts.slice(),correct:currentShuffled.correct};
     ['a','b','c','d'].forEach(function(o){document.getElementById('ao-'+o).classList.add('disabled');});
     var chosen=document.getElementById('ao-'+['a','b','c','d'][optIdx]);
-    chosen.style.borderColor=isCorrect?'#4ade80':'#f87171';
-    chosen.style.background=isCorrect?'rgba(74,222,128,0.15)':'rgba(248,113,113,0.12)';
+    chosen.style.borderColor='rgba(255,255,255,0.3)';
+    chosen.style.background='rgba(255,255,255,0.08)';
     if(isCorrect){
       var xp=document.getElementById('s-xp');if(xp)xp.textContent=parseInt(xp.textContent)+card.xp;
       var sc=document.getElementById('s-correct');if(sc)sc.textContent=parseInt(sc.textContent)+1;
     } else {
       var sw=document.getElementById('s-wrong');if(sw)sw.textContent=parseInt(sw.textContent)+1;
     }
+    // Enable back nav after answering
+    document.getElementById('nav-next').className='nav-btn'+(currentCardIdx<CARDS.length-1?'':' disabled');
     setTimeout(function(){
       if(currentCardIdx<CARDS.length-1){
         loadCard(currentCardIdx+1,'right');
@@ -1595,6 +1640,7 @@ function unlockLayer(n){
     if(nln){nln.classList.remove('layer-name-locked');nln.classList.add('layer-name-next');}
   }
   if(n===4){
+    revealedCards[currentCardIdx]=true; // mark CCCC fully revealed
     setTimeout(function(){
       document.getElementById('lens-name').textContent=card.lens;
       document.getElementById('pearl-text').textContent=card.pearl;
@@ -1746,11 +1792,19 @@ function showDiagnosticResults(){
 function showReviewResult(idx, backFn, cardOverride){
   currentCardIdx=idx;
   currentLayer=1;
+  var sb=document.getElementById('submit-answer-btn');
+  if(sb) sb.style.display='none';
   var card=cardOverride||CARDS[idx];
   if(!card) return;
 
   // Always generate a fresh shuffle for review — safe regardless of session state
-  currentShuffled=shuffleOpts(card);
+  // Use stored shuffle if navigating back, generate new one on first visit
+  if(cardShuffles[idx]){
+    currentShuffled=cardShuffles[idx];
+  } else {
+    currentShuffled=shuffleOpts(card);
+    cardShuffles[idx]=currentShuffled;
+  }
 
   var pct=Math.round(((idx+1)/CARDS.length)*100);
   var studentPick=sessionAnswers[idx]; // which option index they chose
@@ -1902,16 +1956,49 @@ function hideExitModal(){
 function exitSession(){
   hideExitModal();
   sessionActive=false;
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('bottom-nav').classList.add('visible');
-  var _ah2=document.getElementById('app-home');_ah2.classList.add('active');_ah2.scrollTop=0;
-  document.getElementById('tab-home').classList.add('active');
-  // Restore CARDS to diagnostic bank in case we exited during review
-  CARDS=DIAGNOSTIC_CARDS;
-  // Update dashboard from permanent store — safe even if sessionResults was modified
-  updateDashboard();
-  window.scrollTo(0,0);
+  if(reviewingFromProgress){
+    reviewingFromProgress=false;
+    CARDS=DIAGNOSTIC_CARDS;
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+    document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');s.scrollTop=0;});
+    switchTab('study');
+    toggleStudyView('progress');
+    return;
+  }
+  if(isDiagnosticSession){
+    // Diagnostic exit — go home
+    CARDS=DIAGNOSTIC_CARDS;
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+    document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+    document.getElementById('bottom-nav').classList.add('visible');
+    var _ah2=document.getElementById('app-home');_ah2.classList.add('active');_ah2.scrollTop=0;
+    document.getElementById('tab-home').classList.add('active');
+    updateDashboard();
+    window.scrollTo(0,0);
+    return;
+  }
+  // Trim CARDS to only answered cards so far
+  var answeredCount=currentCardIdx; // cards fully answered (not current)
+  if(answeredCount===0){
+    // Nothing answered — just go home
+    CARDS=DIAGNOSTIC_CARDS;
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+    document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+    document.getElementById('bottom-nav').classList.add('visible');
+    var _ah3=document.getElementById('app-home');_ah3.classList.add('active');_ah3.scrollTop=0;
+    document.getElementById('tab-home').classList.add('active');
+    window.scrollTo(0,0);
+    return;
+  }
+  // Slice CARDS to only answered cards
+  CARDS=CARDS.slice(0,answeredCount);
+  saveSession(); // save partial session to My Progress
+  // Go to appropriate review screen
+  if(sessionMode==='test'){
+    showReviewScreen();
+  } else {
+    showStudyReviewScreen();
+  }
 }
 
 // UPDATE DASHBOARD with diagnostic results
@@ -2203,6 +2290,7 @@ function renderSessionHistory(){
 }
 
 function reviewSession(sessionIdx){
+  reviewingFromProgress=true;
   var sess=sessionHistory[sessionIdx];
   if(!sess||sess.cards.length===0) return;
   CARDS=sess.cards;
@@ -2272,7 +2360,8 @@ function finishStudySession(){
 var sessionQCount=10;
 var sessionPool='all';
 var sessionName=''; // name given by student before session
-var sessionActive=false; // true when a session is in progress
+var sessionActive=false;
+var reviewingFromProgress=false; // true when reviewing a past session from My Progress // true when a session is in progress
 var pendingNavTab=''; // tab student tried to navigate to mid-session
 
 function setQCount(n){
@@ -2351,6 +2440,83 @@ function saveAndExitSession(){
   if(t) t.classList.add('active');
   if(tab==='home'){updateDashboard();}
   window.scrollTo(0,0);
+}
+
+var selectedOptIdx=-1; // currently selected option before submit
+var struckOpts={}; // tracks which options are struck out
+var cardShuffles={}; // stores shuffle per card so going back shows same options
+var cardAnswers={}; // stores selected answer per card for navigation
+var revealedCards={}; // stores which cards have had CCCC fully revealed in study mode
+
+function toggleStrike(optIdx){
+  var btn=document.getElementById('sb-'+optIdx);
+  var opt=document.getElementById('ao-'+['a','b','c','d'][optIdx]);
+  if(!btn||!opt) return;
+  struckOpts[optIdx]=!struckOpts[optIdx];
+  if(struckOpts[optIdx]){
+    btn.classList.add('struck');
+    opt.classList.add('struck');
+    // If this option was selected, deselect it
+    if(selectedOptIdx===optIdx){
+      selectedOptIdx=-1;
+      opt.classList.remove('selected-opt');
+      document.getElementById('submit-answer-btn').style.display='none';
+    }
+  } else {
+    btn.classList.remove('struck');
+    opt.classList.remove('struck');
+  }
+}
+
+function selectAnswer(optIdx){
+  // Can't select a struck option
+  if(struckOpts[optIdx]) return;
+  // Deselect previous
+  if(selectedOptIdx!==-1){
+    var prev=document.getElementById('ao-'+['a','b','c','d'][selectedOptIdx]);
+    if(prev) prev.classList.remove('selected-opt');
+  }
+  selectedOptIdx=optIdx;
+  var el=document.getElementById('ao-'+['a','b','c','d'][optIdx]);
+  if(el) el.classList.add('selected-opt');
+  // Show submit button
+  document.getElementById('submit-answer-btn').style.display='block';
+}
+
+function submitAnswer(){
+  if(selectedOptIdx===-1) return;
+  var idx=selectedOptIdx;
+  cardAnswers[currentCardIdx]=idx; // store for back navigation
+  selectedOptIdx=-1;
+  struckOpts={};
+  answer(idx);
+}
+
+function showFullCCCC(idx){
+  // Show result view with all 4 CCCC layers already revealed
+  var card=CARDS[idx];
+  document.getElementById('lc-1').textContent=card.layers[0];
+  for(var n=1;n<=4;n++){
+    var ly=document.getElementById('ly-'+n);var ld=document.getElementById('ld-'+n);
+    var lh=document.getElementById('lh-'+n);var lc2=document.getElementById('lc-'+n);var ln=document.getElementById('ln-'+n);
+    if(ly){ly.className='layer-btn unlocked';ly.onclick=null;ly.style.cursor='default';}
+    if(ld){ld.className='layer-dot lit';}
+    if(lh) lh.style.display='none';
+    if(lc2){lc2.style.display='block';lc2.textContent=card.layers[n-1];}
+    if(ln){ln.className='layer-name layer-name-open';}
+  }
+  document.getElementById('lens-name').textContent=card.lens;
+  document.getElementById('pearl-text').textContent=card.pearl;
+  var mw=document.getElementById('mnemonic-wrap');mw.innerHTML='';
+  card.mnemonic.forEach(function(pair){
+    var l=document.createElement('span');l.className='m-letter';l.textContent=pair[0];mw.appendChild(l);
+    var w=document.createElement('span');w.className='m-word';w.textContent=pair[1];mw.appendChild(w);
+  });
+  document.getElementById('pearl-reveal').style.display='block';
+  document.getElementById('snl-section').style.display='block';
+  document.getElementById('card-state-q').style.display='none';
+  document.getElementById('card-state-r').style.display='block';
+  currentLayer=4;
 }
 
 </script>
