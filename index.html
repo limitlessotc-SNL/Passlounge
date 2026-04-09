@@ -318,6 +318,47 @@ input[type="date"]{color-scheme:dark;}
 .ans-opt.struck{text-decoration:line-through;color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);}
 .ans-opt.selected-opt{border-color:#F5C518;background:rgba(245,197,24,0.1);color:#F5C518;}
 .submit-answer-btn{width:100%;padding:15px;background:linear-gradient(135deg,#F5C518,#e6b800);color:#053571;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;display:none;margin-top:4px;animation:btnPulse 2.5s ease-in-out infinite;}
+
+.insights-toggle{width:100%;padding:10px 12px;background:rgba(255,255,255,0.03);border:1.5px solid rgba(245,197,24,0.2);border-radius:12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin:8px 0 6px;font-family:'Outfit',sans-serif;}
+.insights-toggle-lbl{font-size:11px;font-weight:700;color:#F5C518;}
+.insights-panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px;margin-bottom:8px;display:none;}
+.insights-panel.open{display:block;}
+.insights-avg{display:flex;justify-content:space-between;align-items:center;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:9px;}
+.insights-avg-lbl{font-size:9px;color:rgba(255,255,255,0.35);}
+.insights-avg-val{font-size:14px;font-weight:900;color:#F5C518;}
+.insights-tier{margin-bottom:8px;}
+.insights-tier-hdr{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.insights-tier-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.insights-tier-name{font-size:10px;font-weight:700;}
+.insights-cat-row{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 4px 18px;border-radius:7px;margin-bottom:3px;}
+.insights-cat-row.g{background:rgba(74,222,128,0.06);}
+.insights-cat-row.y{background:rgba(245,197,24,0.05);}
+.insights-cat-row.r{background:rgba(248,113,113,0.06);}
+.insights-cat-name{font-size:10px;font-weight:600;color:#fff;}
+.insights-time-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;}
+.itb-fast{background:rgba(74,222,128,0.1);color:#4ade80;}
+.itb-mid{background:rgba(245,197,24,0.1);color:#F5C518;}
+.itb-slow{background:rgba(248,113,113,0.1);color:#f87171;}
+
+@keyframes ringPulseAnim{0%{transform:translate(-50%,-50%) scale(0);opacity:0.9;}100%{transform:translate(-50%,-50%) scale(3.5);opacity:0;}}
+@keyframes epicReveal{0%{opacity:0;transform:translate(-50%,-50%) scale(0.3) rotate(-8deg);}60%{transform:translate(-50%,-50%) scale(1.15) rotate(2deg);}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg);}}
+@keyframes epicToastAnim{0%{opacity:0;transform:translateX(-50%) scale(0.5);}70%{transform:translateX(-50%) scale(1.08);}100%{opacity:1;transform:translateX(-50%) scale(1);}}
+@keyframes epicConfFall{0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}100%{opacity:0;transform:translateY(160px) rotate(540deg) scale(0.3);}}
+@keyframes epicFlashOverlay{0%{opacity:0;}25%{opacity:1;}100%{opacity:0;}}
+@keyframes shakeHardAnim{0%,100%{transform:translateX(0);}15%{transform:translateX(-10px);}30%{transform:translateX(10px);}45%{transform:translateX(-8px);}60%{transform:translateX(8px);}75%{transform:translateX(-4px);}90%{transform:translateX(4px);}}
+@keyframes floatUpAnim{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-90px) scale(1.5);}}
+.anim-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;animation:ringPulseAnim 0.9s ease forwards;}
+.anim-epic-score{position:fixed;z-index:9999;text-align:center;pointer-events:none;animation:epicReveal 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;}
+.anim-epic-toast{position:fixed;z-index:9999;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:900;white-space:nowrap;pointer-events:none;animation:epicToastAnim 0.4s 0.15s cubic-bezier(0.34,1.56,0.64,1) both;}
+.anim-conf{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;animation:epicConfFall ease forwards;z-index:9997;}
+.anim-overlay{position:fixed;pointer-events:none;z-index:9996;animation:epicFlashOverlay 0.7s ease forwards;}
+.anim-float{position:fixed;pointer-events:none;z-index:9998;animation:floatUpAnim ease forwards;}
+
+.why-wrong-box{background:rgba(248,113,113,0.06);border:1.5px solid rgba(248,113,113,0.2);border-radius:14px;padding:13px 14px;margin-bottom:12px;display:none;}
+.why-wrong-box.visible{display:block;}
+.why-wrong-lbl{font-size:9px;color:#f87171;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.why-wrong-lbl::after{content:'';flex:1;height:1px;background:rgba(248,113,113,0.2);}
+.why-wrong-text{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.65;}
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;box-sizing:border-box;background:rgba(2,13,31,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);display:none;justify-content:space-around;align-items:center;padding:10px 8px 20px;z-index:100;}
 .bottom-nav.visible{display:flex;}
@@ -605,6 +646,7 @@ input[type="date"]{color-scheme:dark;}
       </div>
       <div id="result-display"></div>
       <div class="q-card" style="padding:12px 14px;margin-bottom:10px;"><div class="q-type-label">Your Answer</div><div id="answer-recap" style="font-size:13px;color:#fff;font-weight:600;line-height:1.4;"></div></div>
+      <div class="why-wrong-box" id="why-wrong-box"><div class="why-wrong-lbl" id="why-wrong-lbl">Why this answer is wrong</div><div class="why-wrong-text" id="why-wrong-text"></div></div>
       <div id="snl-section">
         <div class="snl-section-title">SNL Method Breakdown</div>
         <div class="layer-btn unlocked" id="ly-1"><div class="layer-dot lit" id="ld-1"></div><div style="flex:1;"><div class="layer-name layer-name-open">Core Problem</div><div class="layer-content" id="lc-1"></div></div></div>
@@ -626,7 +668,7 @@ input[type="date"]{color-scheme:dark;}
 
 <!-- SNL REVIEW SCREEN (outside app-shell) -->
 <div class="screen" id="s-review">
-  <div class="content scrollable" style="padding-top:28px;padding-bottom:80px;">
+  <div class="content scrollable" style="padding-top:28px;padding-bottom:120px;">
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;color:#F5C518;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Session Complete</div>
       <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px;">Review With<br>SNL Method 📚</div>
@@ -638,6 +680,17 @@ input[type="date"]{color-scheme:dark;}
       </div>
     </div>
     <div id="review-card-list"></div>
+      <button class="insights-toggle" onclick="toggleInsights('test')">
+        <span class="insights-toggle-lbl">📊 Session Insights</span>
+        <span id="insights-arrow-test" style="font-size:10px;color:rgba(255,255,255,0.3);">▼</span>
+      </button>
+      <div class="insights-panel" id="insights-panel-test">
+        <div class="insights-avg">
+          <span class="insights-avg-lbl">Avg time per question</span>
+          <span class="insights-avg-val" id="insights-avg-test">—</span>
+        </div>
+        <div id="insights-tiers-test"></div>
+      </div>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button class="btn-ghost" style="margin-bottom:0;" onclick="switchTab('study')">Study</button>
       <button class="btn-ghost" style="margin-bottom:0;" onclick="finishSession()">Home</button>
@@ -660,6 +713,17 @@ input[type="date"]{color-scheme:dark;}
       </div>
     </div>
     <div id="study-review-card-list"></div>
+      <button class="insights-toggle" onclick="toggleInsights('study')">
+        <span class="insights-toggle-lbl">📊 Session Insights</span>
+        <span id="insights-arrow-study" style="font-size:10px;color:rgba(255,255,255,0.3);">▼</span>
+      </button>
+      <div class="insights-panel" id="insights-panel-study">
+        <div class="insights-avg">
+          <span class="insights-avg-lbl">Avg time per question</span>
+          <span class="insights-avg-val" id="insights-avg-study">—</span>
+        </div>
+        <div id="insights-tiers-study"></div>
+      </div>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button class="btn-ghost" style="margin-bottom:0;" onclick="switchTab('study')">Study</button>
       <button class="btn-ghost" style="margin-bottom:0;" onclick="finishStudySession()">Home</button>
@@ -933,7 +997,7 @@ var DIAGNOSTIC_CARDS=[
    correct:0,
    layers:['Coronary artery is 100% occluded — myocardial ischemia is active and cell death has begun','Every minute without intervention = more irreversible myocardial damage — pain is accelerating O2 demand','Morphine reduces preload and pain decreasing cardiac workload and buying time for reperfusion','HR stabilizes, pain decreases, patient hemodynamically ready for cath lab intervention'],
    lens:'Assessment vs Intervention',pearl:'Pain drives cardiac workload. MONA buys time for reperfusion. Remember:',
-   mnemonic:[['M','Morphine'],['O','Oxygen'],['N','Nitrates'],['A','Aspirin']]},
+   mnemonic:[['M','Morphine'],['O','Oxygen'],['N','Nitrates'],['A','Aspirin']],why_wrong:{'Obtain cardiac cath consent':'Consent is a Complication step — not your Core Problem action. The NCLEX will always ask you to stabilize before you administrate. A patient actively infarcting needs IV access before paperwork.','Establish large-bore IV access bilaterally':'Establishing IV access is actually the correct answer here — it is the priority intervention that enables all subsequent treatment. Review the Core Problem: blocked perfusion requires immediate access to deliver medications.','Notify the cardiologist on call':'Notification is delegation — and delegation is never your first action when a patient is unstable. Establish access first so interventions can be delivered, then notify. The NCLEX tests action before communication in emergencies.'}},
 
   {cat:'Cardiac',bloom:'Analyze',xp:25,title:'Troponin — Gold Standard',type:'Multiple Choice · Cardiac',
    scenario:'A patient presents with chest tightness and diaphoresis. The 12-lead EKG is non-diagnostic. Labs are pending.',
@@ -942,7 +1006,7 @@ var DIAGNOSTIC_CARDS=[
    correct:1,
    layers:['Myocardial cell death releases intracellular proteins that spill into systemic circulation','Troponin I is released exclusively from cardiac muscle — no other tissue produces it','Elevated Troponin I confirms myocardial infarction — it is the gold standard diagnostic marker','Serial Troponins every 3-6 hours confirm infarction and peak levels indicate damage extent'],
    lens:'Assessment vs Intervention',pearl:'Troponin I is cardiac-specific. Elevated = MI confirmed. Remember:',
-   mnemonic:[['T','Troponin = cardiac specific'],['E','Elevated = MI'],['S','Serial draws confirm']]},
+   mnemonic:[['T','Troponin = cardiac specific'],['E','Elevated = MI'],['S','Serial draws confirm']],why_wrong:{'CK-MB':'CK-MB was the previous gold standard but has been replaced by Troponin. The NCLEX expects current knowledge — CK-MB rises faster but lacks the cardiac specificity that makes Troponin the definitive marker.','LDH':'LDH is a non-specific enzyme released with many types of tissue damage. The NCLEX tests whether you know cardiac-specific markers. LDH is not used to confirm MI in current clinical practice.','BNP':'BNP is your Core Problem marker for heart failure — not MI. The NCLEX tests whether you can distinguish between similar sounding cardiac labs. BNP tells you the heart is under pressure, Troponin tells you heart muscle is dying.'}},
 
   {cat:'Cardiac',bloom:'Evaluate',xp:30,title:'Heart Failure — Priority Action',type:'Multiple Choice · Cardiac',
    scenario:'A patient with known heart failure presents with bilateral crackles, O2 sat 88%, sleeping on 3 pillows, BP 158/94.',
@@ -951,7 +1015,7 @@ var DIAGNOSTIC_CARDS=[
    correct:2,
    layers:['Heart failure causes fluid backup into pulmonary circulation — alveoli fill with fluid impairing gas exchange','O2 sat of 88% means hypoxia is active — untreated this progresses to respiratory failure','HOB elevation uses gravity to redistribute fluid away from lungs — diuretic eliminates excess volume','O2 saturation rises, crackles clear, urine output increases confirming the intervention worked'],
    lens:'Stable vs Unstable',pearl:'Fluid overload = pulmonary edema = hypoxia. Two immediate actions:',
-   mnemonic:[['HOB','Head of Bed Up'],['D','Diuretic First']]},
+   mnemonic:[['HOB','Head of Bed Up'],['D','Diuretic First']],why_wrong:{'Obtain a 12-lead EKG':'Obtaining a 12-lead EKG is an assessment action — not the priority intervention. The NCLEX tests action after assessment. Your Core Problem is fluid overload causing hypoxia — diuretics and positioning address this directly.','Administer the prescribed antihypertensive':'Administering antihypertensives addresses blood pressure but not the immediate Core Problem of pulmonary congestion and hypoxia. The NCLEX expects you to prioritize the intervention that relieves the acute respiratory distress.','Restrict oral fluids to 500 mL per day':'Restricting fluids to 500 mL is extreme and not the immediate priority action. The NCLEX tests whether you address the acute emergency first — elevate HOB and give diuretics to relieve the fluid overload causing hypoxia.'}},
 
   {cat:'Pharmacology',bloom:'Apply',xp:20,title:'Digoxin — Before You Give It',type:'Multiple Choice · Pharmacology',
    scenario:'A patient with atrial fibrillation is prescribed Digoxin 0.125mg PO daily. The nurse assesses an apical pulse of 54 bpm before administration.',
@@ -960,7 +1024,7 @@ var DIAGNOSTIC_CARDS=[
    correct:1,
    layers:['Digoxin slows heart rate by increasing vagal tone and decreasing AV node conduction','Digoxin has a narrow therapeutic window — too much causes toxicity including bradycardia','Hold Digoxin if apical pulse is below 60 bpm — this indicates excessive drug effect','Notify the provider — they may hold, reduce, or assess Digoxin level before next dose'],
    lens:'Safety & Delegation',pearl:'Hold Digoxin if apical pulse is below 60. Always check before giving. Remember:',
-   mnemonic:[['H','Hold if HR below 60'],['D','Digoxin level check'],['T','Toxicity = N/V + visual changes']]},
+   mnemonic:[['H','Hold if HR below 60'],['D','Digoxin level check'],['T','Toxicity = N/V + visual changes']],why_wrong:{'Administer — rate is within therapeutic range':'Administering when the rate is within therapeutic range ignores a critical assessment step. The NCLEX expects you to check apical pulse before every dose of Digoxin. A pulse below 60 requires holding the medication regardless of the serum level.','Reduce the dose by half':'Reducing the dose is a provider decision — not an independent nursing action. The NCLEX tests what the nurse does before administration, not dose adjustments. Hold and notify is the correct independent nursing response.','Administer and reassess in 30 minutes':'Administering and reassessing in 30 minutes allows potential toxicity to progress. The NCLEX tests that a pulse below 60 requires holding Digoxin immediately — not giving it and watching. Patient safety always comes before scheduled administration.'}},
 
   {cat:'Pharmacology',bloom:'Analyze',xp:25,title:'Warfarin — Patient Teaching',type:'Multiple Choice · Pharmacology',
    scenario:'A patient is newly started on Warfarin for DVT and is receiving discharge teaching.',
@@ -969,7 +1033,7 @@ var DIAGNOSTIC_CARDS=[
    correct:2,
    layers:['Warfarin blocks Vitamin K-dependent clotting factors — it prevents new clots but increases bleeding risk','NSAIDs like ibuprofen inhibit platelet aggregation AND irritate GI mucosa — combined with Warfarin creates serious bleeding risk','The patient should use acetaminophen for pain — ibuprofen and NSAIDs are contraindicated on Warfarin','Correct teaching: consistent green vegetables, regular INR, reporting unusual bleeding'],
    lens:'Safety & Delegation',pearl:'Warfarin + NSAIDs = dangerous bleeding risk. Use Tylenol instead. Remember:',
-   mnemonic:[['W','Warfarin avoids NSAIDs'],['I','INR monitors levels'],['V','Vitamin K is the antidote']]},
+   mnemonic:[['W','Warfarin avoids NSAIDs'],['I','INR monitors levels'],['V','Vitamin K is the antidote']],why_wrong:{'"I will get my INR checked as scheduled"':'Getting INR checked as scheduled is correct teaching for Warfarin — this indicates good understanding. You are looking for the statement that shows a need for further teaching.','"I will eat consistent amounts of leafy greens"':'Eating consistent amounts of leafy greens is correct — consistency with Vitamin K intake is the teaching point, not complete avoidance. This indicates understanding — not a teaching need.','"I will report any unusual bruising or bleeding"':'Reporting unusual bruising or bleeding is correct safety teaching for any anticoagulant. This statement demonstrates understanding — not a teaching need.'}},
 
   {cat:'Pharmacology',bloom:'Evaluate',xp:30,title:'ACE Inhibitor — Side Effect',type:'Multiple Choice · Pharmacology',
    scenario:'A patient taking Lisinopril for hypertension reports a persistent dry cough for two weeks.',
@@ -978,7 +1042,7 @@ var DIAGNOSTIC_CARDS=[
    correct:3,
    layers:['ACE Inhibitors block conversion of Angiotensin I to II — this causes bradykinin to accumulate in the lungs','Bradykinin accumulation directly causes a persistent dry non-productive cough — this is a class effect','This cough does not resolve on its own — it persists as long as the patient takes an ACE inhibitor','Provider notification needed — patient is typically switched to an ARB which has no bradykinin effect'],
    lens:'Assessment vs Intervention',pearl:'ACE inhibitor cough = bradykinin buildup. It will not resolve. Switch to ARB. Remember:',
-   mnemonic:[['A','ACE causes bradykinin buildup'],['C','Cough is a class effect'],['E','Expect it — switch to ARB']]},
+   mnemonic:[['A','ACE causes bradykinin buildup'],['C','Cough is a class effect'],['E','Expect it — switch to ARB']],why_wrong:{'Instruct the patient to take an OTC cough suppressant':'Taking an OTC cough suppressant without consulting the provider is incorrect. The NCLEX tests that a dry cough from ACE inhibitors requires provider notification because the medication may need to be switched — not masked with cough suppressants.','Reassure the patient this will resolve on its own':'A dry cough from ACE inhibitors does not resolve on its own while taking the medication — it is a class effect. The NCLEX expects you to know this cough is the most common reason patients stop taking ACE inhibitors without telling their provider.','Advise the patient to double fluid intake':'Doubling fluid intake has no evidence for reducing ACE inhibitor cough and is not standard teaching. The NCLEX tests whether you know the correct response — notify the provider about the persistent cough so the medication can be reviewed.'}},
 
   {cat:'Respiratory',bloom:'Apply',xp:20,title:'Asthma Attack — First Action',type:'Multiple Choice · Respiratory',
    scenario:'A patient with asthma presents in moderate respiratory distress. Audible wheezing, RR 28, O2 sat 91%. Used inhaler twice with no relief.',
@@ -987,7 +1051,7 @@ var DIAGNOSTIC_CARDS=[
    correct:3,
    layers:['Asthma causes bronchoconstriction — smooth muscle spasm is the immediate problem','Without bronchodilation the airway remains obstructed and hypoxia worsens rapidly','Albuterol directly relaxes bronchial smooth muscle within minutes — fastest first-line intervention','Steroids reduce inflammation but take hours — used after bronchodilators to prevent recurrence'],
    lens:'ABCs',pearl:'Bronchospasm first — dilate before treating inflammation. Albuterol buys time. Remember:',
-   mnemonic:[['A','Albuterol First'],['B','Bronchodilate'],['C','Corticosteroids come second']]},
+   mnemonic:[['A','Albuterol First'],['B','Bronchodilate'],['C','Corticosteroids come second']],why_wrong:{'Methylprednisolone IV':'Methylprednisolone IV is a critical intervention for asthma but it takes time to work — it is not your immediate first action. The NCLEX tests the sequence: bronchodilators first to open airways, then corticosteroids to reduce inflammation.','Ipratropium bromide':'Ipratropium bromide is an anticholinergic bronchodilator used as an adjunct — not the first line treatment. The NCLEX expects you to know that short-acting beta-agonists like Albuterol are always first line in acute bronchospasm.','Magnesium sulfate IV':'Magnesium sulfate IV is used for severe refractory asthma that has not responded to first line treatment. The NCLEX tests the correct sequence — Albuterol is your first action, magnesium is a rescue therapy.'}},
 
   {cat:'Respiratory',bloom:'Analyze',xp:25,title:'COPD — Oxygen Danger',type:'Multiple Choice · Respiratory',
    scenario:'A patient with severe COPD is admitted with an exacerbation. SpO2 is 84%.',
@@ -996,7 +1060,7 @@ var DIAGNOSTIC_CARDS=[
    correct:1,
    layers:['COPD patients chronically retain CO2 — over time they rely on hypoxic drive to breathe','High-flow oxygen eliminates the hypoxic drive — the brain no longer receives the signal to breathe','Low-flow oxygen titrated to SpO2 88-92% maintains safe oxygenation without eliminating hypoxic drive','Target is 88-92% not normal — because normal O2 levels remove the only respiratory stimulus these patients have'],
    lens:'Stable vs Unstable',pearl:'COPD breathes on hypoxic drive. High O2 = respiratory depression. Target 88-92%. Remember:',
-   mnemonic:[['C','COPD = CO2 retainer'],['O','O2 low flow only'],['P','Push too high = stop breathing']]},
+   mnemonic:[['C','COPD = CO2 retainer'],['O','O2 low flow only'],['P','Push too high = stop breathing']],why_wrong:{'10-15 L/min via non-rebreather — target SpO2 above 98%':'10-15 L/min via non-rebreather targets normal SpO2 levels — this is dangerous for COPD patients who rely on hypoxic drive. The NCLEX tests that over-oxygenating a COPD patient can suppress their respiratory stimulus and cause respiratory failure.','4 L/min via nasal cannula — target SpO2 above 95%':'4 L/min targeting SpO2 above 95% is too high for COPD patients. The NCLEX expects you to know that the target for COPD is 88-92% — not normal saturation. Higher oxygen delivery risks suppressing the hypoxic drive.','BiPAP only — no supplemental O2 until intubation':'BiPAP with no supplemental oxygen is not standard management for COPD exacerbation. The NCLEX tests realistic clinical interventions — controlled low-flow oxygen at 1-2 L/min is the evidence-based approach.'}},
 
   {cat:'Respiratory',bloom:'Evaluate',xp:30,title:'Tension Pneumothorax',type:'Multiple Choice · Respiratory',
    scenario:'A post-op patient suddenly develops severe respiratory distress. Absent breath sounds right side, tracheal deviation left, JVD, O2 sat dropping rapidly.',
@@ -1005,7 +1069,7 @@ var DIAGNOSTIC_CARDS=[
    correct:2,
    layers:['Absent breath sounds + tracheal deviation + JVD + hypoxia = tension pneumothorax','Tension pneumothorax compresses the heart and great vessels — mediastinal shift decreases cardiac output','This is life-threatening — waiting for imaging wastes time and delays needle decompression','Immediate provider notification for needle decompression at 2nd intercostal space midclavicular line'],
    lens:'Stable vs Unstable',pearl:'Tracheal deviation = tension pneumothorax = cardiovascular collapse imminent. No time for X-ray. Remember:',
-   mnemonic:[['T','Trachea deviates AWAY from problem'],['P','Pressure builds — heart shifts'],['N','Notify NOW — needle decompression']]},
+   mnemonic:[['T','Trachea deviates AWAY from problem'],['P','Pressure builds — heart shifts'],['N','Notify NOW — needle decompression']],why_wrong:{'Increase oxygen and reassess in 5 minutes':'Increasing oxygen does not address the Core Problem — air is trapped in the pleural space compressing the heart and great vessels. The NCLEX tests that oxygen alone cannot relieve mediastinal shift. Needle decompression is required immediately.','Obtain a STAT chest X-ray before any intervention':'Waiting for a chest X-ray delays life-saving intervention in a tension pneumothorax. The NCLEX tests that this is a clinical diagnosis — tracheal deviation, absent breath sounds, and hypotension require immediate action without waiting for imaging.','Reposition the patient and suction the airway':'Repositioning and suctioning do not address the Core Problem of trapped air. The NCLEX expects you to recognize tension pneumothorax as a true emergency requiring needle decompression — supportive measures alone are insufficient.'}},
 
   {cat:'OB/Maternity',bloom:'Apply',xp:20,title:'Magnesium Toxicity',type:'Multiple Choice · OB/Maternity',
    scenario:'A patient with severe preeclampsia on magnesium sulfate has RR 10, urine output 20 mL/hour, and absent deep tendon reflexes.',
@@ -1014,7 +1078,7 @@ var DIAGNOSTIC_CARDS=[
    correct:1,
    layers:['Magnesium sulfate is used for seizure prophylaxis in preeclampsia — it has a narrow therapeutic window','Early toxicity: loss of DTRs. Late: respiratory depression, cardiac arrest. RR 10 = respiratory depression','Calcium gluconate is the direct antidote for magnesium toxicity — reverses respiratory and cardiac depression','Stopping the infusion AND giving the antidote are simultaneous — not a watch-and-wait situation'],
    lens:'Safety & Delegation',pearl:'Mag toxicity kills. Stop infusion. Give calcium gluconate. Watch the three Rs. Remember:',
-   mnemonic:[['R','Reflexes lost first'],['R','Respirations slow next'],['R','Respiratory arrest last']]},
+   mnemonic:[['R','Reflexes lost first'],['R','Respirations slow next'],['R','Respiratory arrest last']],why_wrong:{'Slow the infusion and reassess in 15 minutes':'Slowing the infusion and reassessing allows toxicity to progress. The NCLEX tests that loss of deep tendon reflexes is your warning sign before respiratory depression — you must stop the infusion immediately, not slow it.','Notify the provider and document findings':'Notifying the provider and documenting is important but not your first action. The NCLEX tests independent nursing interventions — stop the infusion immediately, then notify. You cannot wait for a provider order before stopping a toxic infusion.','Increase IV fluid rate to improve urine output':'Increasing IV fluids does not reverse magnesium toxicity. Calcium gluconate is the antidote. The NCLEX tests specific pharmacological reversal agents — IV fluids address dehydration, not hypermagnesemia.'}},
 
   {cat:'OB/Maternity',bloom:'Analyze',xp:25,title:'Postpartum Hemorrhage',type:'Multiple Choice · OB/Maternity',
    scenario:'A patient is 1 hour post-vaginal delivery. The fundus is boggy and displaced to the right. Lochia is heavy with clots.',
@@ -1023,7 +1087,7 @@ var DIAGNOSTIC_CARDS=[
    correct:3,
    layers:['A boggy uterus is not contracting — uterine atony is the number 1 cause of postpartum hemorrhage','Displacement to the right indicates a full bladder pushing the uterus — a full bladder prevents contraction','Fundal massage stimulates contraction — bladder emptying removes the mechanical obstruction — both done first','Oxytocin may follow but mechanical causes are addressed first — most boggy uteri resolve with massage and voiding'],
    lens:'Assessment vs Intervention',pearl:'Boggy + displaced uterus = full bladder preventing contraction. Massage + void first. Remember:',
-   mnemonic:[['B','Boggy = uterine atony'],['D','Displaced = full bladder'],['M','Massage first'],['V','Void second']]},
+   mnemonic:[['B','Boggy = uterine atony'],['D','Displaced = full bladder'],['M','Massage first'],['V','Void second']],why_wrong:{'Administer Oxytocin IV immediately':'Administering Oxytocin IV immediately is a provider order — not your first independent nursing action. The NCLEX tests that uterine massage is the first nursing intervention to address uterine atony — the most common cause of postpartum hemorrhage.','Insert a Foley catheter':'Inserting a Foley catheter is important to prevent bladder distension from impeding uterine contraction but it is not your first priority action. The NCLEX tests immediate hemorrhage management — fundal massage addresses the Core Problem directly.','Call the provider for hemorrhage orders':'Calling the provider for orders is important but the NCLEX tests that nursing interventions come first in hemorrhage. Uterine massage can stop the bleeding while notification is happening. Intervene first, then communicate.'}},
 
   {cat:'OB/Maternity',bloom:'Evaluate',xp:30,title:'Previa vs Abruption',type:'Multiple Choice · OB/Maternity',
    scenario:'A patient at 32 weeks reports sudden vaginal bleeding. The nurse must determine the likely cause.',
@@ -1032,7 +1096,7 @@ var DIAGNOSTIC_CARDS=[
    correct:2,
    layers:['Placenta previa — the placenta implants over the cervical os — as the cervix thins bleeding occurs','Because the cervix dilates not the placenta tears there is no placental separation and therefore no pain','Placental abruption involves premature separation of a normally implanted placenta — a tearing event causing severe pain','Painless = previa. Painful = abruption. One of the most frequently tested OB concepts on NCLEX'],
    lens:'Assessment vs Intervention',pearl:'Painless bright red bleeding = Previa. Painful dark bleeding = Abruption. Remember:',
-   mnemonic:[['P','Previa = Painless'],['A','Abruption = Agony']]},
+   mnemonic:[['P','Previa = Painless'],['A','Abruption = Agony']],why_wrong:{'Severe sudden abdominal pain with dark bleeding':'Severe sudden abdominal pain with dark bleeding describes placental abruption — not previa. The NCLEX tests that placenta previa presents with painless bright red bleeding. Knowing the distinction determines the correct emergency response.','Uterine rigidity with tenderness on palpation':'Uterine rigidity with tenderness is a classic sign of placental abruption — the uterus becomes board-like due to retroplacental hemorrhage. The NCLEX tests whether you can distinguish between previa and abruption by their presenting symptoms.','Fetal bradycardia with contractions':'Fetal bradycardia with contractions is associated with cord compression or placental abruption — not the defining feature of placenta previa. The NCLEX tests the specific hallmark signs that differentiate these two obstetric emergencies.'}},
 
   {cat:'Mental Health',bloom:'Apply',xp:20,title:'Therapeutic Communication',type:'Multiple Choice · Mental Health',
    scenario:'A patient with depression says: "I just feel like nothing is ever going to get better. What is even the point anymore?"',
@@ -1041,7 +1105,7 @@ var DIAGNOSTIC_CARDS=[
    correct:2,
    layers:['The patient is expressing hopelessness — a key symptom of depression and a risk factor for suicidality','Dismissing the feeling or redirecting immediately shuts down communication — the patient feels unheard','Reflecting the emotion back validates the experience and opens the door — the patient is invited to share more','Therapeutic communication builds trust — the foundation of the nurse-patient relationship and promotes healing'],
    lens:'Assessment vs Intervention',pearl:'Reflect, validate, invite. Never minimize. The therapeutic response always opens the door. Remember:',
-   mnemonic:[['R','Reflect the feeling'],['V','Validate the experience'],['O','Open-ended question follows']]},
+   mnemonic:[['R','Reflect the feeling'],['V','Validate the experience'],['O','Open-ended question follows']],why_wrong:{'"I understand — everyone feels that way. Things will get better."':'This is false reassurance and minimizing — two non-therapeutic communication blocks combined. The NCLEX tests that claiming to understand and predicting the future both invalidate the patient\'s experience and shut down therapeutic dialogue.','"Have you been taking your medications as prescribed?"':'Asking about medications deflects from the patient\'s emotional expression and makes assumptions. The NCLEX tests that therapeutic communication requires staying with the patient\'s feelings — redirecting to medications dismisses what they shared.','"You should try to focus on positive things in your life."':'Telling a patient to focus on positive things is toxic positivity and minimizes their experience. The NCLEX tests that dismissing negative feelings is non-therapeutic. Open-ended exploration of their experience is always the correct response.'}},
 
   {cat:'Mental Health',bloom:'Analyze',xp:25,title:'Lithium Toxicity',type:'Multiple Choice · Mental Health',
    scenario:'A patient on Lithium 300mg TID reports nausea, hand tremors, and confusion. Last Lithium level was 1.6 mEq/L.',
@@ -1050,7 +1114,7 @@ var DIAGNOSTIC_CARDS=[
    correct:2,
    layers:['Lithium has an extremely narrow therapeutic window: 0.6-1.2 mEq/L therapeutic, above 1.5 = early toxicity','A level of 1.6 plus nausea, tremors, and confusion = early Lithium toxicity — symptoms confirm the lab value','Holding the drug prevents further accumulation — Lithium toxicity can progress to seizures and death','Provider must be notified for hold order, repeat level, and IV fluids to increase renal Lithium excretion'],
    lens:'Safety & Delegation',pearl:'Lithium therapeutic range 0.6-1.2. Above 1.5 = toxicity. Know the early signs. Remember:',
-   mnemonic:[['N','Nausea + vomiting'],['T','Tremors coarse'],['C','Confusion'],['A','Ataxia = getting worse']]},
+   mnemonic:[['N','Nausea + vomiting'],['T','Tremors coarse'],['C','Confusion'],['A','Ataxia = getting worse']],why_wrong:{'Administer the next scheduled dose — level is within range':'Administering the next dose when a patient shows tremors, confusion, and ataxia risks serious toxicity. The NCLEX tests that coarse tremors with neurological symptoms require holding Lithium — never assume the level is within range without checking.','Encourage fluid intake and reassess in 2 hours':'Encouraging fluid intake and reassessing delays intervention when toxicity signs are present. The NCLEX expects immediate action — hold the medication and notify the provider. Hydration is part of toxicity management but not a substitute for stopping the drug.','Obtain an ECG and prepare for cardioversion':'Obtaining an ECG and preparing for cardioversion is appropriate for cardiac arrhythmias — not the priority for Lithium toxicity presenting with neurological symptoms. The NCLEX tests matching the correct intervention to the correct complication.'}},
 
   {cat:'Mental Health',bloom:'Evaluate',xp:30,title:'Alcohol Withdrawal — Priority',type:'Multiple Choice · Mental Health',
    scenario:'A patient 24 hours after last drink is trembling, diaphoretic, BP 158/96, and reports seeing bugs on the wall.',
@@ -1059,7 +1123,7 @@ var DIAGNOSTIC_CARDS=[
    correct:3,
    layers:['Alcohol withdrawal causes CNS hyperexcitability as inhibitory GABA effects are removed','Hallucinations, tremors, and autonomic instability at 24 hours indicate significant withdrawal — seizure risk at peak','Without benzodiazepines, withdrawal seizures can progress to delirium tremens — mortality up to 15%','CIWA protocol and benzodiazepines are the priority — they prevent seizure by restoring GABA inhibition'],
    lens:'Stable vs Unstable',pearl:'Alcohol withdrawal peaks 24-72 hours. Seizures kill. Benzos first. Know the timeline. Remember:',
-   mnemonic:[['6-12hrs','Tremors and anxiety'],['24-48hrs','Seizure peak risk'],['48-72hrs','Delirium tremens possible']]}
+   mnemonic:[['6-12hrs','Tremors and anxiety'],['24-48hrs','Seizure peak risk'],['48-72hrs','Delirium tremens possible']],why_wrong:{'Wernicke encephalopathy — give thiamine immediately':'Wernicke encephalopathy from thiamine deficiency is a serious concern in alcohol withdrawal but it is not the immediate life-threatening priority. The NCLEX tests that seizures are the primary cause of death in alcohol withdrawal — benzodiazepines prevent this.','Aspiration — position patient on side':'Aspiration risk is important and positioning helps — but it is a supportive measure, not the priority pharmacological intervention. The NCLEX tests that preventing seizures with benzodiazepines is the priority action that saves lives in alcohol withdrawal.','Hypertensive crisis — administer antihypertensives':'Hypertensive crisis can occur in alcohol withdrawal but it is a Complication — not the Core Problem. The NCLEX expects you to prioritize seizure prevention with benzodiazepines over treating expected autonomic hyperactivity with antihypertensives.'}}
 ];
 var STUDY_CARDS=[
   {cat:'Cardiac',bloom:'Apply',xp:20,title:'Pericarditis — Priority Finding',type:'Multiple Choice · Cardiac',
@@ -1069,7 +1133,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Pericarditis is inflammation of the pericardial sac surrounding the heart — fluid accumulation creates pressure','When supine the inflamed pericardium presses against surrounding structures — pain intensifies','Leaning forward shifts the heart away from the inflamed pericardium — dramatically reduces friction and pain','Classic pericarditis posture: sitting up and leaning over a bedside table — pain relief confirms the diagnosis'],
    lens:'Assessment vs Intervention',pearl:'Pericarditis pain worsens lying flat, improves leaning forward. Friction rub on auscultation is the hallmark. Remember:',
-   mnemonic:[['P','Pericarditis = positional pain'],['F','Forward lean = relief'],['R','Rub = classic finding']]},
+   mnemonic:[['P','Pericarditis = positional pain'],['F','Forward lean = relief'],['R','Rub = classic finding']],why_wrong:{'Supine with legs elevated':'Supine with legs elevated increases venous return and worsens pericardial pressure — contraindicated in pericarditis. The NCLEX tests that comfort positioning must match the pathophysiology. Lying flat increases friction between pericardial layers.','Left lateral recumbent':'Left lateral recumbent is used for fetal heart rate optimization and post-cardiac procedure positioning — not pericarditis. The NCLEX tests whether you can match comfort positions to specific conditions rather than applying a general rule.','High Fowler with arms at sides':'High Fowler with arms at sides does not relieve the pleuritic friction of pericarditis. The orthopneic position leaning forward reduces pressure on the pericardium — arms at sides provides no mechanical relief from the friction rub.'}},
 
   {cat:'Cardiac',bloom:'Analyze',xp:25,title:'Atrial Fibrillation — Priority Risk',type:'Multiple Choice · Cardiac',
    scenario:'A patient is admitted with new-onset atrial fibrillation. Rate is 112 bpm and irregular. The provider is notified.',
@@ -1078,7 +1142,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['In atrial fibrillation the atria quiver instead of contracting — blood pools and stagnates in the atrial appendage','Pooled blood forms clots — these can travel to the brain causing embolic stroke','Stroke is the number one life-threatening complication of AFib — anticoagulation is initiated to prevent it','Rate control, rhythm control, and anticoagulation are the three pillars of AFib management'],
    lens:'Safety & Delegation',pearl:'AFib = pooled blood = clots = stroke risk. Anticoagulation is the priority intervention. Remember:',
-   mnemonic:[['A','AFib = atria not contracting'],['C','Clots form in left atrium'],['S','Stroke is the danger']]},
+   mnemonic:[['A','AFib = atria not contracting'],['C','Clots form in left atrium'],['S','Stroke is the danger']],why_wrong:{'Hypertensive crisis from increased rate':'Hypertensive crisis is not the primary risk of chronic AFib. The NCLEX tests that the Core Problem in AFib is blood pooling in the atria — this stasis creates clots, not hypertension. Rate control addresses the rate but stroke risk remains.','Ventricular fibrillation converting from AFib':'AFib does not directly cause ventricular fibrillation — this is a common distractor. The NCLEX tests whether you understand that the atrial mechanism in AFib is completely separate from ventricular function. Clot formation and stroke are the priority concern.','Pulmonary edema from decreased cardiac output':'Pulmonary edema can occur if cardiac output drops significantly but it is not the primary priority concern of chronic AFib. The NCLEX expects you to connect chronic AFib directly to stroke risk — this is why lifelong anticoagulation is prescribed.'}},
 
   {cat:'Pharmacology',bloom:'Apply',xp:20,title:'Beta Blockers — Contraindication',type:'Multiple Choice · Pharmacology',
    scenario:'A provider orders Metoprolol 25mg PO for a patient with hypertension. The nurse reviews the chart and notes the patient has a history of acute bronchospasm.',
@@ -1087,7 +1151,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Beta blockers work by blocking beta-1 receptors in the heart to slow rate and reduce blood pressure','Beta-1 selective blockers can also affect beta-2 receptors in the lungs — causing bronchoconstriction','In patients with asthma or bronchospasm history beta blockers can trigger life-threatening bronchospasm','The nurse must hold and notify — this is a contraindication that requires provider awareness before administration'],
    lens:'Safety & Delegation',pearl:'Beta blockers are contraindicated in bronchospasm and asthma. Hold and call. Never administer blind. Remember:',
-   mnemonic:[['B','Beta blockers block bronchodilation'],['A','Asthma = absolute contraindication'],['H','Hold and notify provider']]},
+   mnemonic:[['B','Beta blockers block bronchodilation'],['A','Asthma = absolute contraindication'],['H','Hold and notify provider']],why_wrong:{'Administer as ordered — the dose is low':'Administering when a patient has active bronchospasm risks worsening airway obstruction. The NCLEX tests that beta blockers block beta-2 receptors in the lungs — this causes bronchoconstriction. Active bronchospasm is a contraindication regardless of dose.','Administer with a bronchodilator to prevent spasm':'Administering a beta blocker with a bronchodilator does not eliminate the contraindication. The NCLEX tests that the underlying mechanism — beta-2 blockade causing bronchoconstriction — persists regardless of concurrent bronchodilator use.','Crush and mix with food to reduce side effects':'Crushing and mixing with food changes the pharmacokinetics and does not address the contraindication. The NCLEX tests clinical judgment about contraindications — the route of administration does not change the drug\'s effect on bronchial smooth muscle.'}},
 
   {cat:'Pharmacology',bloom:'Evaluate',xp:30,title:'Heparin — Therapeutic Monitoring',type:'Multiple Choice · Pharmacology',
    scenario:'A patient is on a continuous heparin infusion for DVT. The nurse reviews the latest aPTT result which is 142 seconds.',
@@ -1096,7 +1160,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Heparin prevents clot extension by enhancing antithrombin III activity — aPTT monitors its effect','Therapeutic aPTT range is 60-100 seconds (1.5-2.5 times the normal of 30-40 seconds)','An aPTT of 142 seconds is supratherapeutic — significantly above the therapeutic range','Holding the infusion and notifying the provider prevents serious bleeding complications'],
    lens:'Safety & Delegation',pearl:'Heparin therapeutic aPTT is 60-100 seconds. Above 100 = hold and call. Below 60 = subtherapeutic. Remember:',
-   mnemonic:[['T','Therapeutic = 60-100 seconds'],['H','High = hold and notify'],['L','Low = increase rate per protocol']]},
+   mnemonic:[['T','Therapeutic = 60-100 seconds'],['H','High = hold and notify'],['L','Low = increase rate per protocol']],why_wrong:{'Therapeutic — no change needed':'An aPTT of 120 seconds is supratherapeutic — the therapeutic range is 1.5 to 2.5 times normal. The NCLEX tests precise knowledge of therapeutic ranges. Continuing the infusion at this level significantly increases bleeding risk.','Increase infusion rate — level is subtherapeutic':'The aPTT of 120 seconds is above therapeutic range — increasing the rate would worsen supratherapeutic levels. The NCLEX tests whether you understand that a high aPTT means too much anticoagulation, not too little. Always check the direction before adjusting.','Switch to oral anticoagulation immediately':'Switching to oral anticoagulation is a provider decision based on the clinical situation — not an independent nursing response to a supratherapeutic aPTT. The NCLEX tests the immediate nursing action: hold infusion and notify provider.'}},
 
   {cat:'Respiratory',bloom:'Apply',xp:20,title:'Chest Tube — Priority Assessment',type:'Multiple Choice · Respiratory',
    scenario:'A patient has a chest tube in place after hemothorax. The nurse notes the water seal chamber is no longer fluctuating (tidaling) with respirations.',
@@ -1105,7 +1169,7 @@ var STUDY_CARDS=[
    correct:0,
    layers:['Tidaling in the water seal chamber reflects pressure changes during breathing — it indicates the tube is patent and the lung is not fully expanded','When the lung fully re-expands it fills the pleural space — there is no longer negative pressure fluctuation','Absence of tidaling in a patient who is clinically improving = lung re-expansion — this is a positive sign','If the patient is deteriorating and tidaling stops = obstruction — clinical context determines the interpretation'],
    lens:'Assessment vs Intervention',pearl:'No tidaling = lung re-expanded OR tube obstructed. Clinical status tells you which. Improving = good. Deteriorating = problem. Remember:',
-   mnemonic:[['T','Tidaling stops = two possibilities'],['R','Re-expanded = positive'],['O','Obstructed = problem']]},
+   mnemonic:[['T','Tidaling stops = two possibilities'],['R','Re-expanded = positive'],['O','Obstructed = problem']],why_wrong:{'The chest tube is kinked or obstructed':'A kinked or obstructed chest tube prevents drainage and requires immediate correction. However the NCLEX tests that cessation of tidaling in a previously functioning tube is the priority finding — it indicates the lung may have re-expanded which changes management.','The suction is set too high':'Suction set too high can cause excessive drainage but is not the primary reason for cessation of tidaling. The NCLEX tests systematic assessment of chest tube findings — tidaling stops when the lung re-expands or when the tube is obstructed.','The drainage system needs to be replaced':'Replacing the drainage system requires careful consideration and is not an automatic response to cessation of tidaling. The NCLEX tests that you first assess why tidaling stopped before taking action — lung re-expansion is the most common cause.'}},
 
   {cat:'Respiratory',bloom:'Evaluate',xp:30,title:'Pulmonary Embolism — Priority Action',type:'Multiple Choice · Respiratory',
    scenario:'A patient 2 days post total hip replacement suddenly develops sharp pleuritic chest pain, dyspnea, tachycardia at 118, and O2 sat drops to 88%.',
@@ -1114,7 +1178,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Post-surgical immobility creates the perfect conditions for DVT — a clot can dislodge and travel to the pulmonary vasculature','Sudden pleuritic chest pain + dyspnea + tachycardia + hypoxia after hip surgery = pulmonary embolism until proven otherwise','Oxygen immediately addresses the life-threatening hypoxia — provider notification activates the emergency response','CT pulmonary angiogram confirms PE but oxygen comes first — you treat the hypoxia while preparing for diagnostics'],
    lens:'ABCs',pearl:'Post-surgical sudden hypoxia + pleuritic pain + tachycardia = PE. Oxygen first. Call immediately. Remember:',
-   mnemonic:[['O','Oxygen first'],['N','Notify immediately'],['C','CT confirms it']]},
+   mnemonic:[['O','Oxygen first'],['N','Notify immediately'],['C','CT confirms it']],why_wrong:{'Obtain a STAT CT pulmonary angiogram':'Obtaining a CT pulmonary angiogram is the definitive diagnostic test but diagnosis comes after stabilization. The NCLEX tests ABCs first — oxygen addresses the immediate Core Problem of hypoxia while diagnostic workup follows.','Reposition the patient and encourage deep breathing':'Repositioning and deep breathing exercises do not address the Core Problem of blocked pulmonary circulation. The NCLEX expects interventions that directly target oxygenation — supplemental oxygen is your priority, not positioning alone.','Draw a D-dimer level and await results':'Drawing a D-dimer and awaiting results delays treatment while the patient is hypoxic. The NCLEX tests that ABCs come before diagnostics. D-dimer has low specificity and is not the priority when a patient is acutely symptomatic.'}},
 
   {cat:'OB/Maternity',bloom:'Apply',xp:20,title:'Fetal Heart Rate — Late Decelerations',type:'Multiple Choice · OB/Maternity',
    scenario:'During labor monitoring the nurse notes a pattern of fetal heart rate decelerations that begin after the peak of contractions and return to baseline after the contraction ends.',
@@ -1123,7 +1187,7 @@ var STUDY_CARDS=[
    correct:2,
    layers:['Fetal heart rate decelerations are classified by their timing relative to uterine contractions','Late decelerations begin after the peak of contractions — reflecting delayed response to decreased placental blood flow','Uteroplacental insufficiency means the placenta cannot deliver adequate oxygen during contractions — fetal hypoxia results','Late decelerations are ALWAYS non-reassuring — notify the provider and initiate interventions immediately'],
    lens:'Stable vs Unstable',pearl:'Late decelerations = uteroplacental insufficiency = fetal hypoxia. Always non-reassuring. Act immediately. Remember:',
-   mnemonic:[['E','Early = head compression = OK'],['V','Variable = cord compression = monitor'],['L','Late = placental problem = act NOW']]},
+   mnemonic:[['E','Early = head compression = OK'],['V','Variable = cord compression = monitor'],['L','Late = placental problem = act NOW']],why_wrong:{'Early decelerations — head compression — reassuring':'Early decelerations mirror contractions and are caused by fetal head compression — they are benign and expected. The NCLEX tests whether you can distinguish reassuring from non-reassuring patterns. Early decelerations require documentation not intervention.','Variable decelerations — cord compression — may be benign':'Variable decelerations are caused by cord compression and have an abrupt onset and recovery — they may require intervention but are not the most concerning pattern. Late decelerations indicate uteroplacental insufficiency which is more serious.','Prolonged deceleration — requires position change only':'A prolonged deceleration requires a position change and assessment but it is a single event. The NCLEX distinguishes between patterns — late decelerations indicate a persistent problem with placental oxygenation, not just a transient cord event.'}},
 
   {cat:'Mental Health',bloom:'Apply',xp:20,title:'Suicide Risk — Priority Response',type:'Multiple Choice · Mental Health',
    scenario:'A patient with depression tells the nurse: "I have been thinking that everyone would be better off without me. I have a plan."',
@@ -1132,7 +1196,7 @@ var STUDY_CARDS=[
    correct:0,
    layers:['The patient has expressed suicidal ideation AND has a plan — this is high acuity and represents immediate risk','Staying with the patient prevents an attempt — the nurse must never leave a patient with active suicidal ideation alone','Provider notification initiates psychiatric evaluation and safe environment protocols immediately','No-harm contracts are not evidence-based and do not prevent suicide — immediate safety measures are the priority'],
    lens:'Safety & Delegation',pearl:'Suicidal plan = immediate risk. Stay with the patient. Notify now. Remove means. No-harm contracts do not work. Remember:',
-   mnemonic:[['S','Stay with the patient'],['N','Notify immediately'],['R','Remove all means'],['S','Safety is the only priority']]},
+   mnemonic:[['S','Stay with the patient'],['N','Notify immediately'],['R','Remove all means'],['S','Safety is the only priority']],why_wrong:{'Document the statement and continue the assessment':'Documenting the statement and continuing assessment treats a psychiatric emergency as routine monitoring. The NCLEX tests that patient safety always comes before documentation. You cannot document from across the hall while a patient is at risk.','Reassure the patient that things will improve':'Reassuring the patient that things will improve is false reassurance — a non-therapeutic response. The NCLEX specifically tests that offering false hope dismisses suicidal ideation rather than addressing it. Stay with the patient and remove harmful objects first.','Ask the patient to sign a no-harm contract':'No-harm contracts are explicitly contraindicated by current psychiatric guidelines. The NCLEX tests current evidence — research shows no-harm contracts create false security for staff while providing no actual protection for the patient.'}},
 
   {cat:'Mental Health',bloom:'Analyze',xp:25,title:'Antipsychotics — Tardive Dyskinesia',type:'Multiple Choice · Mental Health',
    scenario:'A patient who has been on haloperidol for 2 years develops involuntary repetitive movements of the tongue, lips, and face.',
@@ -1141,7 +1205,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Long-term antipsychotic use blocks dopamine receptors — over time the receptors upregulate causing hypersensitivity','Tardive dyskinesia develops after months to years — involuntary repetitive movements of face, lips, tongue, and extremities','Unlike acute EPS which is reversible, tardive dyskinesia may be permanent — early recognition is critical','Provider notification is urgent — the medication may need to be reduced, changed, or valbenazine added'],
    lens:'Assessment vs Intervention',pearl:'Tardive dyskinesia = long-term antipsychotics = involuntary face and tongue movements. May be permanent. Notify now. Remember:',
-   mnemonic:[['T','Tardive = late onset'],['D','Dyskinesia = involuntary movements'],['P','Permanent if not caught early']]},
+   mnemonic:[['T','Tardive = late onset'],['D','Dyskinesia = involuntary movements'],['P','Permanent if not caught early']],why_wrong:{'Acute dystonia — administer Benadryl IM immediately':'Acute dystonia presents with sudden muscle spasms and abnormal posturing — it has a rapid onset and responds to Benadryl. The NCLEX tests that tardive dyskinesia develops slowly over months to years of antipsychotic use — these are two distinct extrapyramidal side effects.','Neuroleptic malignant syndrome — this is life-threatening':'Neuroleptic Malignant Syndrome is a life-threatening emergency with fever, muscle rigidity, and altered mental status — it requires immediate discontinuation and emergency treatment. The NCLEX tests that NMS is your emergency while tardive dyskinesia requires medication review.','Akathisia — the patient needs a dose reduction':'Akathisia is subjective motor restlessness — the patient feels compelled to move but there are no involuntary movements. The NCLEX tests that tardive dyskinesia involves objective involuntary movements like lip smacking and tongue protrusion — not subjective restlessness.'}},
 
   {cat:'Renal / GU',bloom:'Apply',xp:20,title:'Foley Catheter — Preventing CAUTI',type:'Multiple Choice · Renal / GU',
    scenario:'A nurse is caring for a patient with an indwelling urinary catheter. During morning care the nurse assesses the catheter system.',
@@ -1150,7 +1214,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['CAUTIs are the most common hospital-acquired infection — catheter care bundles exist to prevent them','The drainage bag must always remain BELOW the level of the bladder — gravity dependent drainage prevents backflow','A bag on the floor allows backflow of contaminated urine into the bladder — introducing bacteria directly into the sterile urinary tract','Immediate correction: hang the bag on the bed frame below bladder level — never allow it to touch the floor'],
    lens:'Safety & Delegation',pearl:'Drainage bag on the floor = backflow risk = CAUTI. Always below the bladder, never on the floor. Remember:',
-   mnemonic:[['B','Bag below the bladder always'],['N','Never on the floor'],['F','Backflow = infection']]},
+   mnemonic:[['B','Bag below the bladder always'],['N','Never on the floor'],['F','Backflow = infection']],why_wrong:{'Urine is dark yellow — patient needs more fluids':'Dark yellow urine indicates the patient needs more fluids — this is a hydration issue, not a catheter complication. The NCLEX tests that you can distinguish between hydration status and catheter-related concerns. Encourage fluids but this is not a CAUTI risk.','The tubing has a small dependent loop':'A small dependent loop in tubing can impede drainage but it is not your priority finding. The NCLEX distinguishes between findings requiring correction and findings requiring immediate action. The drainage bag on the floor allows backflow of urine — a direct CAUTI risk.','Urine output is 45 mL for the past hour':'Urine output of 45 mL per hour is within normal range — normal is 30 mL per hour or greater. The NCLEX tests that you know normal parameters before identifying abnormal ones. This is a reassuring finding requiring no action.'}},
 
   {cat:'Infection Control',bloom:'Apply',xp:20,title:'Blood Transfusion Reaction',type:'Multiple Choice · Infection Control',
    scenario:'15 minutes into a blood transfusion a patient develops fever, chills, back pain, and hematuria.',
@@ -1159,7 +1223,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Fever + chills + back pain + hematuria = hemolytic transfusion reaction — ABO incompatibility causing red blood cell destruction','This is a life-threatening emergency — continued transfusion causes massive hemolysis leading to renal failure and death','Stop the transfusion IMMEDIATELY — maintain IV access with normal saline to protect the kidneys and maintain hemodynamics','Never remove the IV — blood cultures need to be drawn and emergency medications may need to be administered'],
    lens:'Safety & Delegation',pearl:'Hemolytic reaction: STOP the blood, keep the IV, hang normal saline, notify provider, send blood to lab. Remember:',
-   mnemonic:[['S','Stop transfusion immediately'],['S','Saline into the line'],['N','Notify provider'],['S','Send blood and urine to lab']]},
+   mnemonic:[['S','Stop transfusion immediately'],['S','Saline into the line'],['N','Notify provider'],['S','Send blood and urine to lab']],why_wrong:{'Slow the transfusion rate and administer diphenhydramine':'Slowing the transfusion rate is not appropriate when a reaction is suspected. The NCLEX tests that any suspected transfusion reaction requires stopping the transfusion immediately — not slowing it. Continuing even at a slower rate exposes the patient to more foreign blood.','Stop the transfusion and remove the IV catheter':'Stopping the transfusion is correct but removing the IV catheter eliminates access for emergency medications and normal saline. The NCLEX tests that you stop the blood but maintain IV access with normal saline — never remove the catheter during a reaction.','Notify the provider before stopping the transfusion':'Notifying the provider before stopping the transfusion delays intervention in a potential emergency. The NCLEX tests the sequence: stop the transfusion first, maintain IV access, then notify the provider. Patient safety comes before provider notification.'}},
 
   {cat:'Endocrine',bloom:'Apply',xp:20,title:'SIADH vs Diabetes Insipidus',type:'Multiple Choice · Endocrine',
    scenario:'Two patients are admitted. Patient A: serum sodium 122, concentrated urine, weight gain, confusion. Patient B: serum sodium 158, dilute urine, extreme thirst, weight loss.',
@@ -1168,7 +1232,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['ADH controls water reabsorption in the kidneys — too much or too little creates opposite problems','SIADH = too much ADH = too much water retained = dilutional hyponatremia = concentrated urine + fluid overload','DI = too little ADH = water pours out = hypernatremia = extremely dilute urine + dehydration','Treatment opposites: SIADH = fluid restrict. DI = fluid replacement + vasopressin'],
    lens:'Assessment vs Intervention',pearl:'SIADH = too much ADH = retain water = low sodium. DI = no ADH = lose water = high sodium. Total opposites. Remember:',
-   mnemonic:[['S','SIADH = Sodium low, fluid retained'],['D','DI = Dehydrated, sodium high'],['O','Opposite conditions, opposite treatment']]},
+   mnemonic:[['S','SIADH = Sodium low, fluid retained'],['D','DI = Dehydrated, sodium high'],['O','Opposite conditions, opposite treatment']],why_wrong:{'Both conditions cause hypernatremia and concentrated urine':'Both conditions causing hypernatremia and concentrated urine describes neither condition correctly. The NCLEX tests that SIADH causes hyponatremia from water retention — not hypernatremia. Understanding the mechanism prevents this confusion.','DI causes fluid retention — SIADH causes fluid loss':'DI causes fluid loss, not fluid retention — the opposite of SIADH. The NCLEX frequently tests these two conditions together because they are physiological opposites. In DI, insufficient ADH causes the kidneys to lose water, raising sodium.','Both are treated with fluid restriction':'Both conditions are not treated with fluid restriction. The NCLEX tests that DI is treated with fluid replacement and desmopressin — not restriction. Restricting fluids in DI would worsen the already elevated sodium.'}},
 
   {cat:'GI / Nutrition',bloom:'Apply',xp:20,title:'Dumping Syndrome — Teaching',type:'Multiple Choice · GI / Nutrition',
    scenario:'A patient post-gastrectomy reports dizziness, diaphoresis, and palpitations 15-20 minutes after eating. The nurse suspects dumping syndrome.',
@@ -1177,7 +1241,7 @@ var STUDY_CARDS=[
    correct:2,
    layers:['Post-gastrectomy the pyloric sphincter is absent — food dumps rapidly into the small intestine without normal digestion','Rapid entry of hyperosmolar contents draws fluid into the intestine — reducing blood volume and causing vasomotor symptoms','Small frequent meals reduce the volume entering the intestine at once — limiting the osmotic shift and symptom severity','Fluids with meals accelerate gastric emptying — delaying fluids 30-45 minutes after eating reduces dumping'],
    lens:'Assessment vs Intervention',pearl:'Dumping syndrome: small meals, no fluids with food, avoid simple carbs, lie down after eating. Remember:',
-   mnemonic:[['S','Small frequent meals'],['N','No fluids with meals'],['L','Lie down after eating']]},
+   mnemonic:[['S','Small frequent meals'],['N','No fluids with meals'],['L','Lie down after eating']],why_wrong:{'Eat large meals three times daily to reduce frequency of symptoms':'Eating large meals three times daily worsens dumping syndrome by overwhelming the small intestine with a large food bolus at once. The NCLEX tests that small frequent meals are the cornerstone of dumping syndrome management — not large infrequent ones.','Drink fluids freely with meals to aid digestion':'Drinking fluids freely with meals directly accelerates gastric emptying — the Core Problem in dumping syndrome. The NCLEX expects you to know that fluids must be taken 30-45 minutes after meals, never with them, to slow the rate of gastric emptying.','Increase simple carbohydrates to maintain blood sugar':'Increasing simple carbohydrates worsens dumping syndrome by triggering rapid glucose absorption and reactive hypoglycemia. The NCLEX tests that complex carbohydrates and proteins are preferred — simple sugars accelerate the dumping process.'}},
 
   {cat:'Neurology',bloom:'Apply',xp:20,title:'Glasgow Coma Scale',type:'Multiple Choice · Neurology',
    scenario:'A nurse assesses a patient with a head injury. The patient opens eyes to voice, uses inappropriate words, and withdraws from pain.',
@@ -1186,7 +1250,7 @@ var STUDY_CARDS=[
    correct:0,
    layers:['The GCS measures level of consciousness across three domains: eye opening, verbal response, and motor response','Eye opening: spontaneous=4, to voice=3, to pain=2, none=1. Opens to voice = 3','Verbal: oriented=5, confused=4, inappropriate words=3, sounds=2, none=1. Inappropriate words = 3','Motor: obeys=6, localizes=5, withdraws=4, flexion=3, extension=2, none=1. Withdraws = 4. Total = 10... wait: 3+3+4=10'],
    lens:'Assessment vs Intervention',pearl:'GCS: Eyes(4) + Verbal(5) + Motor(6) = 15 max. Below 8 = severe TBI = intubation consideration. Remember:',
-   mnemonic:[['E','Eyes max 4'],['V','Verbal max 5'],['M','Motor max 6'],['8','Below 8 = intubate']]},
+   mnemonic:[['E','Eyes max 4'],['V','Verbal max 5'],['M','Motor max 6'],['8','Below 8 = intubate']],why_wrong:{'GCS 10 — eyes 3, verbal 4, motor 3':'GCS 10 reflects a miscalculation. Eyes open to verbal is 3, Confused verbal response is 4, Motor withdrawal to pain is 4 — totaling 11, not 10. The NCLEX tests precise GCS calculation because accurate scoring drives clinical decisions.','GCS 7 — eyes 2, verbal 3, motor 2':'GCS 7 reflects a more severe impairment than described. Eyes open to pain is 2, Incomprehensible sounds is 2, Abnormal flexion is 3 — totaling 7. This would indicate more severe neurological compromise than the findings in the scenario.','GCS 11 — eyes 3, verbal 3, motor 5':'GCS 11 over-scores one component. Eyes open to pain is 2, Confused verbal is 4, Withdraws to pain is 4 — totaling 10 not 11. The NCLEX tests that each component is scored independently and precisely.'}},
 
   {cat:'Cardiac',bloom:'Evaluate',xp:30,title:'Cardiac Tamponade — Recognition',type:'Multiple Choice · Cardiac',
    scenario:'A post-cardiac surgery patient develops hypotension, muffled heart sounds, and JVD. BP is 78/60 and HR is 128.',
@@ -1195,7 +1259,7 @@ var STUDY_CARDS=[
    correct:1,
    layers:['Post-cardiac surgery bleeding into the pericardial sac compresses the heart — preventing adequate filling','Beck Triad: hypotension + muffled heart sounds + JVD = cardiac tamponade — classic presentation','Compressed heart cannot fill properly — severely decreased cardiac output leads to cardiovascular collapse','Emergency pericardiocentesis (needle drainage of the pericardial sac) is the definitive treatment — notify provider stat'],
    lens:'Stable vs Unstable',pearl:'Beck Triad = cardiac tamponade: hypotension + muffled sounds + JVD. Emergency pericardiocentesis needed. Remember:',
-   mnemonic:[['H','Hypotension'],['M','Muffled heart sounds'],['J','JVD'],['=','Tamponade']]},
+   mnemonic:[['H','Hypotension'],['M','Muffled heart sounds'],['J','JVD'],['=','Tamponade']],why_wrong:{'Tension pneumothorax — needle decompression immediately':'Tension pneumothorax presents with absent breath sounds, tracheal deviation, and hypotension — not muffled heart sounds and JVD. The NCLEX tests whether you can distinguish between two life threatening emergencies that both cause hypotension but require completely different interventions.','Cardiogenic shock — initiate vasopressors immediately':'Cardiogenic shock can cause hypotension but does not present with Beck\'s Triad of muffled heart sounds and JVD. The NCLEX expects you to recognize that Beck\'s Triad specifically points to fluid compressing the pericardium — vasopressors cannot fix that.','Hypovolemic shock — aggressive IV fluid resuscitation':'Hypovolemic shock causes hypotension but would present with flat neck veins — not JVD. The NCLEX tests whether you can distinguish between fluid loss and fluid trapping. Giving IV fluids to a tamponade patient adds more pressure to an already compressed heart.'}},
 
   {cat:'Mental Health',bloom:'Evaluate',xp:30,title:'Eating Disorders — Priority Concern',type:'Multiple Choice · Mental Health',
    scenario:'A patient with anorexia nervosa is admitted for medical stabilization. Weight is 78 lbs at 5 foot 4 inches. Labs show K+ 2.8, sodium 132, and EKG shows QT prolongation.',
@@ -1204,7 +1268,7 @@ var STUDY_CARDS=[
    correct:2,
    layers:['Anorexia causes severe electrolyte imbalances from starvation and purging behaviors — potassium is critically depleted','Hypokalemia directly affects cardiac conduction — potassium is required for myocardial repolarization','K+ of 2.8 + QT prolongation = imminent risk of torsades de pointes and ventricular fibrillation — this is a cardiac emergency','IV potassium replacement with continuous cardiac monitoring is the immediate priority — this is a life-threatening emergency'],
    lens:'Stable vs Unstable',pearl:'Eating disorders + low K+ + QT prolongation = cardiac emergency. Potassium replacement first. Remember:',
-   mnemonic:[['K','Potassium is the priority'],['Q','QT prolongation = dysrhythmia risk'],['T','Torsades = fatal if untreated']]}
+   mnemonic:[['K','Potassium is the priority'],['Q','QT prolongation = dysrhythmia risk'],['T','Torsades = fatal if untreated']],why_wrong:{'Sodium 132 — hyponatremia requires fluid correction':'Sodium of 132 is mildly low and requires monitoring but it is not your immediate priority. The NCLEX trains you to recognize acute physiological threats — hypokalemia with QT prolongation is your Complication that can cause fatal arrhythmia at any moment.','Weight loss — nutritional rehabilitation must begin immediately':'Weight loss requires nutritional rehabilitation but it is a chronic finding — not your acute emergency. The NCLEX expects you to prioritize findings that indicate immediate life-threatening risk. QT prolongation from hypokalemia can cause torsades de pointes before nutritional intervention begins.','QT prolongation alone — administer magnesium sulfate':'QT prolongation alone warrants monitoring but hypokalemia causing QT prolongation is your combined finding requiring immediate action. The NCLEX tests that you treat the underlying cause — correct the potassium first, which addresses both the electrolyte imbalance and the cardiac risk.'}}
 ];
 
 var CARDS=DIAGNOSTIC_CARDS; // active card bank
@@ -1314,7 +1378,7 @@ function startDiagnostic(){
   CARDS=DIAGNOSTIC_CARDS;
   sessionMode='test';
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
-  cardShuffles={};cardAnswers={};revealedCards={};
+  cardShuffles={};cardAnswers={};revealedCards={};cardTimes={};cardTimerStart=0;streakCount=0;
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
   document.getElementById('s-xp').textContent='50';
@@ -1343,7 +1407,7 @@ function selectMode(mode){
 function startSession(){
   isDiagnosticSession=false;
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
-  cardShuffles={};cardAnswers={};revealedCards={};
+  cardShuffles={};cardAnswers={};revealedCards={};cardTimes={};cardTimerStart=0;streakCount=0;
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
   document.getElementById('s-xp').textContent='50';
@@ -1371,6 +1435,7 @@ function setStudyMode(mode){
 }
 function launchStudySession(){
   isDiagnosticSession=false;
+  syncSessionStart();
   reviewingFromProgress=false;
   sessionActive=true;
 
@@ -1403,7 +1468,7 @@ function launchStudySession(){
   CARDS=pool.slice(0,count);
 
   sessionResults=[];sessionAnswers=[];sessionShuffles=[];currentCardIdx=0;currentLayer=1;
-  cardShuffles={};cardAnswers={};revealedCards={};
+  cardShuffles={};cardAnswers={};revealedCards={};cardTimes={};cardTimerStart=0;streakCount=0;
   document.getElementById('s-correct').textContent='0';
   document.getElementById('s-wrong').textContent='0';
   document.getElementById('s-xp').textContent='50';
@@ -1425,8 +1490,8 @@ function shuffleOpts(card){
   var texts=card.opts.map(function(opt){
     return opt.replace(/^[A-D]\.\s*/,'');
   });
-  // Build indexed array of text + isCorrect flag
-  var indexed=texts.map(function(text,i){return{text:text,isCorrect:i===card.correct};});
+  // Build indexed array of text + isCorrect flag + original index
+  var indexed=texts.map(function(text,i){return{text:text,isCorrect:i===card.correct,origIdx:i};});
   // Shuffle
   for(var i=indexed.length-1;i>0;i--){
     var j=Math.floor(Math.random()*(i+1));
@@ -1434,11 +1499,13 @@ function shuffleOpts(card){
   }
   // Re-apply fixed A B C D labels to shuffled content
   var newCorrect=-1;
+  var origMap=[];
   var shuffledOpts=indexed.map(function(o,i){
     if(o.isCorrect) newCorrect=i;
+    origMap.push(o.origIdx);
     return labels[i]+' '+o.text;
   });
-  return{opts:shuffledOpts,correct:newCorrect};
+  return{opts:shuffledOpts,correct:newCorrect,origMap:origMap};
 }
 
 // LOAD CARD
@@ -1477,6 +1544,7 @@ function loadCard(idx,dir){
   });
   selectedOptIdx=-1;
   struckOpts={};
+  var wwReset=document.getElementById('why-wrong-box');if(wwReset)wwReset.classList.remove('visible');
   var submitBtn=document.getElementById('submit-answer-btn');
   if(submitBtn) submitBtn.style.display='none';
   document.getElementById('nav-prev').className='nav-btn'+(idx===0?' disabled':'');
@@ -1503,6 +1571,8 @@ function loadCard(idx,dir){
       resetLayers();
     }
   }
+  startCardTimer(); // start timing this card
+  startCardTimer();
   var cm=document.getElementById('card-main');
   cm.style.animation='none';cm.offsetHeight;
   cm.style.animation=(dir==='right'?'slideInRight':'slideInLeft')+' 0.3s ease';
@@ -1552,6 +1622,7 @@ function answer(optIdx){
     }
     // Enable back nav after answering
     document.getElementById('nav-next').className='nav-btn'+(currentCardIdx<CARDS.length-1?'':' disabled');
+    stopCardTimer(); // stop timer before routing
     setTimeout(function(){
       if(currentCardIdx<CARDS.length-1){
         loadCard(currentCardIdx+1,'right');
@@ -1563,6 +1634,8 @@ function answer(optIdx){
       }
     },600);
   } else {
+    stopCardTimer(); // stop timer on answer
+    checkStudyAnimations(isCorrect,CARDS[currentCardIdx],CARDS[currentCardIdx]?CARDS[currentCardIdx].xp:20);
     sessionAnswers[currentCardIdx]=optIdx;
     sessionShuffles[currentCardIdx]={opts:currentShuffled.opts.slice(),correct:currentShuffled.correct};
     ['a','b','c','d'].forEach(function(o,i){
@@ -1610,6 +1683,19 @@ function showResult(isCorrect,optIdx){
   document.getElementById('snl-section').style.display='block';
   document.getElementById('lc-1').textContent=card.layers[0];
   resetLayers();
+  // Show why wrong if student got it wrong
+  var wwBox=document.getElementById('why-wrong-box');
+  var wwText=document.getElementById('why-wrong-text');
+  var wwLbl=document.getElementById('why-wrong-lbl');
+  var pickedText=currentShuffled.opts[optIdx]?currentShuffled.opts[optIdx].replace(/^[A-D]\. */,''):'';
+  if(!isCorrect && card.why_wrong && card.why_wrong[pickedText]!==undefined){
+    wwText.textContent=card.why_wrong[pickedText];
+    wwLbl.textContent='Why ' + pickedText + ' is wrong';
+    wwBox.classList.add('visible');
+  } else {
+    wwBox.classList.remove('visible');
+    if(wwText) wwText.textContent='';
+  }
   document.getElementById('card-state-q').style.display='none';
   document.getElementById('card-state-r').style.display='block';
   var btn=document.getElementById('next-card-btn');
@@ -1680,6 +1766,8 @@ function showXPFly(txt){
 // REVIEW SCREEN (after test mode daily session)
 function showReviewScreen(){
   sessionActive=false;
+  buildInsights('test');
+  var _sr=document.getElementById('s-review');if(_sr)_sr.scrollTop=0;
   window.reviewCardBank=CARDS.slice();
   var correct=parseInt(document.getElementById('s-correct').textContent)||0;
   var wrong=parseInt(document.getElementById('s-wrong').textContent)||0;
@@ -1852,6 +1940,21 @@ function showReviewResult(idx, backFn, cardOverride){
   // Hide the result banner and answer recap in card-state-r — only show CCCC
   document.getElementById('result-display').innerHTML='';
   document.getElementById('answer-recap').textContent='';
+  // Show why wrong for the student's wrong answer
+  var wwBox2=document.getElementById('why-wrong-box');
+  var wwText2=document.getElementById('why-wrong-text');
+  var wwLbl2=document.getElementById('why-wrong-lbl');
+  var studentPick2=sessionAnswers[idx];
+  var wasWrong2=sessionResults[idx]===false;
+  var reviewCard=cardOverride||CARDS[idx];
+  var pickedText2=currentShuffled.opts[studentPick2]?currentShuffled.opts[studentPick2].replace(/^[A-D]\. */,''):'';
+  if(wasWrong2 && reviewCard && reviewCard.why_wrong && pickedText2 && reviewCard.why_wrong[pickedText2]!==undefined){
+    wwText2.textContent=reviewCard.why_wrong[pickedText2];
+    wwLbl2.textContent='Why "'+currentShuffled.opts[studentPick2].replace(/^[A-D]\.\s*/,'')+'" is wrong';
+    if(wwBox2) wwBox2.classList.add('visible');
+  } else {
+    if(wwBox2) wwBox2.classList.remove('visible');
+  }
 
   // CCCC tap-to-reveal
   document.getElementById('snl-section').style.display='block';
@@ -1900,6 +2003,7 @@ function reviewFromDiag(idx){
 }
 
 function showPlanReady(){
+  saveStudentProfile();
   document.getElementById('pr-name').textContent='Nurse '+nickname;
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   var _pr=document.getElementById('s-plan-ready');_pr.classList.add('active');_pr.scrollTop=0;
@@ -2256,6 +2360,7 @@ function saveSession(){
     shuffles:sessionShuffles.slice()
   };
   sessionHistory.push(snap);
+  syncSessionEnd();
 }
 
 function renderSessionHistory(){
@@ -2304,6 +2409,7 @@ function reviewSession(sessionIdx){
 
 function showStudyReviewScreen(){
   sessionActive=false;
+  buildInsights('study');
   var correct=parseInt(document.getElementById('s-correct').textContent)||0;
   var wrong=parseInt(document.getElementById('s-wrong').textContent)||0;
   var xp=parseInt(document.getElementById('s-xp').textContent)||0;
@@ -2485,6 +2591,7 @@ function selectAnswer(optIdx){
 
 function submitAnswer(){
   if(selectedOptIdx===-1) return;
+  stopCardTimer(); // stop timer on submit
   var idx=selectedOptIdx;
   cardAnswers[currentCardIdx]=idx; // store for back navigation
   selectedOptIdx=-1;
@@ -2518,6 +2625,338 @@ function showFullCCCC(idx){
   document.getElementById('card-state-r').style.display='block';
   currentLayer=4;
 }
+
+var cardTimes={}; // time in seconds per card index
+var cardTimerStart=0; // timestamp when current card loaded
+
+function startCardTimer(){
+  cardTimerStart=Date.now();
+}
+
+function stopCardTimer(){
+  if(cardTimerStart===0) return;
+  var elapsed=Math.round((Date.now()-cardTimerStart)/1000);
+  cardTimes[currentCardIdx]=elapsed;
+  cardTimerStart=0;
+}
+
+function formatTime(sec){
+  if(sec<60) return sec+'s';
+  var m=Math.floor(sec/60);
+  var s=sec%60;
+  return m+'m '+(s>0?s+'s':'');
+}
+
+function toggleInsights(id){
+  var panel=document.getElementById('insights-panel-'+id);
+  var arrow=document.getElementById('insights-arrow-'+id);
+  if(!panel||!arrow) return;
+  var open=panel.classList.contains('open');
+  panel.classList.toggle('open');
+  arrow.textContent=open?'▼':'▲';
+  arrow.style.color=open?'rgba(255,255,255,0.3)':'#F5C518';
+}
+
+function buildInsights(panelId){
+  var catIcons={'Cardiac':'🫀','Pharmacology':'💊','Respiratory':'🫁','OB/Maternity':'🤱','Mental Health':'🧠',
+    'Neurology':'🧠','GI / Nutrition':'🍽️','Endocrine':'⚡','Renal / GU':'🫘','Infection Control':'🦠'};
+
+  // Group by category
+  var cats={};
+  CARDS.forEach(function(card,i){
+    if(!cats[card.cat]) cats[card.cat]={times:[],wrong:0,total:0};
+    cats[card.cat].total++;
+    if(cardTimes[i]) cats[card.cat].times.push(cardTimes[i]);
+    if(sessionResults[i]===false) cats[card.cat].wrong++;
+  });
+
+  // Overall avg
+  var allTimes=Object.values(cardTimes);
+  var overallAvg=allTimes.length>0?Math.round(allTimes.reduce(function(a,b){return a+b;},0)/allTimes.length):0;
+  var avgEl=document.getElementById('insights-avg-'+panelId);
+  if(avgEl) avgEl.textContent=overallAvg>0?formatTime(overallAvg):'—';
+
+  // Assign tiers
+  var mastered=[],developing=[],needsWork=[];
+  Object.keys(cats).forEach(function(cat){
+    var d=cats[cat];
+    var avg=d.times.length>0?Math.round(d.times.reduce(function(a,b){return a+b;},0)/d.times.length):0;
+    var icon=catIcons[cat]||'📋';
+    var timeStr=avg>0?formatTime(avg):'—';
+    if(d.wrong>0||avg>120){
+      needsWork.push({cat:cat,icon:icon,time:timeStr,wrong:d.wrong,avg:avg});
+    } else if(avg>60){
+      developing.push({cat:cat,icon:icon,time:timeStr,avg:avg});
+    } else {
+      mastered.push({cat:cat,icon:icon,time:timeStr,avg:avg});
+    }
+  });
+
+  // Build HTML
+  var html='';
+  if(mastered.length>0){
+    html+='<div class="insights-tier"><div class="insights-tier-hdr">'+
+      '<div class="insights-tier-dot" style="background:#4ade80;"></div>'+
+      '<div class="insights-tier-name" style="color:#4ade80;">🟢 Mastered</div></div>';
+    mastered.forEach(function(c){
+      html+='<div class="insights-cat-row g"><div class="insights-cat-name">'+c.icon+' '+c.cat+'</div>'+
+        '<div class="insights-time-badge itb-fast">'+c.time+' avg</div></div>';
+    });
+    html+='</div>';
+  }
+  if(developing.length>0){
+    html+='<div class="insights-tier"><div class="insights-tier-hdr">'+
+      '<div class="insights-tier-dot" style="background:#F5C518;"></div>'+
+      '<div class="insights-tier-name" style="color:#F5C518;">🟡 Developing</div></div>';
+    developing.forEach(function(c){
+      html+='<div class="insights-cat-row y"><div class="insights-cat-name">'+c.icon+' '+c.cat+'</div>'+
+        '<div class="insights-time-badge itb-mid">'+c.time+' avg</div></div>';
+    });
+    html+='</div>';
+  }
+  if(needsWork.length>0){
+    html+='<div class="insights-tier"><div class="insights-tier-hdr">'+
+      '<div class="insights-tier-dot" style="background:#f87171;"></div>'+
+      '<div class="insights-tier-name" style="color:#f87171;">🔴 Needs Work</div></div>';
+    needsWork.forEach(function(c){
+      var label=c.wrong>0?'Wrong · '+c.time:c.time+' avg';
+      html+='<div class="insights-cat-row r"><div class="insights-cat-name">'+c.icon+' '+c.cat+'</div>'+
+        '<div class="insights-time-badge itb-slow">'+label+'</div></div>';
+    });
+    html+='</div>';
+  }
+
+  var tiersEl=document.getElementById('insights-tiers-'+panelId);
+  if(tiersEl) tiersEl.innerHTML=html||'<div style="font-size:11px;color:rgba(255,255,255,0.25);text-align:center;padding:8px 0;">Answer more cards to see insights.</div>';
+}
+
+var streakCount=0; // consecutive correct answers
+
+function getCardCenter(){
+  var cm=document.getElementById('card-main');
+  if(!cm) return {x:window.innerWidth/2,y:window.innerHeight/2};
+  var r=cm.getBoundingClientRect();
+  return{x:r.left+r.width/2,y:r.top+r.height/2};
+}
+
+function spawnEpicConf(colors,count){
+  var pt=getCardCenter();
+  for(var i=0;i<(count||28);i++){
+    var c=document.createElement('div');c.className='anim-conf';
+    c.style.background=colors[i%colors.length];
+    c.style.left=(pt.x-60+Math.random()*120)+'px';
+    c.style.top=(pt.y-40)+'px';
+    c.style.width=(5+Math.random()*7)+'px';
+    c.style.height=(5+Math.random()*7)+'px';
+    c.style.animationDuration=(0.5+Math.random()*0.7)+'s';
+    c.style.animationDelay=(Math.random()*0.25)+'s';
+    document.body.appendChild(c);
+    setTimeout(function(el){if(el.parentNode)el.remove();},1500,c);
+  }
+}
+
+function spawnRings(colors,delay2){
+  var pt=getCardCenter();
+  colors.forEach(function(col,i){
+    var r=document.createElement('div');r.className='anim-ring';
+    r.style.width='70px';r.style.height='70px';
+    r.style.border='3px solid '+col;
+    r.style.left=pt.x+'px';r.style.top=pt.y+'px';
+    r.style.animationDelay=(i*0.15+(delay2||0))+'s';
+    document.body.appendChild(r);
+    setTimeout(function(el){if(el.parentNode)el.remove();},1200,r);
+  });
+}
+
+function spawnOverlay(color){
+  var cm=document.getElementById('card-main');
+  if(!cm) return;
+  var r=cm.getBoundingClientRect();
+  var o=document.createElement('div');o.className='anim-overlay';
+  o.style.left=r.left+'px';o.style.top=r.top+'px';
+  o.style.width=r.width+'px';o.style.height=r.height+'px';
+  o.style.background=color;o.style.borderRadius='20px';
+  document.body.appendChild(o);
+  setTimeout(function(){if(o.parentNode)o.remove();},800);
+}
+
+function spawnEpicScore(html){
+  var pt=getCardCenter();
+  var s=document.createElement('div');s.className='anim-epic-score';
+  s.innerHTML=html;
+  s.style.left=pt.x+'px';s.style.top=pt.y+'px';
+  s.style.transform='translate(-50%,-50%)';
+  document.body.appendChild(s);
+  setTimeout(function(){if(s.parentNode)s.remove();},1600);
+}
+
+function spawnEpicToast(msg,bg,border,color){
+  var pt=getCardCenter();
+  var t=document.createElement('div');t.className='anim-epic-toast';
+  t.textContent=msg;
+  t.style.background=bg;t.style.border='2px solid '+border;t.style.color=color;
+  t.style.left=pt.x+'px';t.style.bottom=(window.innerHeight-pt.y-80)+'px';
+  t.style.transform='translateX(-50%)';
+  document.body.appendChild(t);
+  setTimeout(function(){
+    t.style.transition='opacity 0.3s';t.style.opacity='0';
+    setTimeout(function(){if(t.parentNode)t.remove();},300);
+  },1600);
+}
+
+function spawnFloats(emojis,count){
+  var pt=getCardCenter();
+  for(var i=0;i<(count||10);i++){
+    var f=document.createElement('div');f.className='anim-float';
+    f.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    f.style.fontSize=(14+Math.random()*16)+'px';
+    f.style.left=(pt.x-60+Math.random()*120)+'px';
+    f.style.top=(pt.y+20)+'px';
+    f.style.animationDuration=(0.6+Math.random()*0.5)+'s';
+    f.style.animationDelay=(Math.random()*0.3)+'s';
+    document.body.appendChild(f);
+    setTimeout(function(el){if(el.parentNode)el.remove();},1400,f);
+  }
+}
+
+function triggerCorrectAnimation(xp){
+  spawnOverlay('rgba(74,222,128,0.15)');
+  spawnRings(['rgba(245,197,24,0.8)','rgba(74,222,128,0.5)']);
+  spawnEpicConf(['#4ade80','#F5C518','#60a5fa','#f87171','#a78bfa','#34d399'],30);
+  spawnEpicScore('<div style="font-size:38px;font-weight:900;color:#F5C518;line-height:1;font-family:Outfit,sans-serif;">+'+xp+'</div><div style="font-size:11px;font-weight:700;color:rgba(245,197,24,0.6);text-transform:uppercase;letter-spacing:2px;font-family:Outfit,sans-serif;">XP Earned</div>');
+  spawnEpicToast('🔥 Nailed it!','linear-gradient(135deg,rgba(245,197,24,0.2),rgba(74,222,128,0.15))','rgba(245,197,24,0.4)','#F5C518');
+}
+
+function triggerWrongAnimation(){
+  var cm=document.getElementById('card-main');
+  if(cm){cm.style.animation='shakeHardAnim 0.5s ease';setTimeout(function(){cm.style.animation='';},500);}
+  spawnOverlay('rgba(248,113,113,0.2)');
+  spawnRings(['rgba(248,113,113,0.7)','rgba(248,113,113,0.4)']);
+  spawnEpicScore('<div style="font-size:44px;line-height:1;">❌</div><div style="font-size:11px;font-weight:700;color:#f87171;text-transform:uppercase;letter-spacing:1px;font-family:Outfit,sans-serif;margin-top:4px;">Review This Card</div>');
+  spawnEpicToast('📖 CCCC will show you why','rgba(248,113,113,0.12)','rgba(248,113,113,0.4)','#f87171');
+}
+
+function triggerStreakAnimation(count){
+  spawnOverlay('rgba(245,197,24,0.18)');
+  spawnRings(['rgba(245,197,24,0.8)','rgba(245,197,24,0.4)']);
+  spawnFloats(['🔥'],12);
+  spawnEpicScore('<div style="font-size:32px;font-weight:900;color:#F5C518;line-height:1;font-family:Outfit,sans-serif;">🔥 x'+count+'</div><div style="font-size:10px;font-weight:700;color:rgba(245,197,24,0.6);text-transform:uppercase;letter-spacing:2px;font-family:Outfit,sans-serif;margin-top:4px;">On Fire!</div>');
+  var msg=count>=10?'⚡ '+count+' in a row — UNSTOPPABLE!':count>=5?'🔥 '+count+' in a row — you\'re on fire!':'🔥 '+count+' in a row!';
+  spawnEpicToast(msg,'linear-gradient(135deg,rgba(245,197,24,0.2),rgba(251,146,60,0.15))','rgba(245,197,24,0.5)','#F5C518');
+}
+
+function triggerMilestoneAnimation(current,total){
+  spawnOverlay('rgba(96,165,250,0.18)');
+  spawnRings(['rgba(96,165,250,0.7)','rgba(167,139,250,0.5)']);
+  spawnEpicConf(['#60a5fa','#a78bfa','#F5C518','#4ade80'],22);
+  spawnEpicScore('<div style="font-size:28px;font-weight:900;color:#60a5fa;line-height:1;font-family:Outfit,sans-serif;">'+current+' / '+total+'</div><div style="font-size:10px;font-weight:700;color:rgba(96,165,250,0.6);text-transform:uppercase;letter-spacing:2px;font-family:Outfit,sans-serif;margin-top:4px;">Halfway There!</div>');
+  spawnEpicToast('💪 Halfway — finish strong!','linear-gradient(135deg,rgba(96,165,250,0.15),rgba(167,139,250,0.12))','rgba(96,165,250,0.45)','#60a5fa');
+}
+
+function checkStudyAnimations(isCorrect, card, xp){
+  if(sessionMode!=='study') return;
+  if(isCorrect){
+    streakCount++;
+    triggerCorrectAnimation(xp||20);
+    if(streakCount===3||streakCount===5||streakCount===10){
+      setTimeout(function(){triggerStreakAnimation(streakCount);},900);
+    }
+    var half=Math.floor(CARDS.length/2);
+    if(currentCardIdx+1===half){
+      setTimeout(function(){triggerMilestoneAnimation(half,CARDS.length);},900);
+    }
+  } else {
+    streakCount=0;
+    triggerWrongAnimation();
+  }
+}
+
+var SUPA_URL='https://oqinkogrloprvophvuui.supabase.co';
+var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xaW5rb2dybG9wcnZvcGh2dXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MDYyODMsImV4cCI6MjA5MTI4MjI4M30.9xZDFz88WlbBij98ojoLdlucDmnTpKVaQFRorr4y5VU';
+var supaStudentId=null;
+var supaSessionId=null;
+
+function supaHeaders(){
+  return {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=representation'};
+}
+
+async function supaPost(table,body){
+  try{
+    var r=await fetch(SUPA_URL+'/rest/v1/'+table,{method:'POST',headers:supaHeaders(),body:JSON.stringify(body)});
+    var data=await r.json();
+    if(!r.ok){console.error('supaPost error on '+table+':',JSON.stringify(data));return null;}
+    return Array.isArray(data)?data[0]:data;
+  }catch(e){console.error('supaPost:',e.message);return null;}
+}
+
+async function supaPatch(table,query,body){
+  try{
+    var r=await fetch(SUPA_URL+'/rest/v1/'+table+'?'+query,{method:'PATCH',headers:supaHeaders(),body:JSON.stringify(body)});
+    var data=await r.json();
+    if(!r.ok){console.error('supaPatch error:',JSON.stringify(data));return null;}
+    return data;
+  }catch(e){console.error('supaPatch:',e.message);return null;}
+}
+
+function genUUID(){
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+    var r=Math.random()*16|0,v=c=='x'?r:(r&0x3|0x8);return v.toString(16);
+  });
+}
+
+async function initSupabase(){
+  try{
+    var stored=localStorage.getItem('pl_student_id');
+    supaStudentId=stored||genUUID();
+    if(!stored) localStorage.setItem('pl_student_id',supaStudentId);
+    await fetch(SUPA_URL+'/rest/v1/students',{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:supaStudentId,nickname:nickname||'Student'})
+    });
+    console.log('Supabase ready. Student ID:',supaStudentId);
+  }catch(e){supaStudentId=genUUID();console.log('initSupabase fallback:',e.message);}
+}
+
+async function saveStudentProfile(){
+  if(!supaStudentId) return;
+  try{
+    await fetch(SUPA_URL+'/rest/v1/students',{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:supaStudentId,nickname:nickname||'',tester_type:testerType||'',confidence:confidence||'',test_date:testDays?String(testDays):''})
+    });
+  }catch(e){console.log('saveStudentProfile:',e.message);}
+}
+
+async function syncSessionStart(){
+  if(!supaStudentId) return;
+  try{
+    var num=sessionHistory.length+1;
+    var label=sessionName||('Session '+num);
+    var data=await supaPost('sessions',{student_id:supaStudentId,name:label,mode:sessionMode,card_count:CARDS.length,correct:0,wrong:0,xp:50,completed:false});
+    if(data) supaSessionId=data.id;
+  }catch(e){console.log('syncSessionStart:',e.message);}
+}
+
+async function syncSessionEnd(){
+  if(!supaStudentId||!supaSessionId) return;
+  try{
+    var correct=parseInt(document.getElementById('s-correct').textContent)||0;
+    var wrong=parseInt(document.getElementById('s-wrong').textContent)||0;
+    var xp=parseInt(document.getElementById('s-xp').textContent)||0;
+    await supaPatch('sessions','id=eq.'+supaSessionId,{correct:correct,wrong:wrong,xp:xp,completed:true});
+  }catch(e){console.log('syncSessionEnd:',e.message);}
+}
+
+async function syncDiagnosticResults(){
+  if(!supaStudentId) return;
+  try{
+    await supaPost('diagnostic_results',{student_id:supaStudentId,correct:diagnosticStore.correct,total:diagnosticStore.total,cat_level:diagnosticStore.catLevel||'1.5',results:diagnosticStore.results});
+  }catch(e){console.log('syncDiagnosticResults:',e.message);}
+}
+
+initSupabase();
 
 </script>
 </body>
