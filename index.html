@@ -303,7 +303,9 @@ input[type="date"]{color-scheme:dark;}
 
 .session-name-overlay{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;height:100%;background:rgba(0,0,0,0.75);z-index:300;display:none;align-items:center;justify-content:center;}
 .session-name-overlay.visible{display:flex;}
-.session-name-box{background:#031428;border:1.5px solid rgba(245,197,24,0.2);border-radius:20px;padding:24px 20px;width:calc(100% - 48px);max-width:340px;}
+.session-name-box{background:#031428;border:1.5px solid rgba(245,197,24,0.2);border-radius:20px;padding:24px 20px;width:calc(100% - 48px);max-width:340px;position:relative;}
+.session-name-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;transition:background 0.15s,color 0.15s;}
+.session-name-close:hover{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);}
 .session-name-title{font-size:17px;font-weight:900;color:#fff;text-align:center;margin-bottom:4px;}
 .session-name-sub{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;line-height:1.5;margin-bottom:16px;}
 .session-name-input{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid rgba(245,197,24,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:14px;font-family:'Outfit',sans-serif;font-weight:600;outline:none;margin-bottom:14px;text-align:center;}
@@ -815,6 +817,7 @@ input[type="date"]{color-scheme:dark;}
 <!-- SESSION NAME MODAL -->
 <div class="session-name-overlay" id="session-name-overlay">
   <div class="session-name-box">
+    <button class="session-name-close" onclick="cancelSessionName()" title="Go back">&#x2715;</button>
     <div class="session-name-title">Name This Session</div>
     <div class="session-name-sub">Optional — helps you find it in My Progress later.</div>
     <input class="session-name-input" id="session-name-input" type="text" maxlength="40" placeholder="e.g. Week 2 Review..."/>
@@ -1125,6 +1128,95 @@ var DIAGNOSTIC_CARDS=[
    lens:'Stable vs Unstable',pearl:'Alcohol withdrawal peaks 24-72 hours. Seizures kill. Benzos first. Know the timeline. Remember:',
    mnemonic:[['6-12hrs','Tremors and anxiety'],['24-48hrs','Seizure peak risk'],['48-72hrs','Delirium tremens possible']],why_wrong:{'Wernicke encephalopathy — give thiamine immediately':'Wernicke encephalopathy from thiamine deficiency is a serious concern in alcohol withdrawal but it is not the immediate life-threatening priority. The NCLEX tests that seizures are the primary cause of death in alcohol withdrawal — benzodiazepines prevent this.','Aspiration — position patient on side':'Aspiration risk is important and positioning helps — but it is a supportive measure, not the priority pharmacological intervention. The NCLEX tests that preventing seizures with benzodiazepines is the priority action that saves lives in alcohol withdrawal.','Hypertensive crisis — administer antihypertensives':'Hypertensive crisis can occur in alcohol withdrawal but it is a Complication — not the Core Problem. The NCLEX expects you to prioritize seizure prevention with benzodiazepines over treating expected autonomic hyperactivity with antihypertensives.'}}
 ];
+// ── Supabase card loader ──────────────────────────────────────────────────────
+var CARDS_LOADED=false;
+var CARDS_LOADING=false;
+
+function mapSupabaseCard(r){
+  // Parse opts from JSON string or array
+  var opts=r.opts;
+  if(typeof opts==='string'){try{opts=JSON.parse(opts);}catch(e){opts=[];}}
+
+  // Parse layers from JSON string or array
+  var layers=r.layers;
+  if(typeof layers==='string'){try{layers=JSON.parse(layers);}catch(e){layers=[];}}
+
+  // Parse mnemonic
+  var mnemonic=r.mnemonic;
+  if(typeof mnemonic==='string'){try{mnemonic=JSON.parse(mnemonic);}catch(e){mnemonic=[];}}
+
+  // Parse why_wrong — keyed by option text
+  var why_wrong=r.why_wrong;
+  if(typeof why_wrong==='string'){try{why_wrong=JSON.parse(why_wrong);}catch(e){why_wrong={};}}
+
+  return {
+    id:r.id,
+    title:r.title||'',
+    cat:r.cat||'',
+    bloom:r.bloom||'Apply',
+    xp:r.xp||20,
+    type:r.type||'Multiple Choice',
+    scenario:r.scenario||'',
+    question:r.question||'',
+    opts:opts,
+    correct:typeof r.correct==='number'?r.correct:parseInt(r.correct)||0,
+    layers:layers,
+    lens:r.lens||'',
+    pearl:r.pearl||'',
+    mnemonic:mnemonic,
+    why_wrong:why_wrong,
+    difficulty_level:r.difficulty_level||2,
+    difficulty_label:r.difficulty_label||'Application',
+    nclex_category:r.nclex_category||r.cat||''
+  };
+}
+
+function showCardsLoadingState(visible){
+  // Show/hide a subtle loading indicator on the mode start button
+  var btn=document.getElementById('start-mode-btn');
+  if(!btn) return;
+  if(visible){
+    btn.textContent='Loading cards…';
+    btn.disabled=true;
+    btn.style.opacity='0.6';
+  } else {
+    btn.textContent='Start Test Mode →';
+    btn.disabled=false;
+    btn.style.opacity='1';
+  }
+}
+
+async function loadCardsFromSupabase(){
+  if(CARDS_LOADED||CARDS_LOADING) return;
+  CARDS_LOADING=true;
+  showCardsLoadingState(true);
+  try{
+    // Fetch all non-diagnostic cards — select only columns the app needs
+    var url=SUPA_URL+'/rest/v1/cards?is_diagnostic=eq.false&select=id,title,cat,bloom,xp,type,scenario,question,opts,correct,layers,lens,pearl,mnemonic,why_wrong,difficulty_level,difficulty_label,nclex_category&order=id.asc&limit=2000';
+    var resp=await fetch(url,{headers:supaHeaders()});
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    var data=await resp.json();
+    if(Array.isArray(data)&&data.length>0){
+      STUDY_CARDS=data.map(mapSupabaseCard);
+      CARDS_LOADED=true;
+      console.log('PassLounge: loaded '+STUDY_CARDS.length+' cards from Supabase');
+    } else {
+      console.warn('PassLounge: Supabase returned 0 cards — keeping fallback');
+    }
+  } catch(err){
+    console.error('PassLounge: card load failed —',err.message,'— using fallback cards');
+  } finally {
+    CARDS_LOADING=false;
+    showCardsLoadingState(false);
+  }
+}
+
+// Kick off card load as soon as the page is ready
+document.addEventListener('DOMContentLoaded',function(){
+  loadCardsFromSupabase();
+});
+// ─────────────────────────────────────────────────────────────────────────────
+
 var STUDY_CARDS=[
   {cat:'Cardiac',bloom:'Apply',xp:20,title:'Pericarditis — Priority Finding',type:'Multiple Choice · Cardiac',
    scenario:'A patient presents with sharp chest pain that worsens when lying flat and improves when leaning forward. A friction rub is heard on auscultation.',
@@ -1301,6 +1393,8 @@ function goTo(id){
   el.classList.add('active');
   el.scrollTop=0;
   if(id==='s-plan') launchConfetti();
+  // Preload cards early so they're ready by the time user hits Start
+  if(id==='s-mode'||id==='s-pool'||id==='s-lounge') loadCardsFromSupabase();
   window.scrollTo(0,0);
 }
 
@@ -1438,6 +1532,11 @@ function launchStudySession(){
   syncSessionStart();
   reviewingFromProgress=false;
   sessionActive=true;
+
+  // If cards haven't loaded yet (slow network), try once more before building pool
+  if(!CARDS_LOADED && !CARDS_LOADING){
+    loadCardsFromSupabase();
+  }
 
   // Build card pool based on selection
   var pool=STUDY_CARDS.slice();
@@ -2510,6 +2609,11 @@ function showSessionNameModal(){
   document.getElementById('session-name-input').value='';
   document.getElementById('session-name-overlay').classList.add('visible');
   setTimeout(function(){document.getElementById('session-name-input').focus();},300);
+}
+
+function cancelSessionName(){
+  document.getElementById('session-name-overlay').classList.remove('visible');
+  sessionActive=false;
 }
 
 function confirmSessionName(skip){
