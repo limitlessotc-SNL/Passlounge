@@ -66,6 +66,7 @@ input[type="date"]{color-scheme:dark;}
 .cd-val{font-size:28px;font-weight:900;color:#F5C518;}
 .cd-sub{font-size:12px;color:rgba(255,255,255,0.3);margin-top:3px;}
 .commit-card{width:100%;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 18px;cursor:pointer;margin-bottom:10px;transition:all 0.25s;}
+.commit-proj{font-size:11px;color:rgba(245,197,24,0.7);margin-top:6px;font-weight:600;min-height:14px;}
 .commit-card.selected{border-color:#F5C518;background:rgba(245,197,24,0.08);}
 .commit-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;}
 .commit-sub{font-size:12px;color:rgba(255,255,255,0.35);}
@@ -387,52 +388,67 @@ input[type="date"]{color-scheme:dark;}
 <div class="app-shell">
 
 <!-- SCREEN 1: WELCOME -->
-<div class="screen active" id="s-welcome">
-  <div class="content welcome-screen">
-    <div class="logo-ring anim">
-      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-        <circle cx="36" cy="36" r="36" fill="#053571"/>
-        <polygon points="36,14 58,26 36,38 14,26" fill="#F5C518"/>
-        <polygon points="36,38 58,26 58,40 36,52" fill="#e6b800"/>
-        <polygon points="36,38 14,26 14,40 36,52" fill="#F5C518" opacity="0.85"/>
-        <line x1="58" y1="26" x2="58" y2="44" stroke="#F5C518" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="58" cy="46" r="3" fill="#F5C518"/>
-        <text x="36" y="33" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="900" font-size="11" fill="#053571" letter-spacing="1">SNL</text>
-      </svg>
+<!-- SCREEN: LOGIN -->
+<div class="screen active" id="s-login">
+  <div class="content">
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:28px;">
+      <div class="logo-ring anim" style="margin-bottom:12px;">
+        <svg width="60" height="60" viewBox="0 0 72 72" fill="none">
+          <circle cx="36" cy="36" r="36" fill="#053571"/>
+          <polygon points="36,14 58,26 36,38 14,26" fill="#F5C518"/>
+          <polygon points="36,38 58,26 58,40 36,52" fill="#e6b800"/>
+          <polygon points="36,38 14,26 14,40 36,52" fill="#F5C518" opacity="0.85"/>
+          <text x="36" y="33" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="900" font-size="11" fill="#053571" letter-spacing="1">SNL</text>
+        </svg>
+      </div>
+      <div class="brand-tag anim" style="margin-bottom:4px;">PassLounge</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.4);">Where Nurses Come To Pass</div>
     </div>
-    <div class="brand-tag anim">PassLounge</div>
-    <div class="welcome-tagline anim">Welcome To The Lounge.</div>
-    <div class="welcome-title anim">Where Nurses<br>Come To <span style="color:#F5C518;">Pass</span> —</div>
-    <div class="welcome-subtitle anim">Not Just Study.</div>
-    <button class="btn-gold anim" onclick="goTo('s-nickname')">Let's Go — I'm Ready 💪</button>
-    <div class="powered-by anim">Powered by Student Nurse Lounge</div>
+    <div class="screen-title" style="font-size:22px;margin-bottom:20px;">Welcome Back</div>
+    <input class="pl-input" id="login-email" type="email" placeholder="Email address" autocomplete="email" style="margin-bottom:10px;"/>
+    <input class="pl-input" id="login-password" type="password" placeholder="Password" autocomplete="current-password" style="margin-bottom:6px;"/>
+    <div style="text-align:right;margin-bottom:18px;">
+      <span style="font-size:12px;color:rgba(245,197,24,0.7);cursor:pointer;" onclick="goTo('s-forgot')">Forgot password?</span>
+    </div>
+    <div class="err-msg" id="login-err" style="display:none;margin-bottom:10px;"></div>
+    <button class="btn-gold" id="login-btn" onclick="doLogin()">Sign In →</button>
+    <div style="text-align:center;margin-top:20px;font-size:13px;color:rgba(255,255,255,0.4);">
+      Don't have an account? <span style="color:#F5C518;cursor:pointer;font-weight:700;" onclick="goTo('s-signup')">Create one free</span>
+    </div>
+    <div class="powered-by anim" style="margin-top:24px;">Powered by Student Nurse Lounge</div>
   </div>
 </div>
 
-<!-- SCREEN 2: NICKNAME -->
-<div class="screen" id="s-nickname">
+<!-- SCREEN: SIGNUP -->
+<div class="screen" id="s-signup">
   <div class="content">
-    <div class="progress-wrap">
-      <div class="progress-meta"><span>Step 1 Of 5</span><span>20%</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+    <button class="back-btn" onclick="goTo('s-login')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div style="width:52px;height:52px;border-radius:50%;background:rgba(5,53,113,0.8);border:1.5px solid rgba(245,197,24,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+      <svg width="24" height="24" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="5" stroke="#F5C518" stroke-width="1.8"/><path d="M4 23c0-5 4-8 9-8s9 3 9 8" stroke="#F5C518" stroke-width="1.8" stroke-linecap="round"/></svg>
     </div>
-    <button class="back-btn" onclick="goTo('s-welcome')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
-    <div class="step-pill">Step 1 Of 5</div>
-    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(5,53,113,0.8),rgba(10,77,153,0.6));border:1.5px solid rgba(245,197,24,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:logoPulse 3s ease-in-out infinite;">
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="9" r="5" stroke="#F5C518" stroke-width="1.8"/><path d="M4 23c0-5 4-8 9-8s9 3 9 8" stroke="#F5C518" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <div class="screen-title" style="font-size:22px;margin-bottom:6px;">Create Your Account</div>
+    <div class="screen-sub" style="margin-bottom:20px;">Free access. Your progress saves forever.</div>
+    <input class="pl-input" id="signup-nickname" type="text" placeholder="Nickname (e.g. Nurse Keisha)" maxlength="20" style="margin-bottom:10px;"/>
+    <input class="pl-input" id="signup-email" type="email" placeholder="Email address" autocomplete="email" style="margin-bottom:10px;"/>
+    <input class="pl-input" id="signup-password" type="password" placeholder="Password (min 6 characters)" autocomplete="new-password" style="margin-bottom:10px;"/>
+    <input class="pl-input" id="signup-password2" type="password" placeholder="Confirm password" autocomplete="new-password" style="margin-bottom:6px;"/>
+    <div class="err-msg" id="signup-err" style="display:none;margin-bottom:10px;"></div>
+    <button class="btn-gold" id="signup-btn" onclick="doSignup()">Create Account →</button>
+    <div style="text-align:center;margin-top:18px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.6;">
+      By signing up you agree to our terms.<br>No spam. No credit card.
     </div>
-    <div class="screen-title">What Do They<br>Call You, Nurse?</div>
-    <div class="screen-sub">This is your identity inside the lounge.</div>
-    <div id="preview-badge" class="preview-badge">
-      <div class="preview-inner">
-        <div class="preview-avatar" id="prev-init">N</div>
-        <div class="preview-text">Welcome to the lounge, <span class="preview-name" id="prev-name">Nurse</span>. Let's get you that license. 💛</div>
-      </div>
-    </div>
-    <input class="pl-input" id="nn-input" type="text" placeholder="Your nickname..." maxlength="20" oninput="onNNType(this)"/>
-    <div class="char-count"><span id="nn-cc">0</span>/20</div>
-    <div class="err-msg" id="nn-err">Please enter a nickname to continue</div>
-    <button class="btn-gold" id="nn-btn" onclick="saveNN()" disabled style="opacity:0.4;">Continue</button>
+  </div>
+</div>
+
+<!-- SCREEN: FORGOT PASSWORD -->
+<div class="screen" id="s-forgot">
+  <div class="content">
+    <button class="back-btn" onclick="goTo('s-login')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div class="screen-title" style="font-size:22px;margin-bottom:6px;">Reset Password</div>
+    <div class="screen-sub" style="margin-bottom:20px;">Enter your email and we'll send you a reset link.</div>
+    <input class="pl-input" id="forgot-email" type="email" placeholder="Email address" style="margin-bottom:10px;"/>
+    <div class="err-msg" id="forgot-msg" style="display:none;margin-bottom:10px;"></div>
+    <button class="btn-gold" onclick="doForgot()">Send Reset Link →</button>
   </div>
 </div>
 
@@ -440,11 +456,11 @@ input[type="date"]{color-scheme:dark;}
 <div class="screen" id="s-tester">
   <div class="content">
     <div class="progress-wrap">
-      <div class="progress-meta"><span>Step 2 Of 5</span><span>40%</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+      <div class="progress-meta"><span>Step 1 Of 4</span><span>25%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
     </div>
-    <button class="back-btn" onclick="goTo('s-nickname')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
-    <div class="step-pill">Step 2 Of 5</div>
+    <button class="back-btn" onclick="goTo('s-signup')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+    <div class="step-pill">Step 1 Of 4</div>
     <div class="screen-title">Is This Your<br>First Time At<br>The NCLEX?</div>
     <div class="screen-sub">This shapes your entire experience, <span id="tester-name" style="color:#F5C518;font-weight:700;">Nurse</span>.</div>
     <div class="opt-card" id="opt-ret" onclick="pickType('ret')">
@@ -463,11 +479,11 @@ input[type="date"]{color-scheme:dark;}
 <div class="screen" id="s-confidence">
   <div class="content">
     <div class="progress-wrap">
-      <div class="progress-meta"><span>Step 3 Of 5</span><span>60%</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+      <div class="progress-meta"><span>Step 2 Of 4</span><span>50%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
     </div>
     <button class="back-btn" onclick="goTo('s-tester')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
-    <div class="step-pill">Step 3 Of 5</div>
+    <div class="step-pill">Step 2 Of 4</div>
     <div class="screen-title">How Are You<br>Feeling About<br>The NCLEX?</div>
     <div class="screen-sub">Your answer helps us coach you properly.</div>
     <div class="conf-row" onclick="pickConf(this,'terrified','rgba(248,113,113,0.12)','#f87171')"><div class="conf-icon" style="background:rgba(248,113,113,0.1);">😰</div><div><div class="conf-label">Terrified</div><div class="conf-sub">I don't even know where to start</div></div></div>
@@ -482,11 +498,11 @@ input[type="date"]{color-scheme:dark;}
 <div class="screen" id="s-testdate">
   <div class="content">
     <div class="progress-wrap">
-      <div class="progress-meta"><span>Step 4 Of 5</span><span>80%</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+      <div class="progress-meta"><span>Step 3 Of 4</span><span>75%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
     </div>
     <button class="back-btn" onclick="goTo('s-confidence')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
-    <div class="step-pill">Step 4 Of 5</div>
+    <div class="step-pill">Step 3 Of 4</div>
     <div class="screen-title">When's Test<br>Day, <span id="testdate-name" style="color:#F5C518;">Nurse</span>?</div>
     <div class="screen-sub">Enter your date — we activate your countdown clock immediately.</div>
     <input type="date" class="pl-input" id="test-date" onchange="showCountdown()"/>
@@ -500,17 +516,28 @@ input[type="date"]{color-scheme:dark;}
 <div class="screen" id="s-commitment">
   <div class="content">
     <div class="progress-wrap">
-      <div class="progress-meta"><span>Step 5 Of 5</span><span>90%</span></div>
-      <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+      <div class="progress-meta"><span>Step 4 Of 4</span><span>100%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
     </div>
     <button class="back-btn" onclick="goTo('s-testdate')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
-    <div class="step-pill">Step 5 Of 5</div>
+    <div class="step-pill">Step 4 Of 4</div>
     <div class="screen-title">How Much Can<br>You Commit Daily?</div>
     <div class="screen-sub">Nurses are busy. Consistency beats intensity every time.</div>
-    <div class="commit-card" onclick="pickCommit(this,'10')"><div class="commit-title">Busy But Consistent</div><div class="commit-sub">10 cards · ~8 minutes · I'm juggling a lot right now</div></div>
-    <div class="commit-card" onclick="pickCommit(this,'20')"><div class="commit-title">Steady And Focused</div><div class="commit-sub">20 cards · ~15 minutes · My sweet spot</div></div>
-    <div class="commit-card" onclick="pickCommit(this,'35')"><div class="commit-title">Ready To Grind</div><div class="commit-sub">35 cards · ~25 minutes · I'm locking in</div></div>
-    <div class="commit-card" onclick="pickCommit(this,'?')"><div class="commit-title">I'll Set My Own Pace</div><div class="commit-sub">Custom daily number — I know what works for me</div></div>
+    <div class="commit-card" onclick="pickCommit(this,'25')">
+      <div class="commit-title">Busy But Committed</div>
+      <div class="commit-sub">25 cards · ~20 min · Lots on my plate but I show up</div>
+      <div class="commit-proj" id="proj-25"></div>
+    </div>
+    <div class="commit-card" onclick="pickCommit(this,'35')">
+      <div class="commit-title">Steady And Focused</div>
+      <div class="commit-sub">35 cards · ~25 min · My sweet spot</div>
+      <div class="commit-proj" id="proj-35"></div>
+    </div>
+    <div class="commit-card" onclick="pickCommit(this,'50')">
+      <div class="commit-title">All In</div>
+      <div class="commit-sub">50 cards · ~35 min · I’m locking in and getting this done</div>
+      <div class="commit-proj" id="proj-50"></div>
+    </div><div class="commit-sub">Custom daily number — I know what works for me</div></div>
   </div>
 </div>
 
@@ -525,9 +552,14 @@ input[type="date"]{color-scheme:dark;}
       <div class="xp-burst"><span class="xp-num">+50 XP</span><span class="xp-lbl">Onboarding Complete!</span></div>
     </div>
     <div class="stat-grid">
-      <div class="stat-box"><div class="stat-num" id="plan-cards">20</div><div class="stat-lbl">Cards Per Day</div></div>
-      <div class="stat-box"><div class="stat-num" id="plan-days">—</div><div class="stat-lbl">Days To Go</div></div>
+      <div class="stat-box"><div class="stat-num" id="plan-cards">35</div><div class="stat-lbl">Cards Per Day</div></div>
+      <div class="stat-box"><div class="stat-num" id="plan-days">—</div><div class="stat-lbl">Days To NCLEX</div></div>
       <div class="stat-box"><div class="stat-num">50</div><div class="stat-lbl">XP Earned</div></div>
+    </div>
+    <div style="background:rgba(245,197,24,0.07);border:1px solid rgba(245,197,24,0.2);border-radius:12px;padding:12px 16px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:11px;color:rgba(245,197,24,0.6);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Projected Test-Ready Date</div>
+      <div id="plan-proj-date" style="font-size:14px;font-weight:800;color:#F5C518;">—</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">Based on 2,000 cards at your daily commitment</div>
     </div>
     <div class="plan-card">
       <div class="plan-row"><span class="plan-label">Starting Category</span><span class="plan-val-gold">Cardiovascular 🫀</span></div>
@@ -981,7 +1013,32 @@ input[type="date"]{color-scheme:dark;}
 <div class="app-screen" id="app-cat"><div class="placeholder-screen"><div class="placeholder-icon">🐱</div><div class="placeholder-title">CAT Mode</div><div class="placeholder-sub">150-question NCLEX CAT simulation<br>coming soon.</div></div></div>
 <div class="app-screen" id="app-compete"><div class="placeholder-screen"><div class="placeholder-icon">⚔️</div><div class="placeholder-title">Compete</div><div class="placeholder-sub">PvP Duels, Tournaments and Leaderboard<br>being built here.</div></div></div>
 <div class="app-screen" id="app-lounge"><div class="placeholder-screen"><div class="placeholder-icon">💜</div><div class="placeholder-title">The Lounge</div><div class="placeholder-sub">Victory Wall, Study Squads and TikTok share<br>being built here.</div></div></div>
-<div class="app-screen" id="app-profile"><div class="placeholder-screen"><div class="placeholder-icon">👤</div><div class="placeholder-title">Profile</div><div class="placeholder-sub">Avatar, XP, badges and weakness map<br>being built here.</div></div></div>
+<div class="app-screen" id="app-profile">
+  <div class="content scrollable" style="padding-top:20px;padding-bottom:100px;">
+    <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;">Profile</div>
+    <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px;margin-bottom:20px;">
+      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#053571,#0a4d99);border:2px solid rgba(245,197,24,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#F5C518;flex-shrink:0;" id="profile-avatar">N</div>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#fff;" id="profile-name">Nurse</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);" id="profile-email"></div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;margin-bottom:20px;">
+      <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Daily Commitment</div>
+        <div style="font-size:15px;font-weight:700;color:#F5C518;" id="profile-commit">35 cards/day</div>
+      </div>
+      <div style="padding:14px 16px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Projected Test-Ready</div>
+        <div style="font-size:15px;font-weight:700;color:#fff;" id="profile-proj"></div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:14px 16px;margin-bottom:12px;text-align:center;color:rgba(255,255,255,0.25);font-size:13px;">
+      Badges, XP history &amp; weakness map<br><span style="font-size:11px;color:rgba(255,255,255,0.15);">Coming soon</span>
+    </div>
+    <button onclick="doLogout()" style="width:100%;padding:14px;background:rgba(220,38,38,0.08);border:1.5px solid rgba(220,38,38,0.25);border-radius:14px;color:rgba(248,113,113,0.8);font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;">Sign Out</button>
+  </div>
+</div>
 
 <script>
 var nickname='',testerType='',confidence='',testDays=0,dailyCards=20;
@@ -1393,6 +1450,8 @@ function goTo(id){
   el.classList.add('active');
   el.scrollTop=0;
   if(id==='s-plan') launchConfetti();
+  if(id==='s-commitment') updateCommitProjections();
+  if(id==='s-tester'||id==='s-testdate') populateNicknameFields();
   // Preload cards early so they're ready by the time user hits Start
   if(id==='s-mode'||id==='s-pool'||id==='s-lounge') loadCardsFromSupabase();
   window.scrollTo(0,0);
@@ -1425,15 +1484,14 @@ function onNNType(el){
   document.getElementById('nn-err').style.display='none';
 }
 function saveNN(){
-  var v=document.getElementById('nn-input').value.trim();
-  if(!v){document.getElementById('nn-err').style.display='block';return;}
-  nickname=v;
-  document.getElementById('tester-name').textContent='Nurse '+nickname;
-  document.getElementById('testdate-name').textContent=nickname;
-  document.getElementById('plan-name').textContent='Nurse '+nickname;
+  // Nickname is captured at signup — this is kept as a safety fallback
+  var v=document.getElementById('nn-input')?document.getElementById('nn-input').value.trim():'';
+  if(v) nickname=v;
+  if(document.getElementById('tester-name')) document.getElementById('tester-name').textContent='Nurse '+nickname;
+  if(document.getElementById('testdate-name')) document.getElementById('testdate-name').textContent=nickname;
+  if(document.getElementById('plan-name')) document.getElementById('plan-name').textContent='Nurse '+nickname;
   goTo('s-tester');
 }
-document.getElementById('nn-input').addEventListener('keydown',function(e){if(e.key==='Enter')saveNN();});
 function pickType(t){
   testerType=t;
   document.getElementById('opt-first').classList.remove('selected');
@@ -1458,10 +1516,31 @@ function showCountdown(){
     document.getElementById('plan-days').textContent=testDays;
   }
 }
+function getProjectedDate(cardsPerDay){
+  var totalCards=2000;
+  var daysNeeded=Math.ceil(totalCards/parseInt(cardsPerDay));
+  var projDate=new Date();
+  projDate.setDate(projDate.getDate()+daysNeeded);
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return 'Test-ready by approx. '+months[projDate.getMonth()]+' '+projDate.getDate()+', '+projDate.getFullYear()+' ('+daysNeeded+' days)';
+}
+
+function updateCommitProjections(){
+  var counts=['25','35','50'];
+  counts.forEach(function(n){
+    var el=document.getElementById('proj-'+n);
+    if(el) el.textContent=getProjectedDate(n);
+  });
+}
+
 function pickCommit(el,num){
   document.querySelectorAll('.commit-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected');dailyCards=num;
-  document.getElementById('plan-cards').textContent=num==='?'?'Custom':num;
+  el.classList.add('selected');
+  dailyCards=num;
+  document.getElementById('plan-cards').textContent=num;
+  // Show projected date in plan reveal
+  var projEl=document.getElementById('plan-proj-date');
+  if(projEl) projEl.textContent=getProjectedDate(num);
   setTimeout(function(){goTo('s-plan');},320);
 }
 
@@ -2147,7 +2226,14 @@ function switchTab(tab){
   if(s){s.classList.add('active');s.scrollTop=0;}
   if(t) t.classList.add('active');
   if(tab==='home'){var dn=document.getElementById('dash-name');if(dn&&nickname)dn.textContent='Nurse '+nickname;}
+  if(tab==='profile'){updateProfileScreen();}
   window.scrollTo(0,0);
+}
+// populate nickname fields on screens that use it
+function populateNicknameFields(){
+  if(document.getElementById('tester-name')) document.getElementById('tester-name').textContent='Nurse '+nickname;
+  if(document.getElementById('testdate-name')) document.getElementById('testdate-name').textContent=nickname;
+  if(document.getElementById('plan-name')) document.getElementById('plan-name').textContent='Nurse '+nickname;
 }
 // EXIT MODAL
 function showExitModal(){
@@ -2205,6 +2291,28 @@ function exitSession(){
 }
 
 // UPDATE DASHBOARD with diagnostic results
+function updateProfileScreen(){
+  var nn=document.getElementById('profile-name');
+  var av=document.getElementById('profile-avatar');
+  var em=document.getElementById('profile-email');
+  var cm=document.getElementById('profile-commit');
+  var pj=document.getElementById('profile-proj');
+  if(nn) nn.textContent='Nurse '+(nickname||'');
+  if(av) av.textContent=(nickname||'N').charAt(0).toUpperCase();
+  // Get email from stored token if available
+  if(em){
+    try{
+      if(authToken){
+        var payload=JSON.parse(atob(authToken.split('.')[1]));
+        em.textContent=payload.email||'';
+      }
+    }catch(e){}
+  }
+  var dc=parseInt(dailyCards)||35;
+  if(cm) cm.textContent=dc+' cards / day';
+  if(pj) pj.textContent=getProjectedDate(dc);
+}
+
 function updateDashboard(){
   // Read from permanent store — not affected by navigation or review sessions
   if(!diagnosticStore.completed) return;
@@ -2979,9 +3087,175 @@ var SUPA_URL='https://oqinkogrloprvophvuui.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xaW5rb2dybG9wcnZvcGh2dXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MDYyODMsImV4cCI6MjA5MTI4MjI4M30.9xZDFz88WlbBij98ojoLdlucDmnTpKVaQFRorr4y5VU';
 var supaStudentId=null;
 var supaSessionId=null;
+var authToken=null; // JWT from Supabase auth — replaces anon key after login
+
+// ── Auth helpers ──────────────────────────────────────────────────────────────
+function setAuthLoading(btnId, loading, text, loadText){
+  var btn=document.getElementById(btnId);
+  if(!btn) return;
+  btn.disabled=loading;
+  btn.textContent=loading?(loadText||'Please wait...'):(text||btn.textContent);
+  btn.style.opacity=loading?'0.6':'1';
+}
+function showAuthErr(elId, msg){
+  var el=document.getElementById(elId);
+  if(!el) return;
+  el.textContent=msg;
+  el.style.display=msg?'block':'none';
+}
+
+async function doLogin(){
+  var email=document.getElementById('login-email').value.trim();
+  var pass=document.getElementById('login-password').value;
+  if(!email||!pass){showAuthErr('login-err','Please enter your email and password.');return;}
+  setAuthLoading('login-btn',true,'Sign In \u2192','Signing in...');
+  showAuthErr('login-err','');
+  try{
+    var r=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
+      body:JSON.stringify({email:email,password:pass})
+    });
+    var data=await r.json();
+    if(!r.ok){showAuthErr('login-err',data.error_description||data.msg||'Login failed. Check your email and password.');return;}
+    authToken=data.access_token;
+    supaStudentId=data.user.id;
+    localStorage.setItem('pl_auth_token',authToken);
+    localStorage.setItem('pl_student_id',supaStudentId);
+    nickname=data.user.user_metadata&&data.user.user_metadata.nickname?data.user.user_metadata.nickname:'Nurse';
+    // Check if onboarding already done
+    var onboardDone=data.user.user_metadata&&data.user.user_metadata.onboarded;
+    if(onboardDone){
+      await initSupabase();
+      goToLounge();
+    } else {
+      // New user via login — start onboarding
+      goTo('s-tester');
+    }
+  }catch(e){
+    showAuthErr('login-err','Connection error. Check your internet and try again.');
+  }finally{
+    setAuthLoading('login-btn',false,'Sign In \u2192');
+  }
+}
+
+async function doSignup(){
+  var nn=document.getElementById('signup-nickname').value.trim();
+  var email=document.getElementById('signup-email').value.trim();
+  var pass=document.getElementById('signup-password').value;
+  var pass2=document.getElementById('signup-password2').value;
+  if(!nn){showAuthErr('signup-err','Please enter a nickname.');return;}
+  if(!email){showAuthErr('signup-err','Please enter your email address.');return;}
+  if(pass.length<6){showAuthErr('signup-err','Password must be at least 6 characters.');return;}
+  if(pass!==pass2){showAuthErr('signup-err','Passwords don\'t match.');return;}
+  setAuthLoading('signup-btn',true,'Create Account \u2192','Creating account...');
+  showAuthErr('signup-err','');
+  try{
+    var r=await fetch(SUPA_URL+'/auth/v1/signup',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
+      body:JSON.stringify({email:email,password:pass,data:{nickname:nn,onboarded:false}})
+    });
+    var data=await r.json();
+    if(!r.ok){showAuthErr('signup-err',data.error_description||data.msg||'Signup failed. That email may already have an account.');return;}
+    if(data.access_token){
+      authToken=data.access_token;
+      supaStudentId=data.user.id;
+      localStorage.setItem('pl_auth_token',authToken);
+      localStorage.setItem('pl_student_id',supaStudentId);
+      nickname=nn;
+      goTo('s-tester');
+    } else {
+      // Email confirmation required
+      showAuthErr('signup-err','');
+      document.getElementById('signup-btn').textContent='Check your email to confirm \u2714';
+      document.getElementById('signup-btn').style.background='rgba(74,222,128,0.2)';
+    }
+  }catch(e){
+    showAuthErr('signup-err','Connection error. Check your internet and try again.');
+  }finally{
+    setAuthLoading('signup-btn',false,'Create Account \u2192');
+  }
+}
+
+async function doForgot(){
+  var email=document.getElementById('forgot-email').value.trim();
+  if(!email){showAuthErr('forgot-msg','Please enter your email address.');return;}
+  showAuthErr('forgot-msg','');
+  try{
+    await fetch(SUPA_URL+'/auth/v1/recover',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
+      body:JSON.stringify({email:email})
+    });
+    var el=document.getElementById('forgot-msg');
+    el.textContent='Reset link sent! Check your email.';
+    el.style.display='block';
+    el.style.color='#4ade80';
+  }catch(e){
+    showAuthErr('forgot-msg','Could not send reset email. Try again.');
+  }
+}
+
+// Check for existing session on load
+(async function checkSession(){
+  var stored=localStorage.getItem('pl_auth_token');
+  var storedId=localStorage.getItem('pl_student_id');
+  if(stored&&storedId){
+    try{
+      var r=await fetch(SUPA_URL+'/auth/v1/user',{
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+stored}
+      });
+      if(r.ok){
+        var user=await r.json();
+        authToken=stored;
+        supaStudentId=user.id;
+        nickname=user.user_metadata&&user.user_metadata.nickname?user.user_metadata.nickname:'Nurse';
+        // Primary check: auth metadata
+        var onboardDone=user.user_metadata&&user.user_metadata.onboarded;
+        // Fallback check: students table (catches cases where auth metadata write failed)
+        if(!onboardDone){
+          try{
+            var sr=await fetch(SUPA_URL+'/rest/v1/students?id=eq.'+user.id+'&select=onboarded,nickname,daily_cards',{
+              headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+stored}
+            });
+            if(sr.ok){
+              var sdata=await sr.json();
+              if(sdata&&sdata.length>0){
+                onboardDone=sdata[0].onboarded===true;
+                if(sdata[0].nickname) nickname=sdata[0].nickname;
+                if(sdata[0].daily_cards) dailyCards=sdata[0].daily_cards;
+                // If found in students table, backfill auth metadata so future logins are faster
+                if(onboardDone&&authToken){
+                  fetch(SUPA_URL+'/auth/v1/user',{
+                    method:'PUT',
+                    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json'},
+                    body:JSON.stringify({data:{nickname:nickname,onboarded:true,daily_cards:dailyCards}})
+                  }).catch(function(){});
+                }
+              }
+            }
+          }catch(fe){console.log('students fallback check:',fe.message);}
+        }
+        await initSupabase();
+        if(onboardDone){
+          goToLounge();
+        } else {
+          goTo('s-tester');
+        }
+        return;
+      }
+    }catch(e){}
+    // Token invalid — clear and show login
+    localStorage.removeItem('pl_auth_token');
+    localStorage.removeItem('pl_student_id');
+  }
+})();
+
 
 function supaHeaders(){
-  return {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=representation'};
+  var token=authToken||SUPA_KEY;
+  return {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+token,'Prefer':'return=representation'};
 }
 
 async function supaPost(table,body){
@@ -3010,28 +3284,63 @@ function genUUID(){
 
 async function initSupabase(){
   try{
-    var stored=localStorage.getItem('pl_student_id');
-    supaStudentId=stored||genUUID();
-    if(!stored) localStorage.setItem('pl_student_id',supaStudentId);
+    // If we have auth token, student ID is already set from auth
+    if(!supaStudentId){
+      var stored=localStorage.getItem('pl_student_id');
+      supaStudentId=stored||genUUID();
+      if(!stored) localStorage.setItem('pl_student_id',supaStudentId);
+    }
+    var token=authToken||SUPA_KEY;
     await fetch(SUPA_URL+'/rest/v1/students',{
       method:'POST',
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({id:supaStudentId,nickname:nickname||'Student'})
     });
     console.log('Supabase ready. Student ID:',supaStudentId);
-  }catch(e){supaStudentId=genUUID();console.log('initSupabase fallback:',e.message);}
+  }catch(e){if(!supaStudentId)supaStudentId=genUUID();console.log('initSupabase fallback:',e.message);}
 }
 
 async function saveStudentProfile(){
   if(!supaStudentId) return;
   try{
+    if(authToken){
+      await fetch(SUPA_URL+'/auth/v1/user',{
+        method:'PUT',
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json'},
+        body:JSON.stringify({data:{nickname:nickname||'',onboarded:true,tester_type:testerType||'',confidence:confidence||'',daily_cards:dailyCards||35}})
+      });
+    }
     await fetch(SUPA_URL+'/rest/v1/students',{
       method:'POST',
-      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
-      body:JSON.stringify({id:supaStudentId,nickname:nickname||'',tester_type:testerType||'',confidence:confidence||'',test_date:testDays?String(testDays):''})
+      headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(authToken||SUPA_KEY),'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:supaStudentId,nickname:nickname||'',tester_type:testerType||'',confidence:confidence||'',test_date:testDays?String(testDays):'',daily_cards:parseInt(dailyCards)||35,onboarded:true})
     });
+    console.log('PassLounge: onboarding saved for',supaStudentId);
   }catch(e){console.log('saveStudentProfile:',e.message);}
 }
+
+async function doLogout(){
+  try{
+    if(authToken){
+      await fetch(SUPA_URL+'/auth/v1/logout',{
+        method:'POST',
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json'}
+      });
+    }
+  }catch(e){}
+  authToken=null;supaStudentId=null;
+  localStorage.removeItem('pl_auth_token');
+  localStorage.removeItem('pl_student_id');
+  nickname='';testerType='';confidence='';testDays=0;dailyCards=35;
+  sessionHistory=[];seenCardTitles={};CARDS_LOADED=false;
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('bottom-nav').classList.remove('visible');
+  document.getElementById('s-login').classList.add('active');
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+}
+
 
 async function syncSessionStart(){
   if(!supaStudentId) return;
