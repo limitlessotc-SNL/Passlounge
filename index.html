@@ -2015,6 +2015,7 @@ function showDiagnosticResults(){
   diagnosticStore.correct=correct;
   diagnosticStore.total=total;
   diagnosticStore.results=sessionResults.slice(); // copy the array
+  syncDiagnosticResults(); // persist to Supabase immediately
   var pct=Math.round((correct/total)*100);
   var catLevel,gradeIcon,gradeText;
   if(pct>=90){catLevel='4.5';gradeIcon='🌟';gradeText='Excellent. You are operating well above the NCLEX passing line. Daily sessions will sharpen your edges.';}
@@ -2217,6 +2218,8 @@ function goToLounge(){
   // SR Engine: prefetch card progress in background as soon as student lands
   loadCardsFromSupabase();
   if(!cardProgressLoaded){ loadCardProgress(); retrySRQueue(); }
+  // Restore diagnostic results and session stats from Supabase
+  loadUserData();
   window.scrollTo(0,0);
 }
 
@@ -2361,11 +2364,12 @@ function updateDashboard(){
   var fill=document.getElementById('dash-cat-fill');
   if(fill) fill.style.width=fillPct+'%';
 
-  // Stats
-  var cs=document.getElementById('dash-cards-studied');if(cs)cs.textContent=total;
+  // Stats — use real Supabase data if available, fallback to diagnostic total
+  var plStats=window._plStats||{cards:total,xp:50+correct*20,sessions:1};
+  var cs=document.getElementById('dash-cards-studied');if(cs)cs.textContent=plStats.cards||total;
   var acc=document.getElementById('dash-accuracy');if(acc)acc.textContent=pct+'%';
-  var xpEl=document.getElementById('dash-xp-total');if(xpEl)xpEl.textContent=(50+correct*20)+'';
-  var sess=document.getElementById('dash-sessions');if(sess)sess.textContent='1';
+  var xpEl=document.getElementById('dash-xp-total');if(xpEl)xpEl.textContent=plStats.xp||'';
+  var sess=document.getElementById('dash-sessions');if(sess)sess.textContent=plStats.sessions||1;
 
   // Category breakdown
   var cats={};
@@ -3496,6 +3500,50 @@ async function syncDiagnosticResults(){
   try{
     await supaPost('diagnostic_results',{student_id:supaStudentId,correct:diagnosticStore.correct,total:diagnosticStore.total,cat_level:diagnosticStore.catLevel||'1.5',results:diagnosticStore.results});
   }catch(e){console.log('syncDiagnosticResults:',e.message);}
+}
+
+// ── Reload all persistent user data from Supabase on login ───────────────────────────
+async function loadUserData(){
+  if(!supaStudentId) return;
+  try{
+    // Load most recent diagnostic result
+    var dr=await fetch(
+      SUPA_URL+'/rest/v1/diagnostic_results?student_id=eq.'+supaStudentId+'&order=id.desc&limit=1&select=correct,total,cat_level,results',
+      {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(authToken||SUPA_KEY),'apikey':SUPA_KEY}}
+    );
+    if(dr.ok){
+      var diagData=await dr.json();
+      if(diagData&&diagData.length>0){
+        var d=diagData[0];
+        diagnosticStore.completed=true;
+        diagnosticStore.correct=parseInt(d.correct)||0;
+        diagnosticStore.total=parseInt(d.total)||15;
+        diagnosticStore.catLevel=d.cat_level||'1.5';
+        diagnosticStore.results=d.results||[];
+        console.log('PassLounge: diagnostic loaded — '+d.correct+'/'+d.total);
+      }
+    }
+    // Load session stats
+    var sr=await fetch(
+      SUPA_URL+'/rest/v1/sessions?student_id=eq.'+supaStudentId+'&completed=eq.true&select=correct,wrong,xp,card_count,mode',
+      {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+(authToken||SUPA_KEY)}}
+    );
+    if(sr.ok){
+      var sessions=await sr.json();
+      if(sessions&&sessions.length>0){
+        var totalCards=0,totalXP=50,totalSessions=0;
+        sessions.forEach(function(s){
+          totalCards+=(s.card_count||0);
+          totalXP+=(s.xp||0);
+          totalSessions++;
+        });
+        window._plStats={cards:totalCards,xp:totalXP,sessions:totalSessions};
+        console.log('PassLounge: sessions loaded — '+totalSessions+' sessions, '+totalCards+' cards');
+      }
+    }
+    // Refresh dashboard with real data
+    updateDashboard();
+  }catch(e){console.log('loadUserData:',e.message);}
 }
 
 initSupabase();
