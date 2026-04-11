@@ -3123,15 +3123,10 @@ async function doLogin(){
     localStorage.setItem('pl_auth_token',authToken);
     localStorage.setItem('pl_student_id',supaStudentId);
     nickname=data.user.user_metadata&&data.user.user_metadata.nickname?data.user.user_metadata.nickname:'Nurse';
-    // Check if onboarding already done
-    var onboardDone=data.user.user_metadata&&data.user.user_metadata.onboarded;
-    if(onboardDone){
-      await initSupabase();
-      goToLounge();
-    } else {
-      // New user via login — start onboarding
-      goTo('s-tester');
-    }
+    if(data.user.user_metadata&&data.user.user_metadata.daily_cards) dailyCards=data.user.user_metadata.daily_cards;
+    // Valid login = always go to lounge — onboarding only runs right after fresh signup
+    await initSupabase();
+    goToLounge();
   }catch(e){
     showAuthErr('login-err','Connection error. Check your internet and try again.');
   }finally{
@@ -3210,39 +3205,13 @@ async function doForgot(){
         var user=await r.json();
         authToken=stored;
         supaStudentId=user.id;
+        // Load nickname from auth metadata or students table
         nickname=user.user_metadata&&user.user_metadata.nickname?user.user_metadata.nickname:'Nurse';
-        // Primary check: auth metadata
-        var onboardDone=user.user_metadata&&user.user_metadata.onboarded;
-        // Fallback check: students table (catches cases where auth metadata write failed)
-        if(!onboardDone){
-          try{
-            var sr=await fetch(SUPA_URL+'/rest/v1/students?id=eq.'+user.id+'&select=onboarded,nickname,daily_cards',{
-              headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+stored}
-            });
-            if(sr.ok){
-              var sdata=await sr.json();
-              if(sdata&&sdata.length>0){
-                onboardDone=sdata[0].onboarded===true;
-                if(sdata[0].nickname) nickname=sdata[0].nickname;
-                if(sdata[0].daily_cards) dailyCards=sdata[0].daily_cards;
-                // If found in students table, backfill auth metadata so future logins are faster
-                if(onboardDone&&authToken){
-                  fetch(SUPA_URL+'/auth/v1/user',{
-                    method:'PUT',
-                    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+authToken,'Content-Type':'application/json'},
-                    body:JSON.stringify({data:{nickname:nickname,onboarded:true,daily_cards:dailyCards}})
-                  }).catch(function(){});
-                }
-              }
-            }
-          }catch(fe){console.log('students fallback check:',fe.message);}
-        }
+        if(user.user_metadata&&user.user_metadata.daily_cards) dailyCards=user.user_metadata.daily_cards;
         await initSupabase();
-        if(onboardDone){
-          goToLounge();
-        } else {
-          goTo('s-tester');
-        }
+        // Valid token = returning user = always go straight to lounge
+        // Onboarding only runs immediately after fresh signup via doSignup()
+        goToLounge();
         return;
       }
     }catch(e){}
