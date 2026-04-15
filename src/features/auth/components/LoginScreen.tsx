@@ -24,70 +24,83 @@ export function LoginScreen() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-yellow-400">PassLounge</h1>
-          <p className="mt-2 text-gray-400">Sign in to your account</p>
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight text-gold-400">
+            PassLounge
+          </h1>
+          <p className="mt-1 text-sm tracking-wide text-slate-400">
+            NCLEX Prep — Built for Nurses
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm text-gray-300">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
-              placeholder="you@example.com"
-            />
+        {/* Card */}
+        <div className="rounded-2xl border border-navy-700/50 bg-navy-900 p-8 shadow-xl">
+          <h2 className="mb-6 text-center text-xl font-semibold text-white">
+            Sign in to your account
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-300">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-lg border border-navy-700 bg-navy-800 px-4 py-2.5 text-white placeholder-slate-500 transition focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-300">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-navy-700 bg-navy-800 px-4 py-2.5 text-white placeholder-slate-500 transition focus:border-gold-400 focus:ring-1 focus:ring-gold-400 focus:outline-none"
+                placeholder="••••••••"
+              />
+            </div>
+
+            {error && (
+              <p role="alert" className="rounded-lg bg-red-900/30 px-3 py-2 text-sm text-red-400">
+                {error.message}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full rounded-lg bg-gold-400 py-3 text-sm font-bold tracking-wide text-navy-950 transition hover:bg-gold-300 disabled:opacity-50"
+            >
+              {isSubmitting ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="mt-5 text-center">
+            <Link to="/forgot" className="text-sm text-gold-400 transition hover:text-gold-300 hover:underline">
+              Forgot password?
+            </Link>
           </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm text-gray-300">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
-              placeholder="••••••••"
-            />
-          </div>
-
-          {error && (
-            <p role="alert" className="text-sm text-red-400">
-              {error.message}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-lg bg-yellow-400 py-2 font-semibold text-gray-900 hover:bg-yellow-300 disabled:opacity-50"
-          >
-            {isSubmitting ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-
-        <div className="text-center text-sm text-gray-400">
-          <Link to="/forgot" className="text-yellow-400 hover:underline">
-            Forgot password?
-          </Link>
         </div>
 
-        <div className="text-center text-sm text-gray-400">
+        {/* Footer link */}
+        <p className="mt-6 text-center text-sm text-slate-400">
           Don&apos;t have an account?{' '}
-          <Link to="/signup" className="text-yellow-400 hover:underline">
+          <Link to="/signup" className="font-medium text-gold-400 transition hover:text-gold-300 hover:underline">
             Sign up
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   )

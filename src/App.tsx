@@ -15,7 +15,7 @@ import { SignupScreen } from '@/features/auth/components/SignupScreen'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-navy-950 font-sans text-white antialiased">
       <Routes>
         {/* Auth routes */}
         <Route path="/login" element={<LoginScreen />} />
