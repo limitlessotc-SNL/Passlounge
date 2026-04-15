@@ -5,6 +5,41 @@
  * All engineers import from here. Never define types inline in components.
  */
 
+// ─── Auth Types ───────────────────────────────────────────────────────────
+
+export interface AuthUser {
+  id: string;
+  email: string;
+}
+
+export interface AuthState {
+  user: AuthUser | null;
+  token: string | null;
+  supaStudentId: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
+
+export interface AuthActions {
+  setUser: (user: AuthUser | null, token: string | null) => void;
+  setLoading: (isLoading: boolean) => void;
+  logout: () => void;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface SignupCredentials {
+  email: string;
+  password: string;
+}
+
+export interface AuthError {
+  message: string;
+}
+
 // ─── Card Types ────────────────────────────────────────────────────────────
 
 export type CardCategory =
