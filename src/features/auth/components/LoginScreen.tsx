@@ -8,18 +8,22 @@
  */
 
 import { type FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../hooks/useAuth'
 
 export function LoginScreen() {
+  const navigate = useNavigate()
   const { login, error, isSubmitting } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    void login({ email, password })
+    const success = await login({ email, password })
+    if (success) {
+      navigate('/')
+    }
   }
 
   return (
@@ -63,12 +67,13 @@ export function LoginScreen() {
       </h1>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="flex-col gap-14 w-full" style={{ marginTop: 28 }}>
+      <form onSubmit={(e) => void handleSubmit(e)} className="flex-col gap-14 w-full" style={{ marginTop: 28 }}>
         <div className="fade-up fade-up-4">
           <input
             id="login-email"
             type="email"
             required
+            disabled={isSubmitting}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-input"
@@ -81,6 +86,7 @@ export function LoginScreen() {
             id="login-password"
             type="password"
             required
+            disabled={isSubmitting}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="pl-input"

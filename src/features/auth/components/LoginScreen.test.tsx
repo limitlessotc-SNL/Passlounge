@@ -10,12 +10,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // ─── Mock useAuth ─────────────────────────────────────────────────────────
 
 const mockLogin = vi.fn()
+let mockError: { message: string } | null = null
+let mockIsSubmitting = false
 
 vi.mock('../hooks/useAuth', () => ({
   useAuth: () => ({
     login: mockLogin,
-    error: null,
-    isSubmitting: false,
+    error: mockError,
+    isSubmitting: mockIsSubmitting,
   }),
 }))
 
@@ -34,6 +36,8 @@ function renderLogin() {
 describe('LoginScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockError = null
+    mockIsSubmitting = false
   })
 
   it('renders login form with inputs and sign-in button', () => {
@@ -53,6 +57,7 @@ describe('LoginScreen', () => {
   })
 
   it('calls login with email and password on submit', async () => {
+    mockLogin.mockResolvedValue(false)
     const user = userEvent.setup()
     renderLogin()
 
@@ -66,9 +71,19 @@ describe('LoginScreen', () => {
     })
   })
 
-  it('renders sign-in button as enabled when not submitting', () => {
+  it('displays error message when error is present', () => {
+    mockError = { message: 'Invalid credentials' }
     renderLogin()
 
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeEnabled()
+    expect(screen.getByRole('alert')).toHaveTextContent('Invalid credentials')
+  })
+
+  it('disables button and inputs while submitting', () => {
+    mockIsSubmitting = true
+    renderLogin()
+
+    expect(screen.getByRole('button', { name: /signing in/i })).toBeDisabled()
+    expect(screen.getByPlaceholderText(/email address/i)).toBeDisabled()
+    expect(screen.getByPlaceholderText(/password/i)).toBeDisabled()
   })
 })

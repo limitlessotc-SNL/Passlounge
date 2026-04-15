@@ -3,6 +3,7 @@
  *
  * Provides login, signup, forgot password, and logout actions.
  * Bridges auth.service calls with the authStore.
+ * Each action returns true on success, false on failure.
  *
  * Owner: Junior Engineer 1
  */
@@ -19,6 +20,19 @@ import {
   signupWithEmail,
 } from '../services/auth.service'
 
+function extractErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error) {
+    return err.message || fallback
+  }
+  if (typeof err === 'object' && err !== null && 'message' in err) {
+    return String((err as { message: unknown }).message) || fallback
+  }
+  if (typeof err === 'string') {
+    return err
+  }
+  return fallback
+}
+
 export function useAuth() {
   const { setUser, setLoading, logout: clearStore } = useAuthStore()
   const [error, setError] = useState<AuthError | null>(null)
@@ -26,7 +40,7 @@ export function useAuth() {
   const [resetSent, setResetSent] = useState(false)
 
   const login = useCallback(
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginCredentials): Promise<boolean> => {
       setError(null)
       setIsSubmitting(true)
       try {
@@ -37,11 +51,13 @@ export function useAuth() {
             { id: session.user.id, email: session.user.email ?? '' },
             session.access_token,
           )
+          return true
         }
+        setError({ message: 'No session returned. Please try again.' })
+        return false
       } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : 'Login failed'
-        setError({ message })
+        setError({ message: extractErrorMessage(err, 'Login failed') })
+        return false
       } finally {
         setIsSubmitting(false)
       }
@@ -50,7 +66,7 @@ export function useAuth() {
   )
 
   const signup = useCallback(
-    async (credentials: SignupCredentials) => {
+    async (credentials: SignupCredentials): Promise<boolean> => {
       setError(null)
       setIsSubmitting(true)
       try {
@@ -61,11 +77,13 @@ export function useAuth() {
             { id: session.user.id, email: session.user.email ?? '' },
             session.access_token,
           )
+          return true
         }
+        setError({ message: 'No session returned. Please try again.' })
+        return false
       } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : 'Signup failed'
-        setError({ message })
+        setError({ message: extractErrorMessage(err, 'Signup failed') })
+        return false
       } finally {
         setIsSubmitting(false)
       }
@@ -73,17 +91,17 @@ export function useAuth() {
     [setUser],
   )
 
-  const forgotPassword = useCallback(async (email: string) => {
+  const forgotPassword = useCallback(async (email: string): Promise<boolean> => {
     setError(null)
     setIsSubmitting(true)
     setResetSent(false)
     try {
       await sendPasswordReset(email)
       setResetSent(true)
+      return true
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Password reset failed'
-      setError({ message })
+      setError({ message: extractErrorMessage(err, 'Password reset failed') })
+      return false
     } finally {
       setIsSubmitting(false)
     }

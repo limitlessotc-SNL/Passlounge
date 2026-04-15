@@ -11,12 +11,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockForgotPassword = vi.fn()
 let mockResetSent = false
+let mockError: { message: string } | null = null
+let mockIsSubmitting = false
 
 vi.mock('../hooks/useAuth', () => ({
   useAuth: () => ({
     forgotPassword: mockForgotPassword,
-    error: null,
-    isSubmitting: false,
+    error: mockError,
+    isSubmitting: mockIsSubmitting,
     resetSent: mockResetSent,
   }),
 }))
@@ -37,6 +39,8 @@ describe('ForgotScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockResetSent = false
+    mockError = null
+    mockIsSubmitting = false
   })
 
   it('renders forgot password form', () => {
@@ -56,6 +60,7 @@ describe('ForgotScreen', () => {
   })
 
   it('calls forgotPassword on submit', async () => {
+    mockForgotPassword.mockResolvedValue(true)
     const user = userEvent.setup()
     renderForgot()
 
@@ -72,5 +77,20 @@ describe('ForgotScreen', () => {
     expect(
       screen.getByText(/check your email for a password reset link/i),
     ).toBeInTheDocument()
+  })
+
+  it('displays error message on failure', () => {
+    mockError = { message: 'Rate limited' }
+    renderForgot()
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Rate limited')
+  })
+
+  it('disables button and input while submitting', () => {
+    mockIsSubmitting = true
+    renderForgot()
+
+    expect(screen.getByRole('button', { name: /sending/i })).toBeDisabled()
+    expect(screen.getByPlaceholderText(/email address/i)).toBeDisabled()
   })
 })

@@ -21,14 +21,17 @@ export function SignupScreen() {
   const [confirm, setConfirm] = useState('')
   const [mismatch, setMismatch] = useState(false)
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (password !== confirm) {
       setMismatch(true)
       return
     }
     setMismatch(false)
-    void signup({ email, password })
+    const success = await signup({ email, password })
+    if (success) {
+      navigate('/onboarding')
+    }
   }
 
   return (
@@ -64,11 +67,12 @@ export function SignupScreen() {
       </p>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="flex-col w-full" style={{ marginTop: 24 }}>
+      <form onSubmit={(e) => void handleSubmit(e)} className="flex-col w-full" style={{ marginTop: 24 }}>
         <div className="fade-up fade-up-4">
           <input
             id="signup-nickname"
             type="text"
+            disabled={isSubmitting}
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             className="pl-input"
@@ -81,6 +85,7 @@ export function SignupScreen() {
             id="signup-email"
             type="email"
             required
+            disabled={isSubmitting}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-input"
@@ -94,6 +99,7 @@ export function SignupScreen() {
             type="password"
             required
             minLength={6}
+            disabled={isSubmitting}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="pl-input"
@@ -107,6 +113,7 @@ export function SignupScreen() {
             type="password"
             required
             minLength={6}
+            disabled={isSubmitting}
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             className="pl-input"

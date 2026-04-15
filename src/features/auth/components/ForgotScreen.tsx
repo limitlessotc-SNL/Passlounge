@@ -17,9 +17,9 @@ export function ForgotScreen() {
   const { forgotPassword, error, isSubmitting, resetSent } = useAuth()
   const [email, setEmail] = useState('')
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    void forgotPassword(email)
+    await forgotPassword(email)
   }
 
   return (
@@ -45,12 +45,13 @@ export function ForgotScreen() {
       </p>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="flex-col w-full" style={{ marginTop: 28 }}>
+      <form onSubmit={(e) => void handleSubmit(e)} className="flex-col w-full" style={{ marginTop: 28 }}>
         <div className="fade-up fade-up-3">
           <input
             id="forgot-email"
             type="email"
             required
+            disabled={isSubmitting}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-input"

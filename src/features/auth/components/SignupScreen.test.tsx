@@ -10,12 +10,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // ─── Mock useAuth ─────────────────────────────────────────────────────────
 
 const mockSignup = vi.fn()
+let mockError: { message: string } | null = null
+let mockIsSubmitting = false
 
 vi.mock('../hooks/useAuth', () => ({
   useAuth: () => ({
     signup: mockSignup,
-    error: null,
-    isSubmitting: false,
+    error: mockError,
+    isSubmitting: mockIsSubmitting,
   }),
 }))
 
@@ -34,6 +36,8 @@ function renderSignup() {
 describe('SignupScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockError = null
+    mockIsSubmitting = false
   })
 
   it('renders signup form with all inputs', () => {
@@ -56,6 +60,7 @@ describe('SignupScreen', () => {
   })
 
   it('calls signup when passwords match', async () => {
+    mockSignup.mockResolvedValue(false)
     const user = userEvent.setup()
     renderSignup()
 
@@ -81,5 +86,22 @@ describe('SignupScreen', () => {
 
     expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument()
     expect(mockSignup).not.toHaveBeenCalled()
+  })
+
+  it('displays API error message', () => {
+    mockError = { message: 'Too many requests' }
+    renderSignup()
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Too many requests')
+  })
+
+  it('disables button and inputs while submitting', () => {
+    mockIsSubmitting = true
+    renderSignup()
+
+    expect(screen.getByRole('button', { name: /creating account/i })).toBeDisabled()
+    expect(screen.getByPlaceholderText(/email address/i)).toBeDisabled()
+    expect(screen.getByPlaceholderText(/^password$/i)).toBeDisabled()
+    expect(screen.getByPlaceholderText(/confirm password/i)).toBeDisabled()
   })
 })
