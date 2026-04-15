@@ -36,27 +36,28 @@ describe('LoginScreen', () => {
     vi.clearAllMocks()
   })
 
-  it('renders login form', () => {
+  it('renders login form with inputs and sign-in button', () => {
     renderLogin()
 
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
   })
 
-  it('renders navigation links', () => {
+  it('renders branding and navigation links', () => {
     renderLogin()
 
+    expect(screen.getByText(/passlounge/i)).toBeInTheDocument()
     expect(screen.getByText(/forgot password/i)).toBeInTheDocument()
-    expect(screen.getByText(/sign up/i)).toBeInTheDocument()
+    expect(screen.getByText(/create one free/i)).toBeInTheDocument()
   })
 
   it('calls login with email and password on submit', async () => {
     const user = userEvent.setup()
     renderLogin()
 
-    await user.type(screen.getByLabelText(/email/i), 'test@test.com')
-    await user.type(screen.getByLabelText(/password/i), 'password123')
+    await user.type(screen.getByPlaceholderText(/email address/i), 'test@test.com')
+    await user.type(screen.getByPlaceholderText(/password/i), 'password123')
     await user.click(screen.getByRole('button', { name: /sign in/i }))
 
     expect(mockLogin).toHaveBeenCalledWith({
@@ -65,24 +66,9 @@ describe('LoginScreen', () => {
     })
   })
 
-  it('displays error message when error is present', () => {
-    vi.mocked(vi.fn()).mockReturnValue(undefined)
-
-    // Re-mock with error
-    vi.doMock('../hooks/useAuth', () => ({
-      useAuth: () => ({
-        login: mockLogin,
-        error: { message: 'Invalid credentials' },
-        isSubmitting: false,
-      }),
-    }))
-
-    // Use a separate render with error state
-    const { unmount } = renderLogin()
-    unmount()
-
-    // For static mock test, we verify the component renders without crashing
+  it('renders sign-in button as enabled when not submitting', () => {
     renderLogin()
+
     expect(screen.getByRole('button', { name: /sign in/i })).toBeEnabled()
   })
 })

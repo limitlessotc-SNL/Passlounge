@@ -36,20 +36,22 @@ describe('SignupScreen', () => {
     vi.clearAllMocks()
   })
 
-  it('renders signup form', () => {
+  it('renders signup form with all inputs', () => {
     renderSignup()
 
-    expect(screen.getByLabelText(/^email$/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/nickname/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/^password$/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/confirm password/i)).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /create account/i }),
     ).toBeInTheDocument()
   })
 
-  it('renders sign-in link', () => {
+  it('renders back button and sign-in link', () => {
     renderSignup()
 
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
     expect(screen.getByText(/sign in/i)).toBeInTheDocument()
   })
 
@@ -57,9 +59,9 @@ describe('SignupScreen', () => {
     const user = userEvent.setup()
     renderSignup()
 
-    await user.type(screen.getByLabelText(/^email$/i), 'new@test.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'password123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'password123')
+    await user.type(screen.getByPlaceholderText(/email address/i), 'new@test.com')
+    await user.type(screen.getByPlaceholderText(/^password$/i), 'password123')
+    await user.type(screen.getByPlaceholderText(/confirm password/i), 'password123')
     await user.click(screen.getByRole('button', { name: /create account/i }))
 
     expect(mockSignup).toHaveBeenCalledWith({
@@ -72,9 +74,9 @@ describe('SignupScreen', () => {
     const user = userEvent.setup()
     renderSignup()
 
-    await user.type(screen.getByLabelText(/^email$/i), 'new@test.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'password123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'different')
+    await user.type(screen.getByPlaceholderText(/email address/i), 'new@test.com')
+    await user.type(screen.getByPlaceholderText(/^password$/i), 'password123')
+    await user.type(screen.getByPlaceholderText(/confirm password/i), 'different')
     await user.click(screen.getByRole('button', { name: /create account/i }))
 
     expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument()

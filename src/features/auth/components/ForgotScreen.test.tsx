@@ -42,23 +42,24 @@ describe('ForgotScreen', () => {
   it('renders forgot password form', () => {
     renderForgot()
 
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /send reset link/i }),
     ).toBeInTheDocument()
   })
 
-  it('renders back to sign in link', () => {
+  it('renders back button and title', () => {
     renderForgot()
 
-    expect(screen.getByText(/back to sign in/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
+    expect(screen.getByText(/reset password/i)).toBeInTheDocument()
   })
 
   it('calls forgotPassword on submit', async () => {
     const user = userEvent.setup()
     renderForgot()
 
-    await user.type(screen.getByLabelText(/email/i), 'test@test.com')
+    await user.type(screen.getByPlaceholderText(/email address/i), 'test@test.com')
     await user.click(screen.getByRole('button', { name: /send reset link/i }))
 
     expect(mockForgotPassword).toHaveBeenCalledWith('test@test.com')
