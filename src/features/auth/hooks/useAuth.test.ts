@@ -142,7 +142,7 @@ describe('useAuth', () => {
     expect(result.current.error?.message).toBe('Email taken')
   })
 
-  it('signup returns false when no session returned', async () => {
+  it('signup sets needsConfirmation when no session returned (email confirmation required)', async () => {
     mockSignup.mockResolvedValue({ session: null, user: null } as never)
 
     const { result } = renderHook(() => useAuth())
@@ -153,7 +153,8 @@ describe('useAuth', () => {
     })
 
     expect(success).toBe(false)
-    expect(result.current.error?.message).toBe('No session returned. Please try again.')
+    expect(result.current.needsConfirmation).toBe(true)
+    expect(result.current.error).toBeNull()
   })
 
   // ── forgotPassword ────────────────────────────────────────────────────

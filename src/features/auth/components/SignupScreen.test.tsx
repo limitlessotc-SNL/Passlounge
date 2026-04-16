@@ -12,12 +12,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mockSignup = vi.fn()
 let mockError: { message: string } | null = null
 let mockIsSubmitting = false
+let mockNeedsConfirmation = false
 
 vi.mock('../hooks/useAuth', () => ({
   useAuth: () => ({
     signup: mockSignup,
     error: mockError,
     isSubmitting: mockIsSubmitting,
+    needsConfirmation: mockNeedsConfirmation,
   }),
 }))
 
@@ -38,6 +40,7 @@ describe('SignupScreen', () => {
     vi.clearAllMocks()
     mockError = null
     mockIsSubmitting = false
+    mockNeedsConfirmation = false
   })
 
   it('renders signup form with all inputs', () => {
@@ -103,5 +106,13 @@ describe('SignupScreen', () => {
     expect(screen.getByPlaceholderText(/email address/i)).toBeDisabled()
     expect(screen.getByPlaceholderText(/^password$/i)).toBeDisabled()
     expect(screen.getByPlaceholderText(/confirm password/i)).toBeDisabled()
+  })
+
+  it('shows email confirmation message when needsConfirmation is true', () => {
+    mockNeedsConfirmation = true
+    renderSignup()
+
+    expect(screen.getByText(/check your email to confirm/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /go to sign in/i })).toBeInTheDocument()
   })
 })

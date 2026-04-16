@@ -38,6 +38,7 @@ export function useAuth() {
   const [error, setError] = useState<AuthError | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [resetSent, setResetSent] = useState(false)
+  const [needsConfirmation, setNeedsConfirmation] = useState(false)
 
   const login = useCallback(
     async (credentials: LoginCredentials): Promise<boolean> => {
@@ -69,6 +70,7 @@ export function useAuth() {
     async (credentials: SignupCredentials): Promise<boolean> => {
       setError(null)
       setIsSubmitting(true)
+      setNeedsConfirmation(false)
       try {
         const data = await signupWithEmail(credentials)
         const session = data.session
@@ -79,7 +81,8 @@ export function useAuth() {
           )
           return true
         }
-        setError({ message: 'No session returned. Please try again.' })
+        // No session = email confirmation required (Supabase default)
+        setNeedsConfirmation(true)
         return false
       } catch (err: unknown) {
         setError({ message: extractErrorMessage(err, 'Signup failed') })
@@ -116,5 +119,5 @@ export function useAuth() {
     }
   }, [setLoading, clearStore])
 
-  return { login, signup, forgotPassword, logout, error, isSubmitting, resetSent }
+  return { login, signup, forgotPassword, logout, error, isSubmitting, resetSent, needsConfirmation }
 }

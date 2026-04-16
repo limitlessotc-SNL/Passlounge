@@ -16,7 +16,7 @@ import { useAuth } from '../hooks/useAuth'
 
 export function SignupScreen() {
   const navigate = useNavigate()
-  const { signup, error, isSubmitting } = useAuth()
+  const { signup, error, isSubmitting, needsConfirmation } = useAuth()
   const setStoreNickname = useStudentStore((s) => s.setNickname)
   const [nickname, setNickname] = useState('')
   const [email, setEmail] = useState('')
@@ -137,10 +137,30 @@ export function SignupScreen() {
           </p>
         )}
 
+        {needsConfirmation && (
+          <div style={{ marginTop: 12, textAlign: 'center' }}>
+            <p className="success-msg">Check your email to confirm your account ✔</p>
+            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 6 }}>
+              After confirming, come back and sign in.
+            </p>
+          </div>
+        )}
+
         <div className="fade-up fade-up-8" style={{ marginTop: 24 }}>
-          <button type="submit" disabled={isSubmitting} className="btn-gold">
-            {isSubmitting ? 'Creating account...' : 'Create Account \u2192'}
-          </button>
+          {needsConfirmation ? (
+            <button
+              type="button"
+              className="btn-gold"
+              style={{ background: 'rgba(74,222,128,0.2)', animation: 'none' }}
+              onClick={() => navigate('/login')}
+            >
+              Go to Sign In →
+            </button>
+          ) : (
+            <button type="submit" disabled={isSubmitting} className="btn-gold">
+              {isSubmitting ? 'Creating account...' : 'Create Account \u2192'}
+            </button>
+          )}
         </div>
       </form>
 
