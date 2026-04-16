@@ -8,6 +8,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
 import { LoginScreen } from '@/features/auth/components/LoginScreen'
 import { SignupScreen } from '@/features/auth/components/SignupScreen'
+import { HomeTab } from '@/features/dashboard/components/HomeTab'
 import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
 import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
 import { CommitmentScreen } from '@/features/onboarding/components/CommitmentScreen'
@@ -33,16 +34,6 @@ import { ReviewScreen } from '@/features/session/components/ReviewScreen'
  */
 
 /* ─── Placeholder screens (replaced in later phases) ──────────────────── */
-
-function HomePlaceholder() {
-  return (
-    <div className="placeholder-screen">
-      <div className="placeholder-icon">🏠</div>
-      <div className="placeholder-title">Dashboard</div>
-      <div className="placeholder-sub">Your study dashboard is coming in Phase 5.</div>
-    </div>
-  )
-}
 
 function StudyPlaceholder() {
   return (
@@ -119,7 +110,7 @@ function App() {
           {/* App routes — require completed onboarding */}
           <Route element={<OnboardingGuard />}>
             <Route element={<AppLayout />}>
-              <Route index element={<HomePlaceholder />} />
+              <Route index element={<HomeTab />} />
               <Route path="/study" element={<StudyPlaceholder />} />
               <Route path="/cat" element={<CATPlaceholder />} />
               <Route path="/compete" element={<CompetePlaceholder />} />
