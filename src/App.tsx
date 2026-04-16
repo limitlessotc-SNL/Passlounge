@@ -19,6 +19,7 @@ import { TestDateScreen } from '@/features/onboarding/components/TestDateScreen'
 import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScreen'
 import { ProfileTab } from '@/features/profile/components/ProfileTab'
 import { CardScreen } from '@/features/session/components/CardScreen'
+import { StudyTab } from '@/features/session/components/StudyTab'
 import { ModeSelectScreen } from '@/features/session/components/ModeSelectScreen'
 import { ReviewScreen } from '@/features/session/components/ReviewScreen'
 
@@ -34,16 +35,6 @@ import { ReviewScreen } from '@/features/session/components/ReviewScreen'
  */
 
 /* ─── Placeholder screens (replaced in later phases) ──────────────────── */
-
-function StudyPlaceholder() {
-  return (
-    <div className="placeholder-screen">
-      <div className="placeholder-icon">⚡</div>
-      <div className="placeholder-title">Study</div>
-      <div className="placeholder-sub">Session setup and progress tracking coming in Phase 6.</div>
-    </div>
-  )
-}
 
 function CATPlaceholder() {
   return (
@@ -111,7 +102,7 @@ function App() {
           <Route element={<OnboardingGuard />}>
             <Route element={<AppLayout />}>
               <Route index element={<HomeTab />} />
-              <Route path="/study" element={<StudyPlaceholder />} />
+              <Route path="/study" element={<StudyTab />} />
               <Route path="/cat" element={<CATPlaceholder />} />
               <Route path="/compete" element={<CompetePlaceholder />} />
               <Route path="/lounge" element={<LoungePlaceholder />} />
