@@ -157,7 +157,7 @@ describe('CardScreen', () => {
     expect(container.innerHTML).toBe('')
   })
 
-  it('study mode shows result bar after submit', async () => {
+  it('study mode shows result bar and CCCC layers after submit', async () => {
     useSessionStore.getState().setMode('study')
     const user = userEvent.setup()
     renderScreen()
@@ -168,7 +168,8 @@ describe('CardScreen', () => {
     await user.click(opts[0])
     await user.click(screen.getByText(/submit answer/i))
 
-    // In study mode, result bar should appear
-    expect(screen.getByText(/next card/i)).toBeInTheDocument()
+    // In study mode, CCCC layers should appear
+    expect(screen.getByText('SNL Method Breakdown')).toBeInTheDocument()
+    expect(screen.getByText('Core Problem')).toBeInTheDocument()
   })
 })

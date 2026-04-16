@@ -15,6 +15,9 @@ import { useSessionStore } from '@/store/sessionStore'
 import { shuffleOptions } from '@/utils/shuffle'
 
 import { AnswerOption } from './AnswerOption'
+import { PearlReveal } from './PearlReveal'
+import { StudyLayers } from './StudyLayers'
+import { WhyWrongBox } from './WhyWrongBox'
 
 export function CardScreen() {
   const navigate = useNavigate()
@@ -27,6 +30,7 @@ export function CardScreen() {
   const [selectedOpt, setSelectedOpt] = useState(-1)
   const [struckOpts, setStruckOpts] = useState<Record<number, boolean>>({})
   const [answered, setAnswered] = useState(false)
+  const [showPearl, setShowPearl] = useState(false)
 
   const card = cards[currentIdx]
   const totalCards = cards.length
@@ -45,6 +49,7 @@ export function CardScreen() {
     setSelectedOpt(alreadyAnswered ? (answers[currentIdx] ?? -1) : -1)
     setStruckOpts({})
     setAnswered(alreadyAnswered)
+    setShowPearl(false)
     startCardTimer()
   }, [currentIdx, answers, startCardTimer])
 
@@ -180,7 +185,7 @@ export function CardScreen() {
         </button>
       )}
 
-      {/* Study mode result */}
+      {/* Study mode result — full CCCC flow */}
       {showResult && (
         <div style={{ marginTop: 12 }}>
           <div className={`result-bar ${isCorrectAnswer ? 'result-correct' : 'result-wrong'}`}>
@@ -190,9 +195,29 @@ export function CardScreen() {
             </span>
           </div>
 
-          <button className="btn-gold" onClick={handleNext} style={{ marginTop: 12 }}>
-            {currentIdx === totalCards - 1 ? 'Complete Session →' : 'Next Card →'}
-          </button>
+          {/* Why wrong explanation */}
+          <WhyWrongBox
+            chosenText={currentShuffle.opts[answers[currentIdx] ?? 0] ?? ''}
+            whyWrong={card.why_wrong ?? {}}
+            visible={!isCorrectAnswer}
+          />
+
+          {/* CCCC Layers */}
+          <StudyLayers
+            layers={card.layers ?? []}
+            onAllUnlocked={() => setShowPearl(true)}
+          />
+
+          {/* Pearl + Next button (after all layers unlocked) */}
+          {showPearl && (
+            <PearlReveal
+              lens={card.lens ?? ''}
+              pearl={card.pearl ?? ''}
+              mnemonic={card.mnemonic ?? []}
+              isLastCard={currentIdx === totalCards - 1}
+              onNext={handleNext}
+            />
+          )}
         </div>
       )}
     </div>
