@@ -12,6 +12,8 @@ import { PlanReadyScreen } from '@/features/onboarding/components/PlanReadyScree
 import { PlanRevealScreen } from '@/features/onboarding/components/PlanRevealScreen'
 import { TestDateScreen } from '@/features/onboarding/components/TestDateScreen'
 import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScreen'
+import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
+import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
 import { CardScreen } from '@/features/session/components/CardScreen'
 import { ModeSelectScreen } from '@/features/session/components/ModeSelectScreen'
 import { ReviewScreen } from '@/features/session/components/ReviewScreen'
@@ -113,6 +115,11 @@ function App() {
           <Route path="/session/mode" element={<ModeSelectScreen />} />
           <Route path="/session/play" element={<CardScreen />} />
           <Route path="/session/review" element={<ReviewScreen />} />
+
+          {/* Diagnostic routes (full-screen, no BottomNav) */}
+          <Route path="/diagnostic/info" element={<DiagInfoScreen />} />
+          <Route path="/diagnostic/play" element={<CardScreen />} />
+          <Route path="/diagnostic/results" element={<DiagResultsScreen />} />
 
           {/* App routes with BottomNav */}
           <Route element={<AppLayout />}>
