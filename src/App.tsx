@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 
+import { Particles } from '@/components/animations/Particles'
 import { AuthGuard } from '@/components/guards/AuthGuard'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
@@ -88,6 +89,7 @@ function App() {
     <div className="app-shell">
       <div className="orb orb1" />
       <div className="orb orb2" />
+      <Particles />
       <Routes>
         {/* Public auth routes */}
         <Route path="/login" element={<LoginScreen />} />

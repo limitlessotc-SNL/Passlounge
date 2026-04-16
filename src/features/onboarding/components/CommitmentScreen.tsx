@@ -20,8 +20,8 @@ interface CommitOption {
 }
 
 const OPTIONS: CommitOption[] = [
-  { cards: 25, title: 'Busy But Committed', sub: '25 cards · ~20 min · Lots on my plate but I show up' },
-  { cards: 35, title: 'Steady And Focused', sub: '35 cards · ~25 min · My sweet spot' },
+  { cards: 25, title: 'Busy But Committed', sub: '25 cards \u00b7 ~20 min \u00b7 Lots on my plate but I show up' },
+  { cards: 35, title: 'Steady And Focused', sub: '35 cards \u00b7 ~25 min \u00b7 My sweet spot' },
   { cards: 50, title: 'All In', sub: "50 cards \u00b7 ~35 min \u00b7 I'm locking in and getting this done" },
 ]
 
@@ -38,7 +38,7 @@ export function CommitmentScreen() {
 
   return (
     <div className="content">
-      <div className="progress-wrap">
+      <div className="progress-wrap anim">
         <div className="progress-meta">
           <span>Step 4 Of 4</span>
           <span>100%</span>
@@ -48,24 +48,27 @@ export function CommitmentScreen() {
         </div>
       </div>
 
-      <button className="back-btn" onClick={() => navigate('/onboarding/testdate')}>
+      <button className="back-btn anim" style={{ animationDelay: '0.05s' }} onClick={() => navigate('/onboarding/testdate')}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         Back
       </button>
 
-      <div className="step-pill">Step 4 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 4 Of 4</div>
 
-      <div className="screen-title">
+      <div className="screen-title anim" style={{ animationDelay: '0.15s' }}>
         How Much Can<br />You Commit Daily?
       </div>
-      <div className="screen-sub">Nurses are busy. Consistency beats intensity every time.</div>
+      <div className="screen-sub anim" style={{ animationDelay: '0.2s' }}>
+        Nurses are busy. Consistency beats intensity every time.
+      </div>
 
-      {OPTIONS.map((opt) => (
+      {OPTIONS.map((opt, i) => (
         <div
           key={opt.cards}
-          className={`commit-card${dailyCards === opt.cards ? ' selected' : ''}`}
+          className={`commit-card anim${dailyCards === opt.cards ? ' selected' : ''}`}
+          style={{ animationDelay: `${0.25 + i * 0.06}s` }}
           onClick={() => handlePick(opt.cards)}
         >
           <div className="commit-title">{opt.title}</div>

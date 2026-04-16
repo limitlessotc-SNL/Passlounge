@@ -41,7 +41,7 @@ export function ConfidenceScreen() {
 
   return (
     <div className="content">
-      <div className="progress-wrap">
+      <div className="progress-wrap anim">
         <div className="progress-meta">
           <span>Step 2 Of 4</span>
           <span>50%</span>
@@ -51,25 +51,28 @@ export function ConfidenceScreen() {
         </div>
       </div>
 
-      <button className="back-btn" onClick={() => navigate('/onboarding')}>
+      <button className="back-btn anim" style={{ animationDelay: '0.05s' }} onClick={() => navigate('/onboarding')}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8l4-4" stroke="rgba(255,255,255,0.4)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         Back
       </button>
 
-      <div className="step-pill">Step 2 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 2 Of 4</div>
 
-      <div className="screen-title">
+      <div className="screen-title anim" style={{ animationDelay: '0.15s' }}>
         How Are You<br />Feeling About<br />The NCLEX?
       </div>
-      <div className="screen-sub">Your answer helps us coach you properly.</div>
+      <div className="screen-sub anim" style={{ animationDelay: '0.2s' }}>Your answer helps us coach you properly.</div>
 
-      {OPTIONS.map((opt) => (
+      {OPTIONS.map((opt, i) => (
         <div
           key={opt.level}
-          className={`conf-row${confidence === opt.level ? ' selected' : ''}`}
-          style={confidence === opt.level ? { borderColor: opt.border, background: opt.bg } : undefined}
+          className={`conf-row anim${confidence === opt.level ? ' selected' : ''}`}
+          style={{
+            animationDelay: `${0.25 + i * 0.05}s`,
+            ...(confidence === opt.level ? { borderColor: opt.border, background: opt.bg } : {}),
+          }}
           onClick={() => handlePick(opt.level)}
         >
           <div className="conf-icon" style={{ background: opt.bg }}>{opt.emoji}</div>

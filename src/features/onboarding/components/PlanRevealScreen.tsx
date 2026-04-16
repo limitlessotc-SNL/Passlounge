@@ -10,6 +10,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { ConfettiOverlay } from '@/components/animations/ConfettiOverlay'
 import { useStudentStore } from '@/store/studentStore'
 
 import { useOnboarding } from '../hooks/useOnboarding'
@@ -31,6 +32,8 @@ export function PlanRevealScreen() {
 
   return (
     <div className="content scrollable">
+      <ConfettiOverlay />
+
       {/* Check ring animation */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 16 }}>
         <div className="check-ring">
@@ -39,11 +42,11 @@ export function PlanRevealScreen() {
           </svg>
         </div>
 
-        <div style={{ fontSize: 11, color: '#F5C518', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, marginBottom: 8 }}>
+        <div className="anim" style={{ fontSize: 11, color: '#F5C518', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, marginBottom: 8, animationDelay: '0.3s' }}>
           You&apos;re In The Lounge!
         </div>
 
-        <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1.2, marginBottom: 6 }}>
+        <div className="anim" style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1.2, marginBottom: 6, animationDelay: '0.4s' }}>
           Welcome, <span style={{ color: '#F5C518' }}>Nurse {nickname || 'Nurse'}</span>! 🎉
         </div>
 
@@ -54,7 +57,7 @@ export function PlanRevealScreen() {
       </div>
 
       {/* Stats Grid */}
-      <div className="stat-grid">
+      <div className="stat-grid anim" style={{ animationDelay: '0.5s' }}>
         <div className="stat-box">
           <div className="stat-num">{dailyCards}</div>
           <div className="stat-lbl">Cards Per Day</div>
@@ -70,7 +73,7 @@ export function PlanRevealScreen() {
       </div>
 
       {/* Projected Date */}
-      <div style={{ background: 'rgba(245,197,24,0.07)', border: '1px solid rgba(245,197,24,0.2)', borderRadius: 12, padding: '12px 16px', marginBottom: 14, textAlign: 'center' }}>
+      <div className="anim" style={{ animationDelay: '0.6s', background: 'rgba(245,197,24,0.07)', border: '1px solid rgba(245,197,24,0.2)', borderRadius: 12, padding: '12px 16px', marginBottom: 14, textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: 'rgba(245,197,24,0.6)', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' as const, marginBottom: 4 }}>
           Projected Test-Ready Date
         </div>
@@ -83,7 +86,7 @@ export function PlanRevealScreen() {
       </div>
 
       {/* Plan Details */}
-      <div className="plan-card">
+      <div className="plan-card anim" style={{ animationDelay: '0.7s' }}>
         <div className="plan-row">
           <span className="plan-label">Starting Category</span>
           <span className="plan-val-gold">Cardiovascular 🫀</span>
@@ -103,7 +106,7 @@ export function PlanRevealScreen() {
       </div>
 
       {/* Coach Pearl */}
-      <div className="pearl-card">
+      <div className="pearl-card anim" style={{ animationDelay: '0.8s' }}>
         <div className="pearl-from">
           <div className="pearl-dot" />
           A Note From Your Coach
@@ -118,13 +121,15 @@ export function PlanRevealScreen() {
         <p className="err-msg" style={{ marginBottom: 10 }}>{error.message}</p>
       )}
 
-      <button
-        className="btn-gold"
-        disabled={isSaving}
-        onClick={() => navigate('/onboarding/ready')}
-      >
-        {isSaving ? 'Saving...' : 'Start My Diagnostic Challenge'}
-      </button>
+      <div className="anim" style={{ animationDelay: '0.9s' }}>
+        <button
+          className="btn-gold"
+          disabled={isSaving}
+          onClick={() => navigate('/onboarding/ready')}
+        >
+          {isSaving ? 'Saving...' : 'Start My Diagnostic Challenge'}
+        </button>
+      </div>
     </div>
   )
 }

@@ -17,23 +17,23 @@ export function PlanReadyScreen() {
 
   return (
     <div className="content" style={{ justifyContent: 'center', textAlign: 'center' }}>
-      <div style={{ fontSize: 52, marginBottom: 16 }}>🎯</div>
+      <div className="anim" style={{ fontSize: 52, marginBottom: 16 }}>🎯</div>
 
-      <div style={{ fontSize: 11, color: '#F5C518', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, marginBottom: 10 }}>
+      <div className="anim" style={{ fontSize: 11, color: '#F5C518', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' as const, marginBottom: 10, animationDelay: '0.1s' }}>
         Your Plan Is Ready
       </div>
 
-      <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1.2, marginBottom: 12 }}>
+      <div className="anim" style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1.2, marginBottom: 12, animationDelay: '0.2s' }}>
         Time To Get To<br />Work, <span style={{ color: '#F5C518' }}>{nickname || 'Nurse'}</span>. 💪
       </div>
 
-      <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 24 }}>
+      <div className="anim" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 24, animationDelay: '0.3s' }}>
         Your diagnostic is complete. Your weakness map is built.
         Every session from here targets your exact gaps.
       </div>
 
       {/* Coach Note */}
-      <div style={{ background: 'rgba(245,197,24,0.07)', border: '1.5px solid rgba(245,197,24,0.2)', borderRadius: 16, padding: 16, marginBottom: 24, textAlign: 'left' }}>
+      <div className="anim" style={{ animationDelay: '0.4s', background: 'rgba(245,197,24,0.07)', border: '1.5px solid rgba(245,197,24,0.2)', borderRadius: 16, padding: 16, marginBottom: 24, textAlign: 'left' }}>
         <div style={{ fontSize: 10, color: '#F5C518', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' as const, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
           <div className="pearl-dot" />
           A Note From Your Coach
@@ -44,9 +44,11 @@ export function PlanReadyScreen() {
         </div>
       </div>
 
-      <button className="btn-gold" onClick={() => navigate('/')}>
-        Enter The Lounge 🏠
-      </button>
+      <div className="anim" style={{ animationDelay: '0.5s' }}>
+        <button className="btn-gold" onClick={() => navigate('/')}>
+          Enter The Lounge 🏠
+        </button>
+      </div>
     </div>
   )
 }

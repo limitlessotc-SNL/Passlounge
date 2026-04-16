@@ -24,7 +24,7 @@ export function TesterTypeScreen() {
 
   return (
     <div className="content">
-      <div className="progress-wrap">
+      <div className="progress-wrap anim">
         <div className="progress-meta">
           <span>Step 1 Of 4</span>
           <span>25%</span>
@@ -34,12 +34,12 @@ export function TesterTypeScreen() {
         </div>
       </div>
 
-      <div className="step-pill">Step 1 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.05s' }}>Step 1 Of 4</div>
 
-      <div className="screen-title">
+      <div className="screen-title anim" style={{ animationDelay: '0.1s' }}>
         Is This Your<br />First Time At<br />The NCLEX?
       </div>
-      <div className="screen-sub">
+      <div className="screen-sub anim" style={{ animationDelay: '0.15s' }}>
         This shapes your entire experience,{' '}
         <span style={{ color: '#F5C518', fontWeight: 700 }}>
           Nurse {nickname || 'Nurse'}
@@ -48,7 +48,8 @@ export function TesterTypeScreen() {
       </div>
 
       <div
-        className={`opt-card${testerType === 'repeat' ? ' selected' : ''}`}
+        className={`opt-card anim${testerType === 'repeat' ? ' selected' : ''}`}
+        style={{ animationDelay: '0.2s' }}
         onClick={() => handlePick('repeat')}
       >
         <div className="opt-icon" style={{ background: 'rgba(245,197,24,0.1)' }}>
@@ -64,14 +65,15 @@ export function TesterTypeScreen() {
         </div>
       </div>
 
-      <div className="divider">
+      <div className="divider anim" style={{ animationDelay: '0.25s' }}>
         <div className="divider-line" />
         <div className="divider-text">OR</div>
         <div className="divider-line" />
       </div>
 
       <div
-        className={`opt-card${testerType === 'first_time' ? ' selected' : ''}`}
+        className={`opt-card anim${testerType === 'first_time' ? ' selected' : ''}`}
+        style={{ animationDelay: '0.3s' }}
         onClick={() => handlePick('first_time')}
       >
         <div className="opt-icon" style={{ background: 'rgba(255,255,255,0.06)' }}>
