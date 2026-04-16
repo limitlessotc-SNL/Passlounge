@@ -123,15 +123,110 @@ export interface ReviewResult {
   interval_days: number;
 }
 
+// ─── Study Card (runtime format matching HTML card engine) ────────────────
+
+export interface StudyCard {
+  id?: string;
+  cat: string;
+  bloom: string;
+  xp: number;
+  title: string;
+  type: string;
+  scenario: string;
+  question: string;
+  opts: string[];
+  correct: number;
+  layers: string[];
+  lens: string;
+  pearl: string;
+  mnemonic: [string, string][];
+  why_wrong: Record<string, string>;
+  difficulty_level?: number;
+  difficulty_label?: string;
+  nclex_category?: string;
+}
+
+// ─── Shuffle Types ────────────────────────────────────────────────────────
+
+export interface ShuffleResult {
+  opts: string[];
+  correct: number;
+  origMap: number[];
+}
+
 // ─── Session Types ─────────────────────────────────────────────────────────
 
 export type SessionMode = 'study' | 'test';
 export type SessionPool = 'all' | 'new' | 'missed';
 
+export interface SessionState {
+  mode: SessionMode;
+  pool: SessionPool;
+  cards: StudyCard[];
+  currentIdx: number;
+  results: (boolean | undefined)[];
+  answers: (number | undefined)[];
+  shuffles: (ShuffleResult | undefined)[];
+  sessionId: string | null;
+  sessionName: string;
+  isActive: boolean;
+  qCount: number;
+  isDiagnostic: boolean;
+  correctCount: number;
+  wrongCount: number;
+  xp: number;
+  streakCount: number;
+  cardTimes: Record<number, number>;
+  cardTimerStart: number;
+}
+
+export interface SessionActions {
+  setMode: (mode: SessionMode) => void;
+  setPool: (pool: SessionPool) => void;
+  setQCount: (count: number) => void;
+  setSessionName: (name: string) => void;
+  startSession: (cards: StudyCard[], isDiagnostic: boolean) => void;
+  recordAnswer: (cardIdx: number, optIdx: number, isCorrect: boolean, xpEarned: number) => void;
+  setShuffle: (cardIdx: number, shuffle: ShuffleResult) => void;
+  setCurrentIdx: (idx: number) => void;
+  startCardTimer: () => void;
+  stopCardTimer: () => void;
+  endSession: () => void;
+  reset: () => void;
+}
+
+// ─── Session History ──────────────────────────────────────────────────────
+
+export interface SessionSnapshot {
+  id: number;
+  name: string;
+  mode: SessionMode;
+  date: string;
+  categories: string;
+  correct: number;
+  wrong: number;
+  total: number;
+  pct: number;
+  cards: StudyCard[];
+  results: (boolean | undefined)[];
+  answers: (number | undefined)[];
+  shuffles: (ShuffleResult | undefined)[];
+}
+
+// ─── Diagnostic Types ─────────────────────────────────────────────────────
+
+export interface DiagnosticResult {
+  completed: boolean;
+  correct: number;
+  total: number;
+  catLevel: string;
+  results: (boolean | undefined)[];
+}
+
 // ─── Student Types ─────────────────────────────────────────────────────────
 
 export type TesterType = 'first_time' | 'repeat' | 'international' | 'lpn_transition';
-export type ConfidenceLevel = 'low' | 'medium' | 'high';
+export type ConfidenceLevel = 'terrified' | 'nervous' | 'unsure' | 'confident' | 'ready';
 
 export interface Student {
   id: string;
@@ -142,3 +237,73 @@ export interface Student {
   daily_cards: number;
   onboarded: boolean;
 }
+
+export interface StudentState {
+  nickname: string;
+  testerType: TesterType | null;
+  confidence: ConfidenceLevel | null;
+  testDays: number;
+  testDate: string | null;
+  dailyCards: number;
+  onboarded: boolean;
+}
+
+export interface StudentActions {
+  setNickname: (nickname: string) => void;
+  setTesterType: (type: TesterType) => void;
+  setConfidence: (level: ConfidenceLevel) => void;
+  setTestDate: (date: string | null, days: number) => void;
+  setDailyCards: (count: number) => void;
+  setOnboarded: (onboarded: boolean) => void;
+  loadFromStudent: (student: Student) => void;
+  reset: () => void;
+}
+
+// ─── SR Store Types ───────────────────────────────────────────────────────
+
+export interface SRPendingUpdate {
+  seen: number;
+  correct: number;
+  wrong: number;
+}
+
+export interface SRState {
+  cardProgressMap: CardProgressMap;
+  cardProgressLoaded: boolean;
+  srPendingUpdates: Record<string, SRPendingUpdate>;
+}
+
+export interface SRActions {
+  setCardProgressMap: (map: CardProgressMap) => void;
+  setCardProgressLoaded: (loaded: boolean) => void;
+  recordSRAnswer: (cardId: string, wasCorrect: boolean) => void;
+  clearPendingUpdates: () => void;
+}
+
+// ─── Dashboard Store Types ────────────────────────────────────────────────
+
+export interface PLStats {
+  cards: number;
+  xp: number;
+  sessions: number;
+}
+
+export interface DashboardState {
+  diagnosticResult: DiagnosticResult;
+  sessionHistory: SessionSnapshot[];
+  plStats: PLStats;
+  streakDays: number;
+  seenCardTitles: Record<string, boolean>;
+}
+
+export interface DashboardActions {
+  setDiagnosticResult: (result: DiagnosticResult) => void;
+  addSession: (snapshot: SessionSnapshot) => void;
+  setStats: (stats: PLStats) => void;
+  setStreak: (days: number) => void;
+  markCardSeen: (title: string) => void;
+}
+
+// ─── Tab Navigation ───────────────────────────────────────────────────────
+
+export type AppTab = 'home' | 'study' | 'cat' | 'compete' | 'lounge' | 'profile';
