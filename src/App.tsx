@@ -2,18 +2,21 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { Particles } from '@/components/animations/Particles'
 import { AuthGuard } from '@/components/guards/AuthGuard'
+import { OnboardingGuard } from '@/components/guards/OnboardingGuard'
+import { PublicGuard } from '@/components/guards/PublicGuard'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
 import { LoginScreen } from '@/features/auth/components/LoginScreen'
 import { SignupScreen } from '@/features/auth/components/SignupScreen'
+import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
+import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
 import { CommitmentScreen } from '@/features/onboarding/components/CommitmentScreen'
 import { ConfidenceScreen } from '@/features/onboarding/components/ConfidenceScreen'
 import { PlanReadyScreen } from '@/features/onboarding/components/PlanReadyScreen'
 import { PlanRevealScreen } from '@/features/onboarding/components/PlanRevealScreen'
 import { TestDateScreen } from '@/features/onboarding/components/TestDateScreen'
 import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScreen'
-import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
-import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
+import { ProfileTab } from '@/features/profile/components/ProfileTab'
 import { CardScreen } from '@/features/session/components/CardScreen'
 import { ModeSelectScreen } from '@/features/session/components/ModeSelectScreen'
 import { ReviewScreen } from '@/features/session/components/ReviewScreen'
@@ -22,7 +25,9 @@ import { ReviewScreen } from '@/features/session/components/ReviewScreen'
  * App.tsx — Root Router
  *
  * Defines all routes for PassLounge.
- * Auth routes, onboarding routes, and protected app routes.
+ * Public routes redirect to app if authenticated.
+ * App routes require auth + completed onboarding.
+ * Session/diagnostic routes require auth only.
  *
  * Owner: Senior Engineer
  */
@@ -79,16 +84,6 @@ function LoungePlaceholder() {
   )
 }
 
-function ProfilePlaceholder() {
-  return (
-    <div className="placeholder-screen">
-      <div className="placeholder-icon">👤</div>
-      <div className="placeholder-title">Profile</div>
-      <div className="placeholder-sub">Your profile and settings coming in Phase 6.</div>
-    </div>
-  )
-}
-
 function App() {
   return (
     <div className="app-shell">
@@ -96,14 +91,14 @@ function App() {
       <div className="orb orb2" />
       <Particles />
       <Routes>
-        {/* Public auth routes */}
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/signup" element={<SignupScreen />} />
-        <Route path="/forgot" element={<ForgotScreen />} />
+        {/* Public auth routes — redirect to app if already signed in */}
+        <Route path="/login" element={<PublicGuard><LoginScreen /></PublicGuard>} />
+        <Route path="/signup" element={<PublicGuard><SignupScreen /></PublicGuard>} />
+        <Route path="/forgot" element={<PublicGuard><ForgotScreen /></PublicGuard>} />
 
-        {/* Protected routes */}
+        {/* Protected routes — require authentication */}
         <Route element={<AuthGuard />}>
-          {/* Onboarding flow (5 steps + plan ready) */}
+          {/* Onboarding flow — only accessible if NOT onboarded */}
           <Route path="/onboarding" element={<TesterTypeScreen />} />
           <Route path="/onboarding/confidence" element={<ConfidenceScreen />} />
           <Route path="/onboarding/testdate" element={<TestDateScreen />} />
@@ -121,14 +116,16 @@ function App() {
           <Route path="/diagnostic/play" element={<CardScreen />} />
           <Route path="/diagnostic/results" element={<DiagResultsScreen />} />
 
-          {/* App routes with BottomNav */}
-          <Route element={<AppLayout />}>
-            <Route index element={<HomePlaceholder />} />
-            <Route path="/study" element={<StudyPlaceholder />} />
-            <Route path="/cat" element={<CATPlaceholder />} />
-            <Route path="/compete" element={<CompetePlaceholder />} />
-            <Route path="/lounge" element={<LoungePlaceholder />} />
-            <Route path="/profile" element={<ProfilePlaceholder />} />
+          {/* App routes — require completed onboarding */}
+          <Route element={<OnboardingGuard />}>
+            <Route element={<AppLayout />}>
+              <Route index element={<HomePlaceholder />} />
+              <Route path="/study" element={<StudyPlaceholder />} />
+              <Route path="/cat" element={<CATPlaceholder />} />
+              <Route path="/compete" element={<CompetePlaceholder />} />
+              <Route path="/lounge" element={<LoungePlaceholder />} />
+              <Route path="/profile" element={<ProfileTab />} />
+            </Route>
           </Route>
         </Route>
 
