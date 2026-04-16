@@ -10,11 +10,14 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
+import { useStudentStore } from '@/store/studentStore'
+
 import { useAuth } from '../hooks/useAuth'
 
 export function SignupScreen() {
   const navigate = useNavigate()
   const { signup, error, isSubmitting } = useAuth()
+  const setStoreNickname = useStudentStore((s) => s.setNickname)
   const [nickname, setNickname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -30,6 +33,7 @@ export function SignupScreen() {
     setMismatch(false)
     const success = await signup({ email, password })
     if (success) {
+      setStoreNickname(nickname || 'Nurse')
       navigate('/onboarding')
     }
   }

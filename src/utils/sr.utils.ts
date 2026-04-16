@@ -29,11 +29,10 @@ import {
 
 import type {
   Card,
-  CardProgress,
   CardProgressMap,
+  DifficultyLevel,
   ReviewInput,
   ReviewResult,
-  DifficultyLevel,
 } from '../types/index';
 
 // ─── getCategoryWeight ─────────────────────────────────────────────────────
