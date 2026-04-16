@@ -5,6 +5,12 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
 import { LoginScreen } from '@/features/auth/components/LoginScreen'
 import { SignupScreen } from '@/features/auth/components/SignupScreen'
+import { CommitmentScreen } from '@/features/onboarding/components/CommitmentScreen'
+import { ConfidenceScreen } from '@/features/onboarding/components/ConfidenceScreen'
+import { PlanReadyScreen } from '@/features/onboarding/components/PlanReadyScreen'
+import { PlanRevealScreen } from '@/features/onboarding/components/PlanRevealScreen'
+import { TestDateScreen } from '@/features/onboarding/components/TestDateScreen'
+import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScreen'
 
 /**
  * App.tsx — Root Router
@@ -77,16 +83,6 @@ function ProfilePlaceholder() {
   )
 }
 
-function OnboardingPlaceholder() {
-  return (
-    <div className="content items-center" style={{ justifyContent: 'center', textAlign: 'center' }}>
-      <div style={{ fontSize: 52 }}>🎯</div>
-      <div className="screen-title" style={{ marginTop: 16 }}>Onboarding</div>
-      <div className="screen-sub">Coming in Phase 1.</div>
-    </div>
-  )
-}
-
 function App() {
   return (
     <div className="app-shell">
@@ -100,8 +96,13 @@ function App() {
 
         {/* Protected routes */}
         <Route element={<AuthGuard />}>
-          {/* Onboarding (Phase 1 will replace this placeholder) */}
-          <Route path="/onboarding" element={<OnboardingPlaceholder />} />
+          {/* Onboarding flow (5 steps + plan ready) */}
+          <Route path="/onboarding" element={<TesterTypeScreen />} />
+          <Route path="/onboarding/confidence" element={<ConfidenceScreen />} />
+          <Route path="/onboarding/testdate" element={<TestDateScreen />} />
+          <Route path="/onboarding/commitment" element={<CommitmentScreen />} />
+          <Route path="/onboarding/plan" element={<PlanRevealScreen />} />
+          <Route path="/onboarding/ready" element={<PlanReadyScreen />} />
 
           {/* App routes with BottomNav */}
           <Route element={<AppLayout />}>
