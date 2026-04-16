@@ -12,6 +12,9 @@ import { PlanReadyScreen } from '@/features/onboarding/components/PlanReadyScree
 import { PlanRevealScreen } from '@/features/onboarding/components/PlanRevealScreen'
 import { TestDateScreen } from '@/features/onboarding/components/TestDateScreen'
 import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScreen'
+import { CardScreen } from '@/features/session/components/CardScreen'
+import { ModeSelectScreen } from '@/features/session/components/ModeSelectScreen'
+import { ReviewScreen } from '@/features/session/components/ReviewScreen'
 
 /**
  * App.tsx — Root Router
@@ -105,6 +108,11 @@ function App() {
           <Route path="/onboarding/commitment" element={<CommitmentScreen />} />
           <Route path="/onboarding/plan" element={<PlanRevealScreen />} />
           <Route path="/onboarding/ready" element={<PlanReadyScreen />} />
+
+          {/* Session routes (full-screen, no BottomNav) */}
+          <Route path="/session/mode" element={<ModeSelectScreen />} />
+          <Route path="/session/play" element={<CardScreen />} />
+          <Route path="/session/review" element={<ReviewScreen />} />
 
           {/* App routes with BottomNav */}
           <Route element={<AppLayout />}>
