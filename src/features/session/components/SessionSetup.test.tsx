@@ -146,4 +146,34 @@ describe('SessionSetup', () => {
     expect(screen.getByText('Full CCCC')).toBeInTheDocument()
     expect(screen.getByText("Coach's Pearl")).toBeInTheDocument()
   })
+
+  it('clicking start opens session name modal (does not navigate immediately)', async () => {
+    const user = userEvent.setup()
+    renderSetup()
+
+    await user.click(screen.getByText(/start test mode/i))
+
+    expect(screen.getByText('Name This Session')).toBeInTheDocument()
+  })
+
+  it('clicking Skip in modal sets empty session name', async () => {
+    const user = userEvent.setup()
+    renderSetup()
+
+    await user.click(screen.getByText(/start test mode/i))
+    await user.click(screen.getByText('Skip'))
+
+    expect(useSessionStore.getState().sessionName).toBe('')
+  })
+
+  it('clicking Start in modal with name sets session name', async () => {
+    const user = userEvent.setup()
+    renderSetup()
+
+    await user.click(screen.getByText(/start test mode/i))
+    await user.type(screen.getByPlaceholderText(/week 2 review/i), 'My Session')
+    await user.click(screen.getByText('Start →'))
+
+    expect(useSessionStore.getState().sessionName).toBe('My Session')
+  })
 })

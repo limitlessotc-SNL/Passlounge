@@ -2,8 +2,8 @@
  * CardScreen
  *
  * Main card display — question state with answer options, session HUD,
- * card navigation, and submit flow. Handles test mode auto-advance.
- * Routes: /session/play
+ * card navigation, submit flow, exit modal, and epic answer animations.
+ * Routes: /session/play, /diagnostic/play
  *
  * Owner: Junior Engineer 3
  */
@@ -11,6 +11,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import type { AnimationType } from '@/components/animations/AnswerAnimations'
+import { AnswerAnimations } from '@/components/animations/AnswerAnimations'
+import { ExitModal } from '@/components/modals/ExitModal'
 import { useSessionStore } from '@/store/sessionStore'
 import { shuffleOptions } from '@/utils/shuffle'
 
@@ -19,10 +22,12 @@ import { PearlReveal } from './PearlReveal'
 import { StudyLayers } from './StudyLayers'
 import { WhyWrongBox } from './WhyWrongBox'
 
+const STREAK_MILESTONES = [3, 5, 10]
+
 export function CardScreen() {
   const navigate = useNavigate()
   const {
-    cards, currentIdx, mode, results, answers, shuffles,
+    cards, currentIdx, mode, results, answers, shuffles, isDiagnostic,
     correctCount, wrongCount, xp, streakCount,
     setCurrentIdx, recordAnswer, setShuffle, startCardTimer, stopCardTimer, endSession,
   } = useSessionStore()
@@ -31,6 +36,8 @@ export function CardScreen() {
   const [struckOpts, setStruckOpts] = useState<Record<number, boolean>>({})
   const [answered, setAnswered] = useState(false)
   const [showPearl, setShowPearl] = useState(false)
+  const [showExitModal, setShowExitModal] = useState(false)
+  const [animation, setAnimation] = useState<AnimationType>(null)
 
   const card = cards[currentIdx]
   const totalCards = cards.length
@@ -76,30 +83,54 @@ export function CardScreen() {
     recordAnswer(currentIdx, selectedOpt, isCorrect, xpEarned)
     setAnswered(true)
 
+    // Trigger epic animation (study mode only)
+    if (mode === 'study') {
+      setAnimation(isCorrect ? 'correct' : 'wrong')
+
+      // Check for streak milestone (requires the new streak count after recordAnswer)
+      if (isCorrect) {
+        const newStreak = streakCount + 1
+        if (STREAK_MILESTONES.includes(newStreak)) {
+          setTimeout(() => setAnimation('streak'), 900)
+        }
+      }
+      // Check for halfway milestone
+      const halfway = Math.floor(totalCards / 2)
+      if (currentIdx + 1 === halfway) {
+        setTimeout(() => setAnimation('milestone'), 900)
+      }
+    }
+
     if (mode === 'test') {
       setTimeout(() => {
         if (currentIdx < totalCards - 1) {
           setCurrentIdx(currentIdx + 1)
         } else {
           endSession()
-          navigate('/session/review')
+          navigate(isDiagnostic ? '/diagnostic/results' : '/session/review')
         }
       }, 600)
     }
-  }, [selectedOpt, answered, currentShuffle, card, currentIdx, totalCards, mode, stopCardTimer, recordAnswer, setCurrentIdx, endSession, navigate])
+  }, [selectedOpt, answered, currentShuffle, card, currentIdx, totalCards, mode, streakCount, isDiagnostic, stopCardTimer, recordAnswer, setCurrentIdx, endSession, navigate])
 
   const handleNext = useCallback(() => {
     if (currentIdx < totalCards - 1) {
       setCurrentIdx(currentIdx + 1)
     } else {
       endSession()
-      navigate('/session/review')
+      navigate(isDiagnostic ? '/diagnostic/results' : '/session/review')
     }
-  }, [currentIdx, totalCards, setCurrentIdx, endSession, navigate])
+  }, [currentIdx, totalCards, isDiagnostic, setCurrentIdx, endSession, navigate])
 
   const handlePrev = useCallback(() => {
     if (currentIdx > 0) setCurrentIdx(currentIdx - 1)
   }, [currentIdx, setCurrentIdx])
+
+  const handleExit = useCallback(() => {
+    setShowExitModal(false)
+    endSession()
+    navigate('/')
+  }, [endSession, navigate])
 
   if (!card) return null
 
@@ -108,8 +139,8 @@ export function CardScreen() {
 
   return (
     <div className="content card-screen scrollable">
-      {/* Navigation row */}
-      <div className="nav-row" style={{ marginBottom: 8 }}>
+      {/* Navigation row + exit button */}
+      <div className="nav-row" style={{ marginBottom: 8, position: 'relative' }}>
         <button
           className={`nav-btn${currentIdx === 0 ? ' disabled' : ''}`}
           onClick={handlePrev}
@@ -127,6 +158,16 @@ export function CardScreen() {
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M5 3l4 4-4 4" stroke="rgba(255,255,255,0.6)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <button
+          className="nav-btn"
+          onClick={() => setShowExitModal(true)}
+          aria-label="Exit session"
+          style={{ marginLeft: 6 }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 2l8 8M10 2l-8 8" stroke="rgba(255,255,255,0.5)" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
         </button>
       </div>
@@ -220,6 +261,23 @@ export function CardScreen() {
           )}
         </div>
       )}
+
+      {/* Epic animations */}
+      <AnswerAnimations
+        type={animation}
+        xp={card.xp}
+        streakCount={streakCount + (isCorrectAnswer ? 1 : 0)}
+        currentCard={currentIdx + 1}
+        totalCards={totalCards}
+        onComplete={() => setAnimation(null)}
+      />
+
+      {/* Exit modal */}
+      <ExitModal
+        visible={showExitModal}
+        onCancel={() => setShowExitModal(false)}
+        onConfirm={handleExit}
+      />
     </div>
   )
 }

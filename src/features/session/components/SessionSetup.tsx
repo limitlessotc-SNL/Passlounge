@@ -10,6 +10,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { SessionNameModal } from '@/components/modals/SessionNameModal'
 import { useSessionStore } from '@/store/sessionStore'
 import type { SessionPool } from '@/types'
 
@@ -36,9 +37,10 @@ const POOLS: PoolOption[] = [
 
 export function SessionSetup() {
   const navigate = useNavigate()
-  const { mode, pool, qCount, setMode, setPool, setQCount } = useSessionStore()
+  const { mode, pool, qCount, setMode, setPool, setQCount, setSessionName } = useSessionStore()
   const [showCustom, setShowCustom] = useState(false)
   const [customVal, setCustomVal] = useState('')
+  const [showNameModal, setShowNameModal] = useState(false)
 
   const handleQCount = (val: number | 'custom') => {
     if (val === 'custom') {
@@ -57,6 +59,12 @@ export function SessionSetup() {
   }
 
   const handleStart = () => {
+    setShowNameModal(true)
+  }
+
+  const handleNameConfirm = (name: string) => {
+    setSessionName(name)
+    setShowNameModal(false)
     navigate('/session/play')
   }
 
@@ -151,6 +159,12 @@ export function SessionSetup() {
       <button className="btn-gold" style={{ marginTop: 8 }} onClick={handleStart}>
         Start {mode === 'test' ? 'Test' : 'Study'} Mode →
       </button>
+
+      <SessionNameModal
+        visible={showNameModal}
+        onStart={handleNameConfirm}
+        onCancel={() => setShowNameModal(false)}
+      />
     </div>
   )
 }

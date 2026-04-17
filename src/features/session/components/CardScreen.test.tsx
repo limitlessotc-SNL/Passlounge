@@ -150,6 +150,32 @@ describe('CardScreen', () => {
     expect(screen.getByText('Streak')).toBeInTheDocument()
   })
 
+  it('renders exit button', () => {
+    renderScreen()
+
+    expect(screen.getByLabelText('Exit session')).toBeInTheDocument()
+  })
+
+  it('clicking exit button opens exit modal', async () => {
+    const user = userEvent.setup()
+    renderScreen()
+
+    await user.click(screen.getByLabelText('Exit session'))
+
+    expect(screen.getByText('Exit Session?')).toBeInTheDocument()
+    expect(screen.getByText('Keep Going')).toBeInTheDocument()
+  })
+
+  it('clicking "Keep Going" in modal closes it', async () => {
+    const user = userEvent.setup()
+    renderScreen()
+
+    await user.click(screen.getByLabelText('Exit session'))
+    await user.click(screen.getByText('Keep Going'))
+
+    expect(screen.queryByText('Exit Session?')).not.toBeInTheDocument()
+  })
+
   it('returns null when no cards', () => {
     useSessionStore.getState().reset()
     const { container } = renderScreen()
