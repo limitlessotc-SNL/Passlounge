@@ -7,6 +7,7 @@
  * Owner: Junior Engineer 3
  */
 
+import { DIAGNOSTIC_CARDS, STUDY_CARDS } from '@/config/fallback-cards'
 import { supabase } from '@/config/supabase'
 import type { StudyCard } from '@/types'
 
@@ -45,33 +46,43 @@ export function mapSupabaseCard(row: Record<string, unknown>): StudyCard {
 
 /**
  * Fetches all non-diagnostic study cards from Supabase.
+ * Falls back to hardcoded STUDY_CARDS if Supabase returns empty or errors.
  */
 export async function fetchStudyCards(): Promise<StudyCard[]> {
-  const { data, error } = await supabase
-    .from('cards')
-    .select('id,title,cat,bloom,xp,type,scenario,question,opts,correct,layers,lens,pearl,mnemonic,why_wrong,difficulty_level,difficulty_label,nclex_category')
-    .eq('is_diagnostic', false)
-    .order('id', { ascending: true })
-    .limit(2000)
+  try {
+    const { data, error } = await supabase
+      .from('cards')
+      .select('id,title,cat,bloom,xp,type,scenario,question,opts,correct,layers,lens,pearl,mnemonic,why_wrong,difficulty_level,difficulty_label,nclex_category')
+      .eq('is_diagnostic', false)
+      .order('id', { ascending: true })
+      .limit(2000)
 
-  if (error) throw error
-  if (!data || data.length === 0) return []
+    if (error) throw error
+    if (!data || data.length === 0) return STUDY_CARDS
 
-  return data.map((row) => mapSupabaseCard(row as Record<string, unknown>))
+    return data.map((row) => mapSupabaseCard(row as Record<string, unknown>))
+  } catch {
+    return STUDY_CARDS
+  }
 }
 
 /**
  * Fetches diagnostic cards from Supabase.
+ * Falls back to hardcoded DIAGNOSTIC_CARDS if Supabase returns empty or errors.
  */
 export async function fetchDiagnosticCards(): Promise<StudyCard[]> {
-  const { data, error } = await supabase
-    .from('cards')
-    .select('id,title,cat,bloom,xp,type,scenario,question,opts,correct,layers,lens,pearl,mnemonic,why_wrong,difficulty_level,difficulty_label,nclex_category')
-    .eq('is_diagnostic', true)
-    .order('id', { ascending: true })
+  try {
+    const { data, error } = await supabase
+      .from('cards')
+      .select('id,title,cat,bloom,xp,type,scenario,question,opts,correct,layers,lens,pearl,mnemonic,why_wrong,difficulty_level,difficulty_label,nclex_category')
+      .eq('is_diagnostic', true)
+      .order('id', { ascending: true })
 
-  if (error) throw error
-  if (!data || data.length === 0) return []
+    if (error) throw error
+    if (!data || data.length === 0) return DIAGNOSTIC_CARDS
 
-  return data.map((row) => mapSupabaseCard(row as Record<string, unknown>))
+    return data.map((row) => mapSupabaseCard(row as Record<string, unknown>))
+  } catch {
+    return DIAGNOSTIC_CARDS
+  }
 }

@@ -130,26 +130,29 @@ describe('cards.service', () => {
       expect(result[1].cat).toBe('Pharma')
     })
 
-    it('returns empty array when no cards', async () => {
+    it('returns fallback cards when Supabase returns empty', async () => {
       chainMock({ data: [], error: null })
 
       const result = await fetchStudyCards()
 
-      expect(result).toEqual([])
+      expect(result.length).toBeGreaterThan(0)
+      expect(result[0].title).toBeTruthy()
     })
 
-    it('returns empty array when data is null', async () => {
+    it('returns fallback cards when data is null', async () => {
       chainMock({ data: null, error: null })
 
       const result = await fetchStudyCards()
 
-      expect(result).toEqual([])
+      expect(result.length).toBeGreaterThan(0)
     })
 
-    it('throws on error', async () => {
+    it('returns fallback cards on error instead of throwing', async () => {
       chainMock({ data: null, error: new Error('DB error') })
 
-      await expect(fetchStudyCards()).rejects.toThrow('DB error')
+      const result = await fetchStudyCards()
+
+      expect(result.length).toBeGreaterThan(0)
     })
   })
 
@@ -168,10 +171,20 @@ describe('cards.service', () => {
       expect(result[0].title).toBe('Diag 1')
     })
 
-    it('throws on error', async () => {
+    it('returns fallback diagnostic cards on error', async () => {
       chainMock({ data: null, error: new Error('Fetch failed') })
 
-      await expect(fetchDiagnosticCards()).rejects.toThrow('Fetch failed')
+      const result = await fetchDiagnosticCards()
+
+      expect(result.length).toBe(15)
+    })
+
+    it('returns fallback diagnostic cards when empty', async () => {
+      chainMock({ data: [], error: null })
+
+      const result = await fetchDiagnosticCards()
+
+      expect(result.length).toBe(15)
     })
   })
 })
