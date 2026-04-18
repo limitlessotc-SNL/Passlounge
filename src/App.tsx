@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { Particles } from '@/components/animations/Particles'
+import { DevSkipButton } from '@/components/DevSkipButton'
 import { AuthGuard } from '@/components/guards/AuthGuard'
 import { OnboardingGuard } from '@/components/guards/OnboardingGuard'
 import { PublicGuard } from '@/components/guards/PublicGuard'
@@ -72,6 +73,7 @@ function App() {
       <div className="orb orb1" />
       <div className="orb orb2" />
       <Particles />
+      <DevSkipButton />
       <Routes>
         {/* Public auth routes — redirect to app if already signed in */}
         <Route path="/login" element={<PublicGuard><LoginScreen /></PublicGuard>} />
