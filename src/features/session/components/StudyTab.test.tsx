@@ -5,10 +5,15 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
+
+// Mock cards.service (transitively imported via SessionSetup) to avoid Supabase env
+vi.mock('@/features/session/services/cards.service', () => ({
+  fetchStudyCards: vi.fn().mockResolvedValue([]),
+}))
 
 import { StudyTab } from './StudyTab'
 

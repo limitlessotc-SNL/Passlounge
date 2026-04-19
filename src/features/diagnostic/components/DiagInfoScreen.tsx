@@ -7,10 +7,39 @@
  * Owner: Junior Engineer 5
  */
 
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { fetchDiagnosticCards } from '@/features/session/services/cards.service'
+import { useSessionStore } from '@/store/sessionStore'
 
 export function DiagInfoScreen() {
   const navigate = useNavigate()
+  const startSession = useSessionStore((s) => s.startSession)
+  const setMode = useSessionStore((s) => s.setMode)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleStart = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const cards = await fetchDiagnosticCards()
+      if (cards.length === 0) {
+        setError('No diagnostic cards available. Please try again.')
+        setLoading(false)
+        return
+      }
+      // Diagnostic is always test mode (no CCCC)
+      setMode('test')
+      startSession(cards, true)
+      setLoading(false)
+      navigate('/diagnostic/play')
+    } catch {
+      setError('Failed to load diagnostic. Please try again.')
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="content" style={{ justifyContent: 'center' }}>
@@ -45,10 +74,13 @@ export function DiagInfoScreen() {
       </div>
 
       <div className="anim" style={{ animationDelay: '0.3s' }}>
-        <button className="btn-gold" onClick={() => navigate('/diagnostic/play')}>
-          I&apos;m Ready — Let&apos;s Go
+        <button className="btn-gold" onClick={() => void handleStart()} disabled={loading}>
+          {loading ? 'Loading cards...' : "I'm Ready — Let's Go"}
         </button>
       </div>
+      {error && (
+        <p className="err-msg" style={{ marginTop: 10 }}>{error}</p>
+      )}
       <div className="anim" style={{ animationDelay: '0.35s', fontSize: 11, color: 'rgba(255,255,255,0.2)', textAlign: 'center', marginTop: 4 }}>
         Answer honestly for the most accurate results
       </div>

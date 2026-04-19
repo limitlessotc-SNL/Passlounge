@@ -11,8 +11,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { SessionNameModal } from '@/components/modals/SessionNameModal'
+import { fetchStudyCards } from '@/features/session/services/cards.service'
+import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
-import type { SessionPool } from '@/types'
+import type { SessionPool, StudyCard } from '@/types'
 
 const CHECK_SVG = (
   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -35,12 +37,49 @@ const POOLS: PoolOption[] = [
   { id: 'missed', icon: '❌', title: 'Missed Cards Only', sub: 'Cards you got wrong in past sessions' },
 ]
 
+/**
+ * Builds the session card pool based on selected filter.
+ * all: everything, new: never-seen, missed: previously wrong.
+ */
+function filterCardPool(
+  cards: StudyCard[],
+  poolType: SessionPool,
+  seenTitles: Record<string, boolean>,
+  missedTitles: Record<string, boolean>,
+): StudyCard[] {
+  if (poolType === 'new') {
+    const unseen = cards.filter((c) => !seenTitles[c.title])
+    return unseen.length > 0 ? unseen : cards
+  }
+  if (poolType === 'missed') {
+    const missed = cards.filter((c) => missedTitles[c.title])
+    return missed.length > 0 ? missed : cards
+  }
+  return cards
+}
+
+/** Fisher-Yates shuffle (pure, non-mutating). */
+function shuffleArray<T>(arr: T[]): T[] {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = copy[i]
+    copy[i] = copy[j]
+    copy[j] = tmp
+  }
+  return copy
+}
+
 export function SessionSetup() {
   const navigate = useNavigate()
-  const { mode, pool, qCount, setMode, setPool, setQCount, setSessionName } = useSessionStore()
+  const { mode, pool, qCount, setMode, setPool, setQCount, setSessionName, startSession } = useSessionStore()
+  const seenTitles = useDashboardStore((s) => s.seenCardTitles)
+  const sessionHistory = useDashboardStore((s) => s.sessionHistory)
   const [showCustom, setShowCustom] = useState(false)
   const [customVal, setCustomVal] = useState('')
   const [showNameModal, setShowNameModal] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleQCount = (val: number | 'custom') => {
     if (val === 'custom') {
@@ -62,10 +101,50 @@ export function SessionSetup() {
     setShowNameModal(true)
   }
 
-  const handleNameConfirm = (name: string) => {
+  const handleNameConfirm = async (name: string) => {
     setSessionName(name)
     setShowNameModal(false)
-    navigate('/session/play')
+    setLoading(true)
+    setError(null)
+
+    try {
+      // 1. Load all study cards (Supabase with hardcoded fallback)
+      const allCards = await fetchStudyCards()
+
+      if (allCards.length === 0) {
+        setError('No cards available. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      // 2. Build missed-card map from session history
+      const missedTitles: Record<string, boolean> = {}
+      for (const sess of sessionHistory) {
+        sess.cards.forEach((card, idx) => {
+          if (sess.results[idx] === false) missedTitles[card.title] = true
+        })
+      }
+
+      // 3. Apply pool filter + shuffle + count limit
+      const filtered = filterCardPool(allCards, pool, seenTitles, missedTitles)
+      const shuffled = shuffleArray(filtered)
+      const count = Math.min(qCount, shuffled.length)
+      const sessionCards = shuffled.slice(0, count)
+
+      if (sessionCards.length === 0) {
+        setError('No cards match the selected filter.')
+        setLoading(false)
+        return
+      }
+
+      // 4. Start the session with loaded cards
+      startSession(sessionCards, false)
+      setLoading(false)
+      navigate('/session/play')
+    } catch {
+      setError('Failed to load cards. Please try again.')
+      setLoading(false)
+    }
   }
 
   return (
@@ -156,9 +235,18 @@ export function SessionSetup() {
         </div>
       ))}
 
-      <button className="btn-gold" style={{ marginTop: 8 }} onClick={handleStart}>
-        Start {mode === 'test' ? 'Test' : 'Study'} Mode →
+      <button
+        className="btn-gold"
+        style={{ marginTop: 8 }}
+        onClick={handleStart}
+        disabled={loading}
+      >
+        {loading ? 'Loading cards...' : `Start ${mode === 'test' ? 'Test' : 'Study'} Mode →`}
       </button>
+
+      {error && (
+        <p className="err-msg" style={{ marginTop: 10 }}>{error}</p>
+      )}
 
       <SessionNameModal
         visible={showNameModal}
