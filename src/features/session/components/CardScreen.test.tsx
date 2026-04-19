@@ -10,6 +10,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useSessionStore } from '@/store/sessionStore'
 import type { StudyCard } from '@/types'
 
+// Mock Supabase-backed services so CardScreen renders without env vars
+vi.mock('@/features/session/services/sessions.service', () => ({
+  saveCompletedSession: vi.fn().mockResolvedValue(undefined),
+}))
+vi.mock('@/features/diagnostic/services/diagnostic.service', () => ({
+  saveDiagnosticResults: vi.fn().mockResolvedValue(undefined),
+}))
+vi.mock('@/features/sr/services/progress.service', () => ({
+  loadCardProgress: vi.fn().mockResolvedValue({}),
+  batchUpsertProgress: vi.fn().mockResolvedValue(undefined),
+  retrySRQueue: vi.fn().mockResolvedValue(undefined),
+}))
+
 import { CardScreen } from './CardScreen'
 
 const makeCard = (id: string, xp = 20): StudyCard => ({

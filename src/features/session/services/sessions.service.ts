@@ -1,13 +1,13 @@
 /**
  * Sessions Service
  *
- * Creates and updates session records in Supabase.
+ * Creates, updates, and fetches session records in Supabase.
  *
  * Owner: Junior Engineer 3
  */
 
 import { supabase } from '@/config/supabase'
-import type { SessionMode } from '@/types'
+import type { SessionMode, SessionSnapshot, ShuffleResult, StudyCard } from '@/types'
 
 export interface CreateSessionParams {
   studentId: string;
@@ -24,7 +24,8 @@ export interface UpdateSessionParams {
 }
 
 /**
- * Creates a new session record in Supabase. Returns the session ID.
+ * Creates a pending session row (completed=false).
+ * Used when session starts so we can track in-flight sessions.
  */
 export async function createSession(params: CreateSessionParams): Promise<string | null> {
   const { data, error } = await supabase
@@ -47,7 +48,7 @@ export async function createSession(params: CreateSessionParams): Promise<string
 }
 
 /**
- * Updates a session record with final results.
+ * Updates an existing session row with final stats.
  */
 export async function updateSession(sessionId: string, params: UpdateSessionParams): Promise<void> {
   const { error } = await supabase
@@ -64,16 +65,99 @@ export async function updateSession(sessionId: string, params: UpdateSessionPara
 }
 
 /**
- * Fetches session history for a student.
+ * Saves a fully-completed session in a single insert.
+ * Stores the full SessionSnapshot (including cards/results/answers/shuffles)
+ * so the session can be reviewed on any device.
  */
-export async function getSessionHistory(studentId: string) {
+export async function saveCompletedSession(
+  studentId: string,
+  snapshot: SessionSnapshot,
+): Promise<void> {
+  const xp = 50 + snapshot.correct * 20
+
+  const { error } = await supabase
+    .from('sessions')
+    .insert({
+      student_id: studentId,
+      name: snapshot.name,
+      mode: snapshot.mode,
+      card_count: snapshot.total,
+      correct: snapshot.correct,
+      wrong: snapshot.wrong,
+      xp,
+      completed: true,
+      date: snapshot.date,
+      categories: snapshot.categories,
+      snapshot: {
+        cards: snapshot.cards,
+        results: snapshot.results,
+        answers: snapshot.answers,
+        shuffles: snapshot.shuffles,
+        pct: snapshot.pct,
+      },
+    })
+
+  if (error) throw error
+}
+
+interface RawSessionRow {
+  id: string;
+  name: string;
+  mode: SessionMode;
+  card_count: number;
+  correct: number;
+  wrong: number;
+  date?: string;
+  categories?: string;
+  created_at: string;
+  snapshot?: {
+    cards: StudyCard[];
+    results: (boolean | undefined)[];
+    answers: (number | undefined)[];
+    shuffles: (ShuffleResult | undefined)[];
+    pct: number;
+  };
+}
+
+/**
+ * Fetches session history for a student and maps to SessionSnapshot[].
+ * Sessions without snapshot JSONB return with empty arrays for cards/results
+ * (Review Session won't work on old records, but stats will display).
+ */
+export async function getSessionHistory(studentId: string): Promise<SessionSnapshot[]> {
   const { data, error } = await supabase
     .from('sessions')
     .select('*')
     .eq('student_id', studentId)
     .eq('completed', true)
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: true })
 
   if (error) throw error
-  return data ?? []
+  if (!data) return []
+
+  return (data as RawSessionRow[]).map((row, idx) => {
+    const total = row.card_count
+    const snap = row.snapshot
+    return {
+      id: idx + 1,
+      name: row.name,
+      mode: row.mode,
+      date: row.date ?? formatDate(row.created_at),
+      categories: row.categories ?? '',
+      correct: row.correct,
+      wrong: row.wrong,
+      total,
+      pct: snap?.pct ?? (total > 0 ? Math.round((row.correct / total) * 100) : 0),
+      cards: snap?.cards ?? [],
+      results: snap?.results ?? [],
+      answers: snap?.answers ?? [],
+      shuffles: snap?.shuffles ?? [],
+    }
+  })
+}
+
+function formatDate(isoString: string): string {
+  const d = new Date(isoString)
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  return `${months[d.getMonth()]} ${d.getDate()}`
 }

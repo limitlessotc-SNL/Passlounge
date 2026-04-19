@@ -14,9 +14,14 @@ import { useNavigate } from 'react-router-dom'
 import type { AnimationType } from '@/components/animations/AnswerAnimations'
 import { AnswerAnimations } from '@/components/animations/AnswerAnimations'
 import { ExitModal } from '@/components/modals/ExitModal'
+import { getDiagnosticGrade } from '@/config/diagnostic-cards'
+import { saveDiagnosticResults } from '@/features/diagnostic/services/diagnostic.service'
+import { saveCompletedSession } from '@/features/session/services/sessions.service'
+import { useSR } from '@/features/sr/hooks/useSR'
+import { useAuthStore } from '@/store/authStore'
 import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
-import type { SessionSnapshot } from '@/types'
+import type { DiagnosticResult, SessionSnapshot } from '@/types'
 import { shuffleOptions } from '@/utils/shuffle'
 
 import { AnswerOption } from './AnswerOption'
@@ -35,7 +40,10 @@ export function CardScreen() {
   } = useSessionStore()
   const addSession = useDashboardStore((s) => s.addSession)
   const markCardSeen = useDashboardStore((s) => s.markCardSeen)
+  const setDiagnosticResult = useDashboardStore((s) => s.setDiagnosticResult)
   const sessionHistoryLength = useDashboardStore((s) => s.sessionHistory.length)
+  const supaStudentId = useAuthStore((s) => s.supaStudentId)
+  const { flushPendingUpdates } = useSR()
 
   const [selectedOpt, setSelectedOpt] = useState(-1)
   const [struckOpts, setStruckOpts] = useState<Record<number, boolean>>({})
@@ -81,19 +89,45 @@ export function CardScreen() {
 
   /**
    * Save completed session to dashboardStore history and navigate to review.
-   * Only runs for non-diagnostic sessions (diagnostic goes to /diagnostic/results).
+   * For non-diagnostic sessions: persist snapshot + SR progress to Supabase.
+   * For diagnostic sessions: persist diagnostic result to Supabase.
+   * All Supabase writes are fire-and-forget (don't block navigation).
    */
   const completeSession = useCallback(() => {
     endSession()
 
+    // Snapshot the store state immediately (before any async work)
+    const state = useSessionStore.getState()
+    const total = state.cards.length
+
+    // ─── Diagnostic flow ──────────────────────────────────────────────
     if (isDiagnostic) {
+      const correct = state.correctCount
+      const pctScore = total > 0 ? Math.round((correct / total) * 100) : 0
+      const grade = getDiagnosticGrade(pctScore)
+      const diagResult: DiagnosticResult = {
+        completed: true,
+        correct,
+        total,
+        catLevel: grade.catLevel,
+        results: state.results,
+      }
+
+      // Update local dashboard state immediately so results screen is ready
+      setDiagnosticResult(diagResult)
+
+      // Fire-and-forget to Supabase
+      if (supaStudentId) {
+        void saveDiagnosticResults(supaStudentId, diagResult).catch(() => {
+          // Silent fail — local state is already updated
+        })
+      }
+
       navigate('/diagnostic/results')
       return
     }
 
-    // Build snapshot using LATEST store state (after final recordAnswer)
-    const state = useSessionStore.getState()
-    const total = state.cards.length
+    // ─── Study / test session flow ────────────────────────────────────
     const pctScore = total > 0 ? Math.round((state.correctCount / total) * 100) : 0
     const cats: Record<string, boolean> = {}
     state.cards.forEach((c) => { cats[c.cat] = true })
@@ -121,8 +155,19 @@ export function CardScreen() {
     addSession(snapshot)
     state.cards.forEach((c) => markCardSeen(c.title))
 
+    // Fire-and-forget: persist session + SR progress to Supabase
+    if (supaStudentId) {
+      void saveCompletedSession(supaStudentId, snapshot).catch(() => {
+        // Silent fail — local state is already updated
+      })
+      void flushPendingUpdates()
+    }
+
     navigate('/session/review')
-  }, [endSession, isDiagnostic, navigate, sessionHistoryLength, sessionName, addSession, markCardSeen])
+  }, [
+    endSession, isDiagnostic, navigate, sessionHistoryLength, sessionName,
+    addSession, markCardSeen, setDiagnosticResult, supaStudentId, flushPendingUpdates,
+  ])
 
   const handleSubmit = useCallback(() => {
     if (selectedOpt === -1 || answered) return

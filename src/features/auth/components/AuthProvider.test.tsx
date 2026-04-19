@@ -22,6 +22,12 @@ vi.mock('@/config/supabase', () => ({
   },
 }))
 
+// Mock dataLoader — AuthProvider calls it on restore/sign-in
+const mockLoadUserData = vi.fn().mockResolvedValue(undefined)
+vi.mock('@/features/data/services/dataLoader.service', () => ({
+  loadUserData: (id: string) => mockLoadUserData(id),
+}))
+
 import { AuthProvider } from './AuthProvider'
 
 // ─── Tests ────────────────────────────────────────────────────────────────
@@ -191,5 +197,93 @@ describe('AuthProvider', () => {
     await waitFor(() => {
       expect(useAuthStore.getState().isAuthenticated).toBe(false)
     })
+  })
+
+  // ── Data loader integration ────────────────────────────────────────
+
+  it('calls loadUserData after restoring session', async () => {
+    mockGetSession.mockResolvedValue({
+      data: {
+        session: {
+          user: { id: 'user-xyz', email: 'x@y.com', user_metadata: {} },
+          access_token: 'tok',
+        },
+      },
+    })
+
+    render(
+      <AuthProvider>
+        <div>App</div>
+      </AuthProvider>,
+    )
+
+    await waitFor(() => {
+      expect(mockLoadUserData).toHaveBeenCalledWith('user-xyz')
+    })
+  })
+
+  it('does not call loadUserData when no session', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+
+    render(
+      <AuthProvider>
+        <div>App</div>
+      </AuthProvider>,
+    )
+
+    // Wait a tick for any async side effects
+    await waitFor(() => {
+      expect(useAuthStore.getState().isLoading).toBe(false)
+    })
+
+    expect(mockLoadUserData).not.toHaveBeenCalled()
+  })
+
+  it('calls loadUserData on SIGNED_IN event (fresh login)', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+
+    render(
+      <AuthProvider>
+        <div>App</div>
+      </AuthProvider>,
+    )
+
+    mockLoadUserData.mockClear()
+
+    const callback = mockOnAuthStateChange.mock.calls[0][0] as (
+      event: string,
+      session: { user: { id: string; email: string }; access_token: string } | null,
+    ) => void
+
+    callback('SIGNED_IN', {
+      user: { id: 'fresh-user', email: 'fresh@test.com' },
+      access_token: 'tok',
+    })
+
+    expect(mockLoadUserData).toHaveBeenCalledWith('fresh-user')
+  })
+
+  it('does not call loadUserData on TOKEN_REFRESHED event', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+
+    render(
+      <AuthProvider>
+        <div>App</div>
+      </AuthProvider>,
+    )
+
+    mockLoadUserData.mockClear()
+
+    const callback = mockOnAuthStateChange.mock.calls[0][0] as (
+      event: string,
+      session: { user: { id: string; email: string }; access_token: string } | null,
+    ) => void
+
+    callback('TOKEN_REFRESHED', {
+      user: { id: 'same-user', email: 'x@y.com' },
+      access_token: 'new-tok',
+    })
+
+    expect(mockLoadUserData).not.toHaveBeenCalled()
   })
 })

@@ -11,6 +11,7 @@
 import { useEffect } from 'react'
 
 import { supabase } from '@/config/supabase'
+import { loadUserData } from '@/features/data/services/dataLoader.service'
 import { useAuthStore } from '@/store/authStore'
 import { useStudentStore } from '@/store/studentStore'
 
@@ -43,6 +44,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (meta.onboarded) setOnboarded(true)
             if (meta.daily_cards) setDailyCards(meta.daily_cards as number)
           }
+
+          // Load all user data from Supabase (sessions, diagnostic, progress)
+          void loadUserData(session.user.id)
         } else {
           setLoading(false)
         }
@@ -54,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     void restoreSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         if (!mounted) return
 
         if (session?.user) {
@@ -62,6 +66,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             { id: session.user.id, email: session.user.email ?? '' },
             session.access_token,
           )
+          // Fresh sign-ins also trigger a data load
+          if (event === 'SIGNED_IN') {
+            void loadUserData(session.user.id)
+          }
         } else {
           logout()
         }
