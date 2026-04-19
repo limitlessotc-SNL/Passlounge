@@ -225,6 +225,32 @@ export interface DiagnosticResult {
   results: (boolean | undefined)[];
 }
 
+// ─── CPR (Candidate Performance Report) Types ─────────────────────────────
+
+export type CPRResultLevel = 'above' | 'near' | 'below';
+
+/** Keyed by CPR_CATEGORIES[i].id. Missing keys = "not answered yet". */
+export type CPRCategoriesMap = Partial<Record<string, CPRResultLevel>>;
+
+/** A persisted CPR row from the cpr_reports table. */
+export interface CPRReport {
+  id: string;
+  student_id: string;
+  attempt_date: string | null;
+  overall_result: 'pass' | 'fail' | null;
+  image_path: string | null;
+  categories: CPRCategoriesMap;
+  created_at: string;
+}
+
+/** Draft held by useCPR while the user fills out the form. */
+export interface CPRDraft {
+  attempt_date: string | null;
+  overall_result: 'pass' | 'fail' | null;
+  image_path: string | null;
+  categories: CPRCategoriesMap;
+}
+
 // ─── Student Types ─────────────────────────────────────────────────────────
 
 export type TesterType = 'first_time' | 'repeat' | 'international' | 'lpn_transition';
