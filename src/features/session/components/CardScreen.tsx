@@ -14,7 +14,9 @@ import { useNavigate } from 'react-router-dom'
 import type { AnimationType } from '@/components/animations/AnswerAnimations'
 import { AnswerAnimations } from '@/components/animations/AnswerAnimations'
 import { ExitModal } from '@/components/modals/ExitModal'
+import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
+import type { SessionSnapshot } from '@/types'
 import { shuffleOptions } from '@/utils/shuffle'
 
 import { AnswerOption } from './AnswerOption'
@@ -27,10 +29,13 @@ const STREAK_MILESTONES = [3, 5, 10]
 export function CardScreen() {
   const navigate = useNavigate()
   const {
-    cards, currentIdx, mode, results, answers, shuffles, isDiagnostic,
+    cards, currentIdx, mode, results, answers, shuffles, isDiagnostic, sessionName,
     correctCount, wrongCount, xp, streakCount,
     setCurrentIdx, recordAnswer, setShuffle, startCardTimer, stopCardTimer, endSession,
   } = useSessionStore()
+  const addSession = useDashboardStore((s) => s.addSession)
+  const markCardSeen = useDashboardStore((s) => s.markCardSeen)
+  const sessionHistoryLength = useDashboardStore((s) => s.sessionHistory.length)
 
   const [selectedOpt, setSelectedOpt] = useState(-1)
   const [struckOpts, setStruckOpts] = useState<Record<number, boolean>>({})
@@ -74,6 +79,51 @@ export function CardScreen() {
     })
   }, [answered, selectedOpt])
 
+  /**
+   * Save completed session to dashboardStore history and navigate to review.
+   * Only runs for non-diagnostic sessions (diagnostic goes to /diagnostic/results).
+   */
+  const completeSession = useCallback(() => {
+    endSession()
+
+    if (isDiagnostic) {
+      navigate('/diagnostic/results')
+      return
+    }
+
+    // Build snapshot using LATEST store state (after final recordAnswer)
+    const state = useSessionStore.getState()
+    const total = state.cards.length
+    const pctScore = total > 0 ? Math.round((state.correctCount / total) * 100) : 0
+    const cats: Record<string, boolean> = {}
+    state.cards.forEach((c) => { cats[c.cat] = true })
+    const categoryList = Object.keys(cats).join(', ')
+
+    const now = new Date()
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const dateStr = `${months[now.getMonth()]} ${now.getDate()}`
+
+    const snapshot: SessionSnapshot = {
+      id: sessionHistoryLength + 1,
+      name: sessionName || `Session ${sessionHistoryLength + 1}`,
+      mode: state.mode,
+      date: dateStr,
+      categories: categoryList,
+      correct: state.correctCount,
+      wrong: state.wrongCount,
+      total,
+      pct: pctScore,
+      cards: state.cards,
+      results: state.results,
+      answers: state.answers,
+      shuffles: state.shuffles,
+    }
+    addSession(snapshot)
+    state.cards.forEach((c) => markCardSeen(c.title))
+
+    navigate('/session/review')
+  }, [endSession, isDiagnostic, navigate, sessionHistoryLength, sessionName, addSession, markCardSeen])
+
   const handleSubmit = useCallback(() => {
     if (selectedOpt === -1 || answered) return
     stopCardTimer()
@@ -106,21 +156,19 @@ export function CardScreen() {
         if (currentIdx < totalCards - 1) {
           setCurrentIdx(currentIdx + 1)
         } else {
-          endSession()
-          navigate(isDiagnostic ? '/diagnostic/results' : '/session/review')
+          completeSession()
         }
       }, 600)
     }
-  }, [selectedOpt, answered, currentShuffle, card, currentIdx, totalCards, mode, streakCount, isDiagnostic, stopCardTimer, recordAnswer, setCurrentIdx, endSession, navigate])
+  }, [selectedOpt, answered, currentShuffle, card, currentIdx, totalCards, mode, streakCount, stopCardTimer, recordAnswer, setCurrentIdx, completeSession])
 
   const handleNext = useCallback(() => {
     if (currentIdx < totalCards - 1) {
       setCurrentIdx(currentIdx + 1)
     } else {
-      endSession()
-      navigate(isDiagnostic ? '/diagnostic/results' : '/session/review')
+      completeSession()
     }
-  }, [currentIdx, totalCards, isDiagnostic, setCurrentIdx, endSession, navigate])
+  }, [currentIdx, totalCards, setCurrentIdx, completeSession])
 
   const handlePrev = useCallback(() => {
     if (currentIdx > 0) setCurrentIdx(currentIdx - 1)

@@ -11,9 +11,10 @@ import type { SessionSnapshot } from '@/types'
 
 interface SessionHistoryProps {
   sessions: SessionSnapshot[];
+  onReview?: (sessionIdx: number) => void;
 }
 
-export function SessionHistory({ sessions }: SessionHistoryProps) {
+export function SessionHistory({ sessions, onReview }: SessionHistoryProps) {
   if (sessions.length === 0) {
     return (
       <>
@@ -25,12 +26,14 @@ export function SessionHistory({ sessions }: SessionHistoryProps) {
     )
   }
 
-  const reversed = [...sessions].reverse()
+  // Display newest first while preserving original indices for callback
+  const indexed = sessions.map((sess, idx) => ({ sess, idx }))
+  const reversed = [...indexed].reverse()
 
   return (
     <>
       <div className="setup-section-lbl">Session History</div>
-      {reversed.map((sess) => {
+      {reversed.map(({ sess, idx }) => {
         const modeLabel = sess.mode === 'test' ? 'Test' : 'Study'
         const modeClass = sess.mode === 'test' ? 'badge-test-sm' : 'badge-study-sm'
 
@@ -46,7 +49,13 @@ export function SessionHistory({ sessions }: SessionHistoryProps) {
               <span className="sh-stat r">{sess.wrong} missed</span>
               <span className="sh-stat">{sess.pct}%</span>
             </div>
-            <button className="sess-rev-btn">Review Session →</button>
+            <button
+              className="sess-rev-btn"
+              onClick={() => onReview?.(idx)}
+              disabled={!onReview}
+            >
+              Review Session →
+            </button>
           </div>
         )
       })}

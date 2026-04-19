@@ -3,7 +3,8 @@
  */
 
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
 
 import type { SessionSnapshot } from '@/types'
 
@@ -100,5 +101,42 @@ describe('SessionHistory', () => {
     const { container } = render(<SessionHistory sessions={[makeSession(1, 'study')]} />)
     const badge = container.querySelector('.sess-hist-badge')
     expect(badge?.className).toContain('badge-study-sm')
+  })
+
+  it('calls onReview with session index when button clicked', async () => {
+    const onReview = vi.fn()
+    const user = userEvent.setup()
+    render(<SessionHistory sessions={[makeSession(1), makeSession(2)]} onReview={onReview} />)
+
+    // First button in the DOM is the most recent session (index 1 in original array)
+    const buttons = screen.getAllByText('Review Session →')
+    await user.click(buttons[0])
+
+    expect(onReview).toHaveBeenCalledWith(1)
+  })
+
+  it('calls onReview with correct index for older session', async () => {
+    const onReview = vi.fn()
+    const user = userEvent.setup()
+    render(<SessionHistory sessions={[makeSession(1), makeSession(2)]} onReview={onReview} />)
+
+    const buttons = screen.getAllByText('Review Session →')
+    await user.click(buttons[1])
+
+    expect(onReview).toHaveBeenCalledWith(0)
+  })
+
+  it('review button is disabled when no onReview handler provided', () => {
+    render(<SessionHistory sessions={[makeSession(1)]} />)
+
+    const btn = screen.getByText('Review Session →') as HTMLButtonElement
+    expect(btn.disabled).toBe(true)
+  })
+
+  it('review button is enabled when onReview handler provided', () => {
+    render(<SessionHistory sessions={[makeSession(1)]} onReview={vi.fn()} />)
+
+    const btn = screen.getByText('Review Session →') as HTMLButtonElement
+    expect(btn.disabled).toBe(false)
   })
 })

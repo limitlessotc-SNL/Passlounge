@@ -9,6 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
+import type { SessionSnapshot, StudyCard } from '@/types'
 
 // Mock cards.service (transitively imported via SessionSetup) to avoid Supabase env
 vi.mock('@/features/session/services/cards.service', () => ({
@@ -16,6 +17,46 @@ vi.mock('@/features/session/services/cards.service', () => ({
 }))
 
 import { StudyTab } from './StudyTab'
+
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return { ...actual, useNavigate: () => mockNavigate }
+})
+
+const makeCard = (id: string): StudyCard => ({
+  id,
+  cat: 'Cardiac',
+  bloom: 'Apply',
+  xp: 20,
+  title: `Card ${id}`,
+  type: 'MC',
+  scenario: 'S',
+  question: 'Q?',
+  opts: ['A', 'B', 'C', 'D'],
+  correct: 0,
+  layers: ['L1', 'L2', 'L3', 'L4'],
+  lens: '',
+  pearl: '',
+  mnemonic: [],
+  why_wrong: {},
+})
+
+const makeSnapshot = (id: number): SessionSnapshot => ({
+  id,
+  name: `Session ${id}`,
+  mode: 'test',
+  date: 'Apr 18',
+  categories: 'Cardiac',
+  correct: 8,
+  wrong: 2,
+  total: 10,
+  pct: 80,
+  cards: [makeCard(`c${id}-1`), makeCard(`c${id}-2`)],
+  results: [true, false],
+  answers: [0, 1],
+  shuffles: [],
+})
 
 function renderTab() {
   return render(
@@ -27,6 +68,7 @@ function renderTab() {
 
 describe('StudyTab', () => {
   afterEach(() => {
+    vi.clearAllMocks()
     useSessionStore.getState().reset()
     useDashboardStore.setState({
       diagnosticResult: { completed: false, correct: 0, total: 0, catLevel: '—', results: [] },
@@ -117,5 +159,56 @@ describe('StudyTab', () => {
     renderTab()
 
     expect(screen.queryByText('Card Bank')).not.toBeInTheDocument()
+  })
+
+  it('displays session history entries in progress view', async () => {
+    useDashboardStore.setState({ sessionHistory: [makeSnapshot(1)] })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('My Progress'))
+
+    expect(screen.getByText('Session 1')).toBeInTheDocument()
+    expect(screen.getByText('Review Session →')).toBeInTheDocument()
+  })
+
+  it('clicking Review Session restores session and navigates', async () => {
+    const snap = makeSnapshot(1)
+    useDashboardStore.setState({ sessionHistory: [snap] })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('My Progress'))
+    await user.click(screen.getByText('Review Session →'))
+
+    expect(useSessionStore.getState().cards).toEqual(snap.cards)
+    expect(useSessionStore.getState().results).toEqual(snap.results)
+    expect(useSessionStore.getState().sessionName).toBe('Session 1')
+    expect(mockNavigate).toHaveBeenCalledWith('/session/review')
+  })
+
+  it('restoring session sets correct + wrong counts', async () => {
+    const snap = makeSnapshot(1)
+    useDashboardStore.setState({ sessionHistory: [snap] })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('My Progress'))
+    await user.click(screen.getByText('Review Session →'))
+
+    expect(useSessionStore.getState().correctCount).toBe(8)
+    expect(useSessionStore.getState().wrongCount).toBe(2)
+  })
+
+  it('restored session is not marked active (review only)', async () => {
+    const snap = makeSnapshot(1)
+    useDashboardStore.setState({ sessionHistory: [snap] })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('My Progress'))
+    await user.click(screen.getByText('Review Session →'))
+
+    expect(useSessionStore.getState().isActive).toBe(false)
   })
 })
