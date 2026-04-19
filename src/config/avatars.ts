@@ -21,22 +21,30 @@ export interface AvatarOption {
 
 export const DEFAULT_AVATAR_ID = ''
 
+// All emoji are Unicode 12 or earlier to ensure consistent rendering
+// on older Windows/browser fonts. (Unicode 13 glyphs like 🫀/🫁 and
+// gender-neutral ZWJ sequences render as tofu boxes on many systems.)
 export const AVATAR_OPTIONS: AvatarOption[] = [
   { id: DEFAULT_AVATAR_ID, emoji: null, label: 'Initial letter' },
-  { id: 'nurse-w', emoji: '👩‍⚕️', label: 'Nurse' },
-  { id: 'nurse-m', emoji: '👨‍⚕️', label: 'Nurse' },
-  { id: 'nurse-n', emoji: '🧑‍⚕️', label: 'Nurse' },
+  { id: 'nurse-w', emoji: '👩‍⚕️', label: 'Nurse (she)' },
+  { id: 'nurse-m', emoji: '👨‍⚕️', label: 'Nurse (he)' },
   { id: 'stethoscope', emoji: '🩺', label: 'Stethoscope' },
-  { id: 'heart', emoji: '🫀', label: 'Heart' },
+  { id: 'pill', emoji: '💊', label: 'Pill' },
+  { id: 'syringe', emoji: '💉', label: 'Syringe' },
+  { id: 'dna', emoji: '🧬', label: 'DNA' },
+  { id: 'test-tube', emoji: '🧪', label: 'Test tube' },
+  { id: 'bandage', emoji: '🩹', label: 'Bandage' },
+  { id: 'thermometer', emoji: '🌡️', label: 'Thermometer' },
+  { id: 'hospital', emoji: '🏥', label: 'Hospital' },
   { id: 'brain', emoji: '🧠', label: 'Brain' },
-  { id: 'lungs', emoji: '🫁', label: 'Lungs' },
+  { id: 'heart', emoji: '❤️', label: 'Heart' },
+  { id: 'bone', emoji: '🦴', label: 'Bone' },
+  { id: 'tooth', emoji: '🦷', label: 'Tooth' },
   { id: 'flex', emoji: '💪', label: 'Strong' },
-  { id: 'target', emoji: '🎯', label: 'Target' },
-  { id: 'fire', emoji: '🔥', label: 'Fire' },
-  { id: 'trophy', emoji: '🏆', label: 'Trophy' },
-  { id: 'star', emoji: '⭐', label: 'Star' },
+  { id: 'grad', emoji: '🎓', label: 'Graduate' },
+  { id: 'trophy', emoji: '🏆', label: 'Champion' },
+  { id: 'fire', emoji: '🔥', label: 'On fire' },
   { id: 'rocket', emoji: '🚀', label: 'Rocket' },
-  { id: 'crown', emoji: '👑', label: 'Crown' },
 ]
 
 /**

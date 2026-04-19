@@ -158,7 +158,7 @@ describe('ProfileTab', () => {
 
     expect(screen.getByRole('radiogroup', { name: /choose an avatar/i })).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: /fire/i })).toBeInTheDocument()
-    expect(screen.getByRole('radio', { name: /trophy/i })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /champion/i })).toBeInTheDocument()
   })
 
   it('edit mode preselects current avatar', async () => {
@@ -177,7 +177,7 @@ describe('ProfileTab', () => {
     renderTab()
 
     await user.click(screen.getByText('Edit Profile'))
-    await user.click(screen.getByRole('radio', { name: /trophy/i }))
+    await user.click(screen.getByRole('radio', { name: /champion/i }))
 
     expect(screen.getByLabelText(/avatar preview/i).textContent).toBe('🏆')
   })
@@ -200,12 +200,12 @@ describe('ProfileTab', () => {
     renderTab()
 
     await user.click(screen.getByText('Edit Profile'))
-    await user.click(screen.getByRole('radio', { name: /star/i }))
+    await user.click(screen.getByRole('radio', { name: /pill/i }))
     await user.click(screen.getByText('Save Changes'))
 
     await waitFor(() => {
       expect(mockSaveAuth).toHaveBeenCalledWith(
-        expect.objectContaining({ avatar: 'star' }),
+        expect.objectContaining({ avatar: 'pill' }),
       )
     })
   })
@@ -215,7 +215,7 @@ describe('ProfileTab', () => {
     renderTab()
 
     await user.click(screen.getByText('Edit Profile'))
-    await user.click(screen.getByRole('radio', { name: /crown/i }))
+    await user.click(screen.getByRole('radio', { name: /tooth/i }))
     await user.click(screen.getByText('Cancel'))
 
     expect(useStudentStore.getState().avatar).toBe('')

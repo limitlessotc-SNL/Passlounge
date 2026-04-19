@@ -83,7 +83,7 @@ describe('avatars config', () => {
 
   it('emoji wins over nickname when avatar is selected', () => {
     // Even with a nickname, selected emoji takes priority
-    expect(getAvatarDisplay('heart', 'Keisha')).toBe('🫀')
+    expect(getAvatarDisplay('heart', 'Keisha')).toBe('❤️')
   })
 
   it('returns letter for unknown avatar id (fallback to default)', () => {
