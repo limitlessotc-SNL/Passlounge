@@ -19,6 +19,7 @@ import { PlanRevealScreen } from '@/features/onboarding/components/PlanRevealScr
 import { TestDateScreen } from '@/features/onboarding/components/TestDateScreen'
 import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScreen'
 import { ProfileTab } from '@/features/profile/components/ProfileTab'
+import { CardReviewScreen } from '@/features/session/components/CardReviewScreen'
 import { CardScreen } from '@/features/session/components/CardScreen'
 import { StudyTab } from '@/features/session/components/StudyTab'
 import { ModeSelectScreen } from '@/features/session/components/ModeSelectScreen'
@@ -94,6 +95,7 @@ function App() {
           <Route path="/session/mode" element={<ModeSelectScreen />} />
           <Route path="/session/play" element={<CardScreen />} />
           <Route path="/session/review" element={<ReviewScreen />} />
+          <Route path="/session/review-card/:cardIdx" element={<CardReviewScreen />} />
 
           {/* Diagnostic routes (full-screen, no BottomNav) */}
           <Route path="/diagnostic/info" element={<DiagInfoScreen />} />

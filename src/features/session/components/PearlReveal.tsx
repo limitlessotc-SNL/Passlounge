@@ -15,9 +15,12 @@ interface PearlRevealProps {
   mnemonic: [string, string][];
   isLastCard: boolean;
   onNext: () => void;
+  /** Optional override for the button label (e.g. "Back to Results →" for review mode). */
+  nextLabel?: string;
 }
 
-export function PearlReveal({ lens, pearl, mnemonic, isLastCard, onNext }: PearlRevealProps) {
+export function PearlReveal({ lens, pearl, mnemonic, isLastCard, onNext, nextLabel }: PearlRevealProps) {
+  const buttonLabel = nextLabel ?? (isLastCard ? 'Complete Session →' : 'Next Card →')
   return (
     <div className="anim" style={{ animationDelay: '0.1s' }}>
       {/* Clinical Lens */}
@@ -54,7 +57,7 @@ export function PearlReveal({ lens, pearl, mnemonic, isLastCard, onNext }: Pearl
 
       {/* Next Card Button */}
       <button className="btn-gold" onClick={onNext}>
-        {isLastCard ? 'Complete Session →' : 'Next Card →'}
+        {buttonLabel}
       </button>
     </div>
   )

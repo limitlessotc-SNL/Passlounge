@@ -54,7 +54,8 @@ export function ReviewScreen() {
           <div
             key={idx}
             className={`review-list-item anim${isCorrect === false ? ' wrong-item' : ''}`}
-            style={{ animationDelay: `${0.2 + idx * 0.03}s` }}
+            style={{ animationDelay: `${0.2 + idx * 0.03}s`, cursor: 'pointer' }}
+            onClick={() => navigate(`/session/review-card/${idx}`)}
           >
             <div style={{ width: 10, height: 10, borderRadius: '50%', background: isCorrect ? '#4ade80' : '#f87171', flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
@@ -63,7 +64,15 @@ export function ReviewScreen() {
                 {card.cat}{!isCorrect ? ' · ⚠ Priority Review' : ''}
               </div>
             </div>
-            <div className="review-btn">Review →</div>
+            <button
+              className="review-btn"
+              onClick={(e) => {
+                e.stopPropagation()
+                navigate(`/session/review-card/${idx}`)
+              }}
+            >
+              Review →
+            </button>
           </div>
         )
       })}
