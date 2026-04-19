@@ -104,7 +104,7 @@ describe('HomeTab', () => {
     expect(screen.getByText(/start session/i)).toBeInTheDocument()
   })
 
-  it('navigates to /session/mode when diagnostic completed', async () => {
+  it('navigates to /study when diagnostic completed (full setup flow)', async () => {
     useDashboardStore.setState({
       diagnosticResult: { completed: true, correct: 10, total: 15, catLevel: '3.5', results: [] },
     })
@@ -113,7 +113,7 @@ describe('HomeTab', () => {
 
     await user.click(screen.getByText(/start session/i))
 
-    expect(mockNavigate).toHaveBeenCalledWith('/session/mode')
+    expect(mockNavigate).toHaveBeenCalledWith('/study')
   })
 
   it('shows view diagnostic results button when completed', () => {

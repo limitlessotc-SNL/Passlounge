@@ -44,7 +44,9 @@ export function HomeTab() {
     if (!completed) {
       navigate('/diagnostic/info')
     } else {
-      navigate('/session/mode')
+      // Navigate to Study tab — full 3-step setup (Mode, Questions, Pool)
+      // matches original HTML's startWeightedSession() behavior
+      navigate('/study')
     }
   }
 
