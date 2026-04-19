@@ -20,7 +20,6 @@ vi.mock('react-router-dom', async () => {
 vi.mock('../services/cpr.service', () => ({
   getLatestCPRReport: vi.fn(),
   insertCPRReport: vi.fn(),
-  uploadCPRPhoto: vi.fn(),
 }))
 
 import { insertCPRReport } from '../services/cpr.service'
@@ -75,20 +74,25 @@ describe('CPRReviewScreen', () => {
     }
   })
 
-  it('shows attempt date and overall result from draft', () => {
+  it('shows attempt date from draft', () => {
     useCPRStore.getState().setAttemptDate('2026-03-01')
-    useCPRStore.getState().setOverallResult('fail')
     fillAllCategories()
     renderScreen()
 
     expect(screen.getByText('2026-03-01')).toBeInTheDocument()
-    expect(screen.getByText('FAIL')).toBeInTheDocument()
   })
 
-  it('shows "Not set" placeholders when draft values missing', () => {
+  it('shows "Not set" placeholder when attempt date missing', () => {
     fillAllCategories()
     renderScreen()
-    expect(screen.getAllByText(/not set/i).length).toBeGreaterThanOrEqual(2)
+    expect(screen.getByText(/not set/i)).toBeInTheDocument()
+  })
+
+  it('does not render the legacy overall-result or photo rows', () => {
+    fillAllCategories()
+    renderScreen()
+    expect(screen.queryByText(/overall result/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^photo$/i)).not.toBeInTheDocument()
   })
 
   it('Save button is disabled when categories incomplete', () => {

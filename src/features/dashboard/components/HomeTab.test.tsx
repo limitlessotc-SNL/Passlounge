@@ -23,7 +23,6 @@ vi.mock('react-router-dom', async () => {
 vi.mock('@/features/cpr/services/cpr.service', () => ({
   getLatestCPRReport: vi.fn().mockResolvedValue(null),
   insertCPRReport: vi.fn(),
-  uploadCPRPhoto: vi.fn(),
 }))
 
 function renderTab() {

@@ -43,16 +43,6 @@ describe('cprStore', () => {
     expect(useCPRStore.getState().draft.attempt_date).toBe('2026-03-01')
   })
 
-  it('setOverallResult writes to draft', () => {
-    useCPRStore.getState().setOverallResult('fail')
-    expect(useCPRStore.getState().draft.overall_result).toBe('fail')
-  })
-
-  it('setImagePath writes to draft', () => {
-    useCPRStore.getState().setImagePath('stu-1/123.jpg')
-    expect(useCPRStore.getState().draft.image_path).toBe('stu-1/123.jpg')
-  })
-
   it('setCategoryResult merges into categories map', () => {
     useCPRStore.getState().setCategoryResult('management_of_care', 'below')
     useCPRStore.getState().setCategoryResult('safety_and_infection_control', 'above')

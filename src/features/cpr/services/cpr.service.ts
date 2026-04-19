@@ -1,9 +1,8 @@
 /**
  * CPR Service
  *
- * Supabase CRUD for cpr_reports table + image upload to the private
- * `cpr-photos` storage bucket. RLS enforces per-student isolation;
- * all we do here is call Supabase and translate errors.
+ * Supabase CRUD for cpr_reports table. RLS enforces per-student
+ * isolation; all we do here is call Supabase and translate errors.
  *
  * Owner: Junior Engineer 2
  */
@@ -13,6 +12,7 @@ import type { CPRCategoriesMap, CPRDraft, CPRReport } from '@/types'
 
 const TABLE = 'cpr_reports'
 const BUCKET = 'cpr-photos'
+// Bucket remains in schema for a future OCR / photo-archive feature.
 
 /**
  * Returns the most recently created CPR report for a student,
@@ -89,51 +89,3 @@ export async function deleteCPRReport(report: CPRReport): Promise<void> {
   }
 }
 
-/**
- * Uploads a CPR photo to the private bucket under `<studentId>/<timestamp>.<ext>`
- * and returns the storage path. Callers should pass this path to insertCPRReport.
- */
-export async function uploadCPRPhoto(
-  studentId: string,
-  file: File,
-): Promise<string> {
-  const ext = fileExtension(file)
-  const path = `${studentId}/${Date.now()}.${ext}`
-
-  const { error } = await supabase.storage
-    .from(BUCKET)
-    .upload(path, file, {
-      cacheControl: '3600',
-      upsert: false,
-      contentType: file.type || undefined,
-    })
-
-  if (error) throw error
-  return path
-}
-
-/**
- * Returns a short-lived signed URL for a stored CPR photo so the dashboard
- * card can render it without making the bucket public.
- */
-export async function getCPRPhotoUrl(
-  imagePath: string,
-  expiresInSeconds = 60 * 60,
-): Promise<string> {
-  const { data, error } = await supabase.storage
-    .from(BUCKET)
-    .createSignedUrl(imagePath, expiresInSeconds)
-
-  if (error) throw error
-  return data.signedUrl
-}
-
-function fileExtension(file: File): string {
-  if (file.name.includes('.')) {
-    const ext = file.name.split('.').pop()
-    if (ext && ext.length <= 5) return ext.toLowerCase()
-  }
-  if (file.type === 'image/jpeg') return 'jpg'
-  if (file.type === 'image/png') return 'png'
-  return 'bin'
-}

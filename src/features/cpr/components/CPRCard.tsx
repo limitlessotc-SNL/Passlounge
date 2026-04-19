@@ -38,7 +38,7 @@ export function CPRCard() {
     void loadLatest()
   }, [loadLatest])
 
-  const startFlow = () => navigate('/cpr/upload')
+  const startFlow = () => navigate('/cpr/entry')
 
   // ── Empty state ───────────────────────────────────────────────────
   if (!latest && !isLoading) {

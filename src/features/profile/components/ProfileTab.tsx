@@ -342,7 +342,7 @@ export function ProfileTab() {
         <div className="anim" style={{ animationDelay: '0.13s', marginBottom: 12 }}>
           <button
             className="btn-ghost"
-            onClick={() => navigate('/cpr/upload')}
+            onClick={() => navigate('/cpr/entry')}
             type="button"
             style={{ marginBottom: 0 }}
           >

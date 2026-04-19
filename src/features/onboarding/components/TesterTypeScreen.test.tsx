@@ -81,7 +81,7 @@ describe('TesterTypeScreen', () => {
     await user.click(screen.getByText(/coming back stronger/i))
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/cpr/upload?from=onboarding')
+      expect(mockNavigate).toHaveBeenCalledWith('/cpr/entry?from=onboarding')
     })
   })
 

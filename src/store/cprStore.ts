@@ -2,7 +2,7 @@
  * CPR Store
  *
  * Holds:
- *  - the draft a repeat tester is filling out across Upload → Entry → Review
+ *  - the draft the user fills out on CPREntry \u2192 Review
  *  - the latest persisted CPR report for the signed-in student (for the
  *    HomeTab dashboard card). Populated by useCPR.loadLatest().
  *
@@ -32,8 +32,6 @@ interface CPRState {
 interface CPRActions {
   resetDraft: () => void;
   setAttemptDate: (date: string | null) => void;
-  setOverallResult: (result: 'pass' | 'fail' | null) => void;
-  setImagePath: (path: string | null) => void;
   setCategoryResult: (categoryId: string, level: CPRResultLevel) => void;
   setCategoriesMap: (map: CPRCategoriesMap) => void;
   setLatest: (report: CPRReport | null) => void;
@@ -55,12 +53,6 @@ export const useCPRStore = create<CPRState & CPRActions>()(
 
       setAttemptDate: (attempt_date) =>
         set((s) => ({ draft: { ...s.draft, attempt_date } })),
-
-      setOverallResult: (overall_result) =>
-        set((s) => ({ draft: { ...s.draft, overall_result } })),
-
-      setImagePath: (image_path) =>
-        set((s) => ({ draft: { ...s.draft, image_path } })),
 
       setCategoryResult: (categoryId, level) =>
         set((s) => ({

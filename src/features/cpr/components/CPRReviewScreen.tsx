@@ -33,7 +33,7 @@ export function CPRReviewScreen() {
   const [params] = useSearchParams()
   const isOnboarding = params.get('from') === 'onboarding'
   const draft = useCPRStore((s) => s.draft)
-  const { saveDraft, isSaving, error, pendingFile } = useCPR()
+  const { saveDraft, isSaving, error } = useCPR()
 
   const complete = isComplete(draft.categories)
 
@@ -68,26 +68,14 @@ export function CPRReviewScreen() {
           borderRadius: 14,
           padding: 14,
           marginBottom: 14,
+          display: 'flex',
+          justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Attempt Date</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>
-            {draft.attempt_date ?? 'Not set'}
-          </span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Overall Result</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: draft.overall_result === 'pass' ? 'rgba(74,222,128,0.9)' : draft.overall_result === 'fail' ? 'rgba(248,113,113,0.9)' : '#fff' }}>
-            {draft.overall_result ? draft.overall_result.toUpperCase() : 'Not set'}
-          </span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Photo</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>
-            {pendingFile ? pendingFile.name : 'None'}
-          </span>
-        </div>
+        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Attempt Date</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>
+          {draft.attempt_date ?? 'Not set'}
+        </span>
       </div>
 
       {CPR_CATEGORIES.map((cat) => {

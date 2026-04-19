@@ -12,25 +12,19 @@ import type { CPRReport } from '@/types'
 vi.mock('../services/cpr.service', () => ({
   getLatestCPRReport: vi.fn(),
   insertCPRReport: vi.fn(),
-  uploadCPRPhoto: vi.fn(),
 }))
 
-import {
-  getLatestCPRReport,
-  insertCPRReport,
-  uploadCPRPhoto,
-} from '../services/cpr.service'
+import { getLatestCPRReport, insertCPRReport } from '../services/cpr.service'
 import { useCPR } from './useCPR'
 
 const mockGetLatest = vi.mocked(getLatestCPRReport)
 const mockInsert = vi.mocked(insertCPRReport)
-const mockUpload = vi.mocked(uploadCPRPhoto)
 
 const sampleReport: CPRReport = {
   id: 'r-1',
   student_id: 'stu-1',
   attempt_date: '2026-03-01',
-  overall_result: 'fail',
+  overall_result: null,
   image_path: null,
   categories: { management_of_care: 'below' },
   created_at: '2026-03-02T00:00:00Z',
@@ -42,6 +36,7 @@ describe('useCPR', () => {
     useAuthStore.setState({
       user: { id: 'stu-1', email: 't@t.com' },
       supaStudentId: 'stu-1',
+      token: 'real-token',
       isAuthenticated: true,
       isLoading: false,
     })
@@ -95,56 +90,29 @@ describe('useCPR', () => {
 
       expect(mockGetLatest).not.toHaveBeenCalled()
     })
-  })
 
-  // ── attachPhoto / clearPhoto ───────────────────────────────────────
-
-  describe('photo handling', () => {
-    it('attachPhoto stores the pending file', () => {
+    it('skips Supabase in a dev session', async () => {
+      useAuthStore.setState({
+        user: { id: 'dev-user-id', email: 'dev@passlounge.local' },
+        supaStudentId: 'dev-user-id',
+        token: 'dev-mock-token',
+        isAuthenticated: true,
+        isLoading: false,
+      })
       const { result } = renderHook(() => useCPR())
-      const file = new File(['x'], 'cpr.jpg', { type: 'image/jpeg' })
 
-      act(() => result.current.attachPhoto(file))
+      await act(async () => {
+        await result.current.loadLatest()
+      })
 
-      expect(result.current.pendingFile).toBe(file)
-    })
-
-    it('clearPhoto resets both pending file and draft image_path', () => {
-      const { result } = renderHook(() => useCPR())
-      const file = new File(['x'], 'a.jpg', { type: 'image/jpeg' })
-
-      act(() => result.current.attachPhoto(file))
-      act(() => result.current.clearPhoto())
-
-      expect(result.current.pendingFile).toBeNull()
-      expect(useCPRStore.getState().draft.image_path).toBeNull()
+      expect(mockGetLatest).not.toHaveBeenCalled()
     })
   })
 
   // ── saveDraft ──────────────────────────────────────────────────────
 
   describe('saveDraft', () => {
-    it('uploads photo then inserts row with image path', async () => {
-      mockUpload.mockResolvedValue('stu-1/123.jpg')
-      mockInsert.mockResolvedValue({ ...sampleReport, image_path: 'stu-1/123.jpg' })
-
-      const { result } = renderHook(() => useCPR())
-      const file = new File(['x'], 'cpr.jpg', { type: 'image/jpeg' })
-      act(() => result.current.attachPhoto(file))
-
-      await act(async () => {
-        await result.current.saveDraft()
-      })
-
-      expect(mockUpload).toHaveBeenCalledWith('stu-1', file)
-      expect(mockInsert).toHaveBeenCalledWith(
-        'stu-1',
-        expect.objectContaining({ image_path: 'stu-1/123.jpg' }),
-      )
-      expect(useCPRStore.getState().latest?.image_path).toBe('stu-1/123.jpg')
-    })
-
-    it('skips upload when no pending file', async () => {
+    it('inserts row and stores latest', async () => {
       mockInsert.mockResolvedValue(sampleReport)
       const { result } = renderHook(() => useCPR())
 
@@ -152,8 +120,11 @@ describe('useCPR', () => {
         await result.current.saveDraft()
       })
 
-      expect(mockUpload).not.toHaveBeenCalled()
-      expect(mockInsert).toHaveBeenCalled()
+      expect(mockInsert).toHaveBeenCalledWith(
+        'stu-1',
+        expect.objectContaining({ image_path: null }),
+      )
+      expect(useCPRStore.getState().latest).toEqual(sampleReport)
     })
 
     it('resets the draft after a successful save', async () => {
@@ -190,6 +161,27 @@ describe('useCPR', () => {
 
       expect(useCPRStore.getState().error).toContain('Not signed in')
       expect(mockInsert).not.toHaveBeenCalled()
+    })
+
+    it('dev-mode save writes a local row without hitting Supabase', async () => {
+      useAuthStore.setState({
+        user: { id: 'dev-user-id', email: 'dev@passlounge.local' },
+        supaStudentId: 'dev-user-id',
+        token: 'dev-mock-token',
+        isAuthenticated: true,
+        isLoading: false,
+      })
+      useCPRStore.getState().setCategoryResult('management_of_care', 'below')
+
+      const { result } = renderHook(() => useCPR())
+      await act(async () => {
+        await result.current.saveDraft()
+      })
+
+      expect(mockInsert).not.toHaveBeenCalled()
+      const saved = useCPRStore.getState().latest
+      expect(saved?.student_id).toBe('dev-user-id')
+      expect(saved?.categories.management_of_care).toBe('below')
     })
   })
 })

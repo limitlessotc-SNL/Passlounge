@@ -20,11 +20,9 @@ import type { CPRReport } from '@/types'
 
 import {
   deleteCPRReport,
-  getCPRPhotoUrl,
   getLatestCPRReport,
   insertCPRReport,
   listCPRReports,
-  uploadCPRPhoto,
 } from './cpr.service'
 
 const sampleReport: CPRReport = {
@@ -224,64 +222,4 @@ describe('cpr.service', () => {
     })
   })
 
-  // ── uploadCPRPhoto ────────────────────────────────────────────────
-
-  describe('uploadCPRPhoto', () => {
-    it('uploads to <studentId>/<timestamp>.<ext> path', async () => {
-      const upload = vi.fn().mockResolvedValue({ error: null })
-      mockStorageFrom.mockReturnValue({ upload })
-
-      const file = new File(['x'], 'cpr.jpg', { type: 'image/jpeg' })
-      const path = await uploadCPRPhoto('stu-1', file)
-
-      expect(path.startsWith('stu-1/')).toBe(true)
-      expect(path.endsWith('.jpg')).toBe(true)
-      expect(upload).toHaveBeenCalledWith(
-        path,
-        file,
-        expect.objectContaining({ contentType: 'image/jpeg' }),
-      )
-    })
-
-    it('derives extension from mime when filename has none', async () => {
-      const upload = vi.fn().mockResolvedValue({ error: null })
-      mockStorageFrom.mockReturnValue({ upload })
-
-      const file = new File(['x'], 'noext', { type: 'image/png' })
-      const path = await uploadCPRPhoto('stu-1', file)
-
-      expect(path.endsWith('.png')).toBe(true)
-    })
-
-    it('throws when storage returns an error', async () => {
-      const upload = vi.fn().mockResolvedValue({ error: new Error('quota') })
-      mockStorageFrom.mockReturnValue({ upload })
-
-      const file = new File(['x'], 'a.jpg', { type: 'image/jpeg' })
-      await expect(uploadCPRPhoto('stu-1', file)).rejects.toThrow('quota')
-    })
-  })
-
-  // ── getCPRPhotoUrl ────────────────────────────────────────────────
-
-  describe('getCPRPhotoUrl', () => {
-    it('returns the signed URL', async () => {
-      const createSignedUrl = vi
-        .fn()
-        .mockResolvedValue({ data: { signedUrl: 'https://signed/x' }, error: null })
-      mockStorageFrom.mockReturnValue({ createSignedUrl })
-
-      const url = await getCPRPhotoUrl('stu-1/1.jpg')
-      expect(url).toBe('https://signed/x')
-    })
-
-    it('throws on storage error', async () => {
-      const createSignedUrl = vi
-        .fn()
-        .mockResolvedValue({ data: null, error: new Error('denied') })
-      mockStorageFrom.mockReturnValue({ createSignedUrl })
-
-      await expect(getCPRPhotoUrl('stu-1/1.jpg')).rejects.toThrow('denied')
-    })
-  })
 })

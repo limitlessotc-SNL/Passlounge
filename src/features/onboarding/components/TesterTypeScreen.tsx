@@ -19,9 +19,9 @@ export function TesterTypeScreen() {
 
   const handlePick = (type: 'repeat' | 'first_time') => {
     setTesterType(type)
-    // Repeat testers detour through CPR upload before confidence;
+    // Repeat testers detour through CPR entry before confidence;
     // first-timers go straight to confidence.
-    const next = type === 'repeat' ? '/cpr/upload?from=onboarding' : '/onboarding/confidence'
+    const next = type === 'repeat' ? '/cpr/entry?from=onboarding' : '/onboarding/confidence'
     setTimeout(() => navigate(next), 320)
   }
 

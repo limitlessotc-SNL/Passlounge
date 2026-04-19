@@ -20,7 +20,6 @@ vi.mock('react-router-dom', async () => {
 vi.mock('../services/cpr.service', () => ({
   getLatestCPRReport: vi.fn(),
   insertCPRReport: vi.fn(),
-  uploadCPRPhoto: vi.fn(),
 }))
 
 import { getLatestCPRReport } from '../services/cpr.service'
@@ -90,7 +89,7 @@ describe('CPRAnalysisScreen', () => {
     expect(screen.getByRole('button', { name: /upload cpr/i })).toBeInTheDocument()
   })
 
-  it('empty-state Upload button navigates to /cpr/upload', async () => {
+  it('empty-state Upload button navigates to /cpr/entry', async () => {
     mockGetLatest.mockResolvedValue(null)
     const user = userEvent.setup()
     renderScreen()
@@ -98,7 +97,7 @@ describe('CPRAnalysisScreen', () => {
     await waitFor(() => screen.getByRole('button', { name: /upload cpr/i }))
     await user.click(screen.getByRole('button', { name: /upload cpr/i }))
 
-    expect(mockNavigate).toHaveBeenCalledWith('/cpr/upload')
+    expect(mockNavigate).toHaveBeenCalledWith('/cpr/entry')
   })
 
   // ── Populated ─────────────────────────────────────────────────────

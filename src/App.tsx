@@ -15,7 +15,6 @@ import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsS
 import { CPRAnalysisScreen } from '@/features/cpr/components/CPRAnalysisScreen'
 import { CPREntryScreen } from '@/features/cpr/components/CPREntryScreen'
 import { CPRReviewScreen } from '@/features/cpr/components/CPRReviewScreen'
-import { CPRUploadScreen } from '@/features/cpr/components/CPRUploadScreen'
 import { AvatarScreen } from '@/features/onboarding/components/AvatarScreen'
 import { CommitmentScreen } from '@/features/onboarding/components/CommitmentScreen'
 import { ConfidenceScreen } from '@/features/onboarding/components/ConfidenceScreen'
@@ -109,7 +108,6 @@ function App() {
           <Route path="/diagnostic/results" element={<DiagResultsScreen />} />
 
           {/* CPR routes (full-screen, accept ?from=onboarding) */}
-          <Route path="/cpr/upload" element={<CPRUploadScreen />} />
           <Route path="/cpr/entry" element={<CPREntryScreen />} />
           <Route path="/cpr/review" element={<CPRReviewScreen />} />
           <Route path="/cpr/analysis" element={<CPRAnalysisScreen />} />

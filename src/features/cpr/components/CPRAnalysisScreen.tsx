@@ -83,7 +83,7 @@ export function CPRAnalysisScreen() {
         <button
           className="btn-gold anim"
           style={{ animationDelay: '0.2s' }}
-          onClick={() => navigate('/cpr/upload')}
+          onClick={() => navigate('/cpr/entry')}
           type="button"
         >
           Upload CPR

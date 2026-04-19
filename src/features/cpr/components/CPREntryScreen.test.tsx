@@ -55,11 +55,15 @@ describe('CPREntryScreen', () => {
     }
   })
 
-  it('renders attempt date and overall result inputs', () => {
+  it('renders attempt date input', () => {
     renderScreen()
     expect(screen.getByLabelText(/attempt date/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /pass/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /fail/i })).toBeInTheDocument()
+  })
+
+  it('does not show the legacy overall-result pass/fail toggle', () => {
+    renderScreen()
+    expect(screen.queryByRole('button', { name: /^pass$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^fail$/i })).not.toBeInTheDocument()
   })
 
   it('clicking a level button updates the store', async () => {
@@ -72,16 +76,6 @@ describe('CPREntryScreen', () => {
     expect(useCPRStore.getState().draft.categories[firstCat.id]).toBe('below')
   })
 
-  it('overall result toggles on/off', async () => {
-    const user = userEvent.setup()
-    renderScreen()
-
-    await user.click(screen.getByRole('button', { name: /pass/i }))
-    expect(useCPRStore.getState().draft.overall_result).toBe('pass')
-
-    await user.click(screen.getByRole('button', { name: /pass/i }))
-    expect(useCPRStore.getState().draft.overall_result).toBeNull()
-  })
 
   it('Review button is disabled until all 8 categories are answered', () => {
     renderScreen()
@@ -105,11 +99,37 @@ describe('CPREntryScreen', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/cpr/review?from=onboarding')
   })
 
-  it('Back navigates to /cpr/upload (preserves onboarding query)', async () => {
+  it('Back navigates to /onboarding in onboarding mode', async () => {
     const user = userEvent.setup()
     renderScreen('/cpr/entry?from=onboarding')
 
     await user.click(screen.getByRole('button', { name: /back/i }))
-    expect(mockNavigate).toHaveBeenCalledWith('/cpr/upload?from=onboarding')
+    expect(mockNavigate).toHaveBeenCalledWith('/onboarding')
+  })
+
+  it('Back navigates to / when not onboarding', async () => {
+    const user = userEvent.setup()
+    renderScreen()
+
+    await user.click(screen.getByRole('button', { name: /back/i }))
+    expect(mockNavigate).toHaveBeenCalledWith('/')
+  })
+
+  it('shows "Skip CPR for now" only in onboarding mode', () => {
+    renderScreen('/cpr/entry?from=onboarding')
+    expect(screen.getByRole('button', { name: /skip cpr for now/i })).toBeInTheDocument()
+  })
+
+  it('does not show skip button outside onboarding', () => {
+    renderScreen()
+    expect(screen.queryByRole('button', { name: /skip cpr for now/i })).not.toBeInTheDocument()
+  })
+
+  it('Skip button routes to /onboarding/confidence', async () => {
+    const user = userEvent.setup()
+    renderScreen('/cpr/entry?from=onboarding')
+
+    await user.click(screen.getByRole('button', { name: /skip cpr for now/i }))
+    expect(mockNavigate).toHaveBeenCalledWith('/onboarding/confidence')
   })
 })

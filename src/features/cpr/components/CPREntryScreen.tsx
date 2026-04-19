@@ -1,9 +1,8 @@
 /**
  * CPREntryScreen
  *
- * Step 2 of the CPR flow — manual data entry. Every NCSBN category must
- * be marked Above / Near / Below. Optional fields: attempt date and
- * overall pass/fail.
+ * First step of the CPR flow — manual data entry. Every NCSBN category
+ * must be marked Above / Near / Below. Attempt date is optional.
  *
  * Routes: /cpr/entry  (accepts ?from=onboarding)
  *
@@ -28,12 +27,14 @@ export function CPREntryScreen() {
   const draft = useCPRStore((s) => s.draft)
   const setCategoryResult = useCPRStore((s) => s.setCategoryResult)
   const setAttemptDate = useCPRStore((s) => s.setAttemptDate)
-  const setOverallResult = useCPRStore((s) => s.setOverallResult)
 
   const complete = isComplete(draft.categories)
 
-  const goBack = () => navigate(isOnboarding ? '/cpr/upload?from=onboarding' : '/cpr/upload')
-  const goReview = () => navigate(isOnboarding ? '/cpr/review?from=onboarding' : '/cpr/review')
+  const goBack = () =>
+    navigate(isOnboarding ? '/onboarding' : '/')
+  const goReview = () =>
+    navigate(isOnboarding ? '/cpr/review?from=onboarding' : '/cpr/review')
+  const goSkip = () => navigate('/onboarding/confidence')
 
   return (
     <div className="content scrollable">
@@ -46,11 +47,12 @@ export function CPREntryScreen() {
         Match each row to what the CPR said next to that category.
       </div>
 
-      {/* Optional attempt date + overall result */}
-      <div
+      {/* Optional attempt date */}
+      <label
         className="anim"
         style={{
           animationDelay: '0.18s',
+          display: 'block',
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 14,
@@ -58,38 +60,18 @@ export function CPREntryScreen() {
           marginBottom: 14,
         }}
       >
-        <label style={{ display: 'block', marginBottom: 12 }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 6 }}>
-            Attempt Date (optional)
-          </div>
-          <input
-            className="pl-input"
-            type="date"
-            value={draft.attempt_date ?? ''}
-            onChange={(e) => setAttemptDate(e.target.value || null)}
-            aria-label="Attempt date"
-          />
-        </label>
-
-        <div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 6 }}>
-            Overall Result (optional)
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {(['pass', 'fail'] as const).map((r) => (
-              <button
-                key={r}
-                type="button"
-                onClick={() => setOverallResult(draft.overall_result === r ? null : r)}
-                className={`q-count-btn${draft.overall_result === r ? ' selected' : ''}`}
-                style={{ textTransform: 'capitalize' as const, flex: 1 }}
-              >
-                {r}
-              </button>
-            ))}
-          </div>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 6 }}>
+          Attempt Date (optional)
         </div>
-      </div>
+        <input
+          className="pl-input"
+          type="date"
+          value={draft.attempt_date ?? ''}
+          onChange={(e) => setAttemptDate(e.target.value || null)}
+          aria-label="Attempt date"
+          style={{ marginBottom: 0 }}
+        />
+      </label>
 
       {/* Category rows */}
       {CPR_CATEGORIES.map((cat, i) => {
@@ -166,6 +148,26 @@ export function CPREntryScreen() {
           Review →
         </button>
       </div>
+
+      {isOnboarding && (
+        <button
+          type="button"
+          onClick={goSkip}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'rgba(255,255,255,0.35)',
+            fontSize: 13,
+            fontFamily: "'Outfit',sans-serif",
+            cursor: 'pointer',
+            width: '100%',
+            padding: 12,
+            marginTop: 8,
+          }}
+        >
+          Skip CPR for now
+        </button>
+      )}
     </div>
   )
 }
