@@ -287,13 +287,16 @@ export function CardScreen() {
         </div>
       </div>
 
-      {/* Stats HUD */}
-      <div className="stats-row">
-        <div className="stat-mini"><div className="stat-n">{correctCount}</div><div className="stat-l">Correct</div></div>
-        <div className="stat-mini"><div className="stat-n">{wrongCount}</div><div className="stat-l">Review</div></div>
-        <div className="stat-mini"><div className="stat-n">{xp}</div><div className="stat-l">XP</div></div>
-        <div className="stat-mini"><div className="stat-n">🔥{streakCount}</div><div className="stat-l">Streak</div></div>
-      </div>
+      {/* Stats HUD — study mode only. Test / diagnostic modes hide it to
+          avoid revealing correctness during the session (mimics real NCLEX). */}
+      {mode === 'study' && (
+        <div className="stats-row">
+          <div className="stat-mini"><div className="stat-n">{correctCount}</div><div className="stat-l">Correct</div></div>
+          <div className="stat-mini"><div className="stat-n">{wrongCount}</div><div className="stat-l">Review</div></div>
+          <div className="stat-mini"><div className="stat-n">{xp}</div><div className="stat-l">XP</div></div>
+          <div className="stat-mini"><div className="stat-n">🔥{streakCount}</div><div className="stat-l">Streak</div></div>
+        </div>
+      )}
 
       {/* Question card */}
       <div className="q-card">
@@ -304,7 +307,8 @@ export function CardScreen() {
         <div className="q-text-main">{card.question}</div>
       </div>
 
-      {/* Answer options */}
+      {/* Answer options. Correct/wrong styling is withheld in test/diagnostic
+          mode so the student doesn't see the answer during the session. */}
       {currentShuffle.opts.map((text, i) => (
         <AnswerOption
           key={i}
@@ -312,8 +316,8 @@ export function CardScreen() {
           text={text}
           isSelected={selectedOpt === i && !answered}
           isStruck={!!struckOpts[i]}
-          isCorrect={answered && i === currentShuffle.correct}
-          isWrong={answered && i === selectedOpt && i !== currentShuffle.correct}
+          isCorrect={mode === 'study' && answered && i === currentShuffle.correct}
+          isWrong={mode === 'study' && answered && i === selectedOpt && i !== currentShuffle.correct}
           isDisabled={answered}
           onSelect={handleSelect}
           onStrike={handleStrike}

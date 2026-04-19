@@ -103,12 +103,42 @@ describe('CardScreen', () => {
     expect(screen.getByText('Card 1 of 3')).toBeInTheDocument()
   })
 
-  it('renders stats HUD with initial values', () => {
+  it('study mode renders stats HUD with initial values', () => {
+    useSessionStore.getState().setMode('study')
     renderScreen()
 
     expect(screen.getByText('Correct')).toBeInTheDocument()
     expect(screen.getByText('50')).toBeInTheDocument() // XP
     expect(screen.getByText('Streak')).toBeInTheDocument()
+  })
+
+  it('test mode hides stats HUD (no hints during the exam)', () => {
+    // beforeEach already set mode to 'test'
+    renderScreen()
+
+    expect(screen.queryByText('Correct')).not.toBeInTheDocument()
+    expect(screen.queryByText('Review')).not.toBeInTheDocument()
+    expect(screen.queryByText('Streak')).not.toBeInTheDocument()
+  })
+
+  it('test mode does not mark the chosen option correct/wrong after submit', async () => {
+    const user = userEvent.setup()
+    renderScreen()
+
+    const opts = screen.getAllByRole('button').filter((b) =>
+      b.className.includes('ans-opt'),
+    )
+    await user.click(opts[0])
+    await user.click(screen.getByText(/submit answer/i))
+
+    // Neither the correct nor wrong styling classes should appear
+    const allOpts = screen.getAllByRole('button').filter((b) =>
+      b.className.includes('ans-opt'),
+    )
+    for (const btn of allOpts) {
+      expect(btn.className).not.toContain('correct')
+      expect(btn.className).not.toContain('wrong')
+    }
   })
 
   it('shows submit button after selecting an option', async () => {
@@ -157,7 +187,8 @@ describe('CardScreen', () => {
     expect(screen.getByText('📋 Scenario')).toBeInTheDocument()
   })
 
-  it('renders streak counter', () => {
+  it('study mode renders streak counter', () => {
+    useSessionStore.getState().setMode('study')
     renderScreen()
 
     expect(screen.getByText('Streak')).toBeInTheDocument()
