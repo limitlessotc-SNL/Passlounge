@@ -19,6 +19,7 @@ import {
 import { useAuthStore } from '@/store/authStore'
 import { useStudentStore } from '@/store/studentStore'
 import type { ConfidenceLevel, TesterType } from '@/types'
+import { isDevSession } from '@/utils/devMode'
 
 const DAILY_PRESETS = [25, 35, 50] as const
 
@@ -85,6 +86,16 @@ export function ProfileTab() {
 
     setSaving(true)
     setError(null)
+
+    // Dev sessions have no real auth token — skip Supabase, update locally only
+    if (isDevSession()) {
+      setNickname(trimmedNickname)
+      setDailyCards(draftDailyCards)
+      setTestDate(newTestDate, newTestDays)
+      setIsEditing(false)
+      setSaving(false)
+      return
+    }
 
     try {
       // Persist to Supabase students table

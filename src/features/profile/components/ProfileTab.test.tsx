@@ -408,4 +408,73 @@ describe('ProfileTab', () => {
     // Let it complete for cleanup
     resolve()
   })
+
+  // ── Dev mode ──────────────────────────────────────────────────────
+
+  it('skips Supabase calls and updates local state in dev session', async () => {
+    // Simulate dev skip: token sentinel
+    useAuthStore.setState({
+      user: { id: 'dev-user-id', email: 'dev@passlounge.local' },
+      supaStudentId: 'dev-user-id',
+      token: 'dev-mock-token',
+      isAuthenticated: true,
+      isLoading: false,
+    })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    const input = screen.getByPlaceholderText(/nurse keisha/i)
+    await user.clear(input)
+    await user.type(input, 'DevEdit')
+    await user.click(screen.getByText('Save Changes'))
+
+    await waitFor(() => {
+      expect(useStudentStore.getState().nickname).toBe('DevEdit')
+    })
+
+    // No Supabase calls in dev mode
+    expect(mockUpsert).not.toHaveBeenCalled()
+    expect(mockSaveAuth).not.toHaveBeenCalled()
+  })
+
+  it('returns to view mode after dev mode save', async () => {
+    useAuthStore.setState({
+      user: { id: 'dev-user-id', email: 'dev@passlounge.local' },
+      supaStudentId: 'dev-user-id',
+      token: 'dev-mock-token',
+      isAuthenticated: true,
+      isLoading: false,
+    })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByText('Save Changes'))
+
+    await waitFor(() => {
+      expect(screen.getByText('Edit Profile')).toBeInTheDocument()
+    })
+  })
+
+  it('updates daily cards locally in dev mode', async () => {
+    useAuthStore.setState({
+      user: { id: 'dev-user-id', email: 'dev@passlounge.local' },
+      supaStudentId: 'dev-user-id',
+      token: 'dev-mock-token',
+      isAuthenticated: true,
+      isLoading: false,
+    })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByRole('button', { name: '50' }))
+    await user.click(screen.getByText('Save Changes'))
+
+    await waitFor(() => {
+      expect(useStudentStore.getState().dailyCards).toBe(50)
+    })
+    expect(mockUpsert).not.toHaveBeenCalled()
+  })
 })

@@ -16,6 +16,7 @@ import { DIAGNOSTIC_CARDS } from '@/config/fallback-cards'
 import { useAuthStore } from '@/store/authStore'
 import { useDashboardStore } from '@/store/dashboardStore'
 import { useStudentStore } from '@/store/studentStore'
+import { DEV_MOCK_TOKEN, DEV_USER_EMAIL, DEV_USER_ID } from '@/utils/devMode'
 
 interface DevSkipButtonProps {
   /** Override for tests — if false, button never renders. */
@@ -30,8 +31,8 @@ export function DevSkipButton({ enabled = import.meta.env.DEV }: DevSkipButtonPr
   const handleSkip = () => {
     // Mock authenticated user
     useAuthStore.getState().setUser(
-      { id: 'dev-user-id', email: 'dev@passlounge.local' },
-      'dev-mock-token',
+      { id: DEV_USER_ID, email: DEV_USER_EMAIL },
+      DEV_MOCK_TOKEN,
     )
     useAuthStore.getState().setLoading(false)
 
