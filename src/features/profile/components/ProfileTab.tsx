@@ -337,6 +337,20 @@ export function ProfileTab() {
         </div>
       )}
 
+      {/* CPR re-upload — repeat testers only, view mode only */}
+      {!isEditing && testerType === 'repeat' && (
+        <div className="anim" style={{ animationDelay: '0.13s', marginBottom: 12 }}>
+          <button
+            className="btn-ghost"
+            onClick={() => navigate('/cpr/upload')}
+            type="button"
+            style={{ marginBottom: 0 }}
+          >
+            Update CPR Report
+          </button>
+        </div>
+      )}
+
       {/* Coming soon */}
       <div className="anim" style={{ animationDelay: '0.15s', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '14px 16px', marginBottom: 12, textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: 13 }}>
         Badges, XP history &amp; weakness map<br />

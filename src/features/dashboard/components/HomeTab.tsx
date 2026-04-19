@@ -10,6 +10,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { getCategoryBreakdown, getDiagnosticGrade } from '@/config/diagnostic-cards'
+import { CPRCard } from '@/features/cpr/components/CPRCard'
 import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
 import { useStudentStore } from '@/store/studentStore'
@@ -22,6 +23,7 @@ import { TodaysFocus } from './TodaysFocus'
 export function HomeTab() {
   const navigate = useNavigate()
   const nickname = useStudentStore((s) => s.nickname)
+  const testerType = useStudentStore((s) => s.testerType)
   const { diagnosticResult, plStats, streakDays } = useDashboardStore()
 
   const completed = diagnosticResult.completed
@@ -59,6 +61,13 @@ export function HomeTab() {
         </div>
         <div className="streak-pill">🔥 {streakDays} day streak</div>
       </div>
+
+      {/* CPR summary — repeat testers only */}
+      {testerType === 'repeat' && (
+        <div className="anim" style={{ animationDelay: '0.04s' }}>
+          <CPRCard />
+        </div>
+      )}
 
       {/* CAT Score Card */}
       <div className="anim" style={{ animationDelay: '0.05s' }}>

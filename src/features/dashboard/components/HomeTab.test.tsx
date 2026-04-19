@@ -18,6 +18,14 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => mockNavigate }
 })
 
+// HomeTab now renders CPRCard for repeat testers, which transitively imports
+// the supabase client. Stub the service layer so tests don't need env vars.
+vi.mock('@/features/cpr/services/cpr.service', () => ({
+  getLatestCPRReport: vi.fn().mockResolvedValue(null),
+  insertCPRReport: vi.fn(),
+  uploadCPRPhoto: vi.fn(),
+}))
+
 function renderTab() {
   return render(
     <MemoryRouter>

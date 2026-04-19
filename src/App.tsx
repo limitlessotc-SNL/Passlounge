@@ -12,6 +12,9 @@ import { SignupScreen } from '@/features/auth/components/SignupScreen'
 import { HomeTab } from '@/features/dashboard/components/HomeTab'
 import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
 import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
+import { CPREntryScreen } from '@/features/cpr/components/CPREntryScreen'
+import { CPRReviewScreen } from '@/features/cpr/components/CPRReviewScreen'
+import { CPRUploadScreen } from '@/features/cpr/components/CPRUploadScreen'
 import { AvatarScreen } from '@/features/onboarding/components/AvatarScreen'
 import { CommitmentScreen } from '@/features/onboarding/components/CommitmentScreen'
 import { ConfidenceScreen } from '@/features/onboarding/components/ConfidenceScreen'
@@ -103,6 +106,11 @@ function App() {
           <Route path="/diagnostic/info" element={<DiagInfoScreen />} />
           <Route path="/diagnostic/play" element={<CardScreen />} />
           <Route path="/diagnostic/results" element={<DiagResultsScreen />} />
+
+          {/* CPR routes (full-screen, accept ?from=onboarding) */}
+          <Route path="/cpr/upload" element={<CPRUploadScreen />} />
+          <Route path="/cpr/entry" element={<CPREntryScreen />} />
+          <Route path="/cpr/review" element={<CPRReviewScreen />} />
 
           {/* App routes — require completed onboarding */}
           <Route element={<OnboardingGuard />}>
