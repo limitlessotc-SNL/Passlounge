@@ -12,6 +12,7 @@ import { SignupScreen } from '@/features/auth/components/SignupScreen'
 import { HomeTab } from '@/features/dashboard/components/HomeTab'
 import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
 import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
+import { AvatarScreen } from '@/features/onboarding/components/AvatarScreen'
 import { CommitmentScreen } from '@/features/onboarding/components/CommitmentScreen'
 import { ConfidenceScreen } from '@/features/onboarding/components/ConfidenceScreen'
 import { PlanReadyScreen } from '@/features/onboarding/components/PlanReadyScreen'
@@ -88,6 +89,7 @@ function App() {
           <Route path="/onboarding/confidence" element={<ConfidenceScreen />} />
           <Route path="/onboarding/testdate" element={<TestDateScreen />} />
           <Route path="/onboarding/commitment" element={<CommitmentScreen />} />
+          <Route path="/onboarding/avatar" element={<AvatarScreen />} />
           <Route path="/onboarding/plan" element={<PlanRevealScreen />} />
           <Route path="/onboarding/ready" element={<PlanReadyScreen />} />
 

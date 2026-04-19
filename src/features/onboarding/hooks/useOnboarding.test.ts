@@ -66,6 +66,29 @@ describe('useOnboarding', () => {
     expect(useStudentStore.getState().onboarded).toBe(true)
   })
 
+  it('completeOnboarding includes avatar in auth metadata', async () => {
+    useStudentStore.getState().setAvatar('rocket')
+    mockUpsert.mockResolvedValue({
+      id: 'student-123',
+      nickname: 'Nurse Dev',
+      tester_type: 'first_time',
+      confidence: 'confident',
+      test_date: null,
+      daily_cards: 35,
+      onboarded: true,
+    })
+    mockSaveAuth.mockResolvedValue(undefined)
+
+    const { result } = renderHook(() => useOnboarding())
+    await act(async () => {
+      await result.current.completeOnboarding()
+    })
+
+    expect(mockSaveAuth).toHaveBeenCalledWith(
+      expect.objectContaining({ avatar: 'rocket' }),
+    )
+  })
+
   it('completeOnboarding returns false on error', async () => {
     mockUpsert.mockRejectedValue(new Error('DB error'))
 

@@ -38,11 +38,11 @@ export function TestDateScreen() {
     <div className="content">
       <div className="progress-wrap anim">
         <div className="progress-meta">
-          <span>Step 3 Of 4</span>
-          <span>75%</span>
+          <span>Step 3 Of 5</span>
+          <span>60%</span>
         </div>
         <div className="progress-bar">
-          <div className="progress-fill" style={{ width: '75%' }} />
+          <div className="progress-fill" style={{ width: '60%' }} />
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export function TestDateScreen() {
         Back
       </button>
 
-      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 3 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 3 Of 5</div>
 
       <div className="screen-title anim" style={{ animationDelay: '0.15s' }}>
         When&apos;s Test<br />Day,{' '}

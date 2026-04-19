@@ -33,18 +33,18 @@ export function CommitmentScreen() {
 
   const handlePick = (cards: number) => {
     setDailyCards(cards)
-    setTimeout(() => navigate('/onboarding/plan'), 320)
+    setTimeout(() => navigate('/onboarding/avatar'), 320)
   }
 
   return (
     <div className="content">
       <div className="progress-wrap anim">
         <div className="progress-meta">
-          <span>Step 4 Of 4</span>
-          <span>100%</span>
+          <span>Step 4 Of 5</span>
+          <span>80%</span>
         </div>
         <div className="progress-bar">
-          <div className="progress-fill" style={{ width: '100%' }} />
+          <div className="progress-fill" style={{ width: '80%' }} />
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export function CommitmentScreen() {
         Back
       </button>
 
-      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 4 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 4 Of 5</div>
 
       <div className="screen-title anim" style={{ animationDelay: '0.15s' }}>
         How Much Can<br />You Commit Daily?

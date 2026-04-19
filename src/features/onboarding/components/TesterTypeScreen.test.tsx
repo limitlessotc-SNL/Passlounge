@@ -31,7 +31,7 @@ describe('TesterTypeScreen', () => {
   it('renders step 1 progress and title', () => {
     renderScreen()
 
-    expect(screen.getAllByText(/step 1 of 4/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/step 1 of 5/i).length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText(/is this your/i)).toBeInTheDocument()
     expect(screen.getByText(/first time at/i)).toBeInTheDocument()
   })

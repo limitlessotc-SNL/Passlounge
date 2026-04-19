@@ -27,7 +27,7 @@ describe('ConfidenceScreen', () => {
   it('renders step 2 progress and title', () => {
     renderScreen()
 
-    expect(screen.getAllByText(/step 2 of 4/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/step 2 of 5/i).length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText(/how are you/i)).toBeInTheDocument()
   })
 

@@ -43,11 +43,11 @@ export function ConfidenceScreen() {
     <div className="content">
       <div className="progress-wrap anim">
         <div className="progress-meta">
-          <span>Step 2 Of 4</span>
-          <span>50%</span>
+          <span>Step 2 Of 5</span>
+          <span>40%</span>
         </div>
         <div className="progress-bar">
-          <div className="progress-fill" style={{ width: '50%' }} />
+          <div className="progress-fill" style={{ width: '40%' }} />
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export function ConfidenceScreen() {
         Back
       </button>
 
-      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 2 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.1s' }}>Step 2 Of 5</div>
 
       <div className="screen-title anim" style={{ animationDelay: '0.15s' }}>
         How Are You<br />Feeling About<br />The NCLEX?

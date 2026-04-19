@@ -33,7 +33,7 @@ describe('CommitmentScreen', () => {
   it('renders step 4 progress and title', () => {
     renderScreen()
 
-    expect(screen.getAllByText(/step 4 of 4/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText(/step 4 of 5/i).length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText(/how much can/i)).toBeInTheDocument()
   })
 

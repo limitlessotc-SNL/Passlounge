@@ -26,15 +26,15 @@ export function TesterTypeScreen() {
     <div className="content">
       <div className="progress-wrap anim">
         <div className="progress-meta">
-          <span>Step 1 Of 4</span>
-          <span>25%</span>
+          <span>Step 1 Of 5</span>
+          <span>20%</span>
         </div>
         <div className="progress-bar">
-          <div className="progress-fill" style={{ width: '25%' }} />
+          <div className="progress-fill" style={{ width: '20%' }} />
         </div>
       </div>
 
-      <div className="step-pill anim" style={{ animationDelay: '0.05s' }}>Step 1 Of 4</div>
+      <div className="step-pill anim" style={{ animationDelay: '0.05s' }}>Step 1 Of 5</div>
 
       <div className="screen-title anim" style={{ animationDelay: '0.1s' }}>
         Is This Your<br />First Time At<br />The NCLEX?

@@ -27,6 +27,7 @@ export function useOnboarding() {
     testDate,
     testDays,
     dailyCards,
+    avatar,
     setOnboarded,
   } = useStudentStore()
 
@@ -59,6 +60,7 @@ export function useOnboarding() {
         tester_type: testerType ?? 'first_time',
         confidence: confidence ?? 'unsure',
         daily_cards: dailyCards,
+        avatar,
       })
 
       setOnboarded(true)
@@ -71,7 +73,7 @@ export function useOnboarding() {
     } finally {
       setIsSaving(false)
     }
-  }, [supaStudentId, nickname, testerType, confidence, testDate, dailyCards, setOnboarded])
+  }, [supaStudentId, nickname, testerType, confidence, testDate, dailyCards, avatar, setOnboarded])
 
   const getProjectedDays = useCallback(
     (cardsPerDay: number): number => {
