@@ -97,7 +97,7 @@ describe('CPRReviewScreen', () => {
     expect(btn.disabled).toBe(true)
   })
 
-  it('Save calls insertCPRReport and navigates to / on success (non-onboarding)', async () => {
+  it('Save calls insertCPRReport and navigates to analysis on success (non-onboarding)', async () => {
     fillAllCategories()
     mockInsert.mockResolvedValue({
       id: 'r-1', student_id: 'stu-1', attempt_date: null, overall_result: null,
@@ -111,10 +111,10 @@ describe('CPRReviewScreen', () => {
     await waitFor(() => {
       expect(mockInsert).toHaveBeenCalledWith('stu-1', expect.any(Object))
     })
-    expect(mockNavigate).toHaveBeenCalledWith('/')
+    expect(mockNavigate).toHaveBeenCalledWith('/cpr/analysis')
   })
 
-  it('Save navigates to /onboarding/confidence when from=onboarding', async () => {
+  it('Save navigates to analysis with onboarding flag when from=onboarding', async () => {
     fillAllCategories()
     mockInsert.mockResolvedValue({
       id: 'r-1', student_id: 'stu-1', attempt_date: null, overall_result: null,
@@ -126,7 +126,7 @@ describe('CPRReviewScreen', () => {
     await user.click(screen.getByRole('button', { name: /save cpr/i }))
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/onboarding/confidence')
+      expect(mockNavigate).toHaveBeenCalledWith('/cpr/analysis?from=onboarding')
     })
   })
 

@@ -196,14 +196,24 @@ export function CPRCard() {
         </div>
       </details>
 
-      <button
-        className="btn-ghost"
-        onClick={startFlow}
-        type="button"
-        style={{ marginBottom: 0, marginTop: 12 }}
-      >
-        Re-upload CPR
-      </button>
+      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+        <button
+          className="btn-gold"
+          onClick={() => navigate('/cpr/analysis')}
+          type="button"
+          style={{ marginBottom: 0, flex: 2 }}
+        >
+          View Full Analysis
+        </button>
+        <button
+          className="btn-ghost"
+          onClick={startFlow}
+          type="button"
+          style={{ marginBottom: 0, flex: 1 }}
+        >
+          Re-upload
+        </button>
+      </div>
     </div>
   )
 }

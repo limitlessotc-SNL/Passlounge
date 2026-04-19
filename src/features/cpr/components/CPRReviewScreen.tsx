@@ -43,7 +43,9 @@ export function CPRReviewScreen() {
   const handleSave = async () => {
     const row = await saveDraft()
     if (!row) return
-    navigate(isOnboarding ? '/onboarding/confidence' : '/')
+    // Funnel both flows through the analysis screen so users always see
+    // what their results mean before moving on.
+    navigate(isOnboarding ? '/cpr/analysis?from=onboarding' : '/cpr/analysis')
   }
 
   return (

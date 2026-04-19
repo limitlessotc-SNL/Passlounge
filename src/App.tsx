@@ -12,6 +12,7 @@ import { SignupScreen } from '@/features/auth/components/SignupScreen'
 import { HomeTab } from '@/features/dashboard/components/HomeTab'
 import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
 import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
+import { CPRAnalysisScreen } from '@/features/cpr/components/CPRAnalysisScreen'
 import { CPREntryScreen } from '@/features/cpr/components/CPREntryScreen'
 import { CPRReviewScreen } from '@/features/cpr/components/CPRReviewScreen'
 import { CPRUploadScreen } from '@/features/cpr/components/CPRUploadScreen'
@@ -111,6 +112,7 @@ function App() {
           <Route path="/cpr/upload" element={<CPRUploadScreen />} />
           <Route path="/cpr/entry" element={<CPREntryScreen />} />
           <Route path="/cpr/review" element={<CPRReviewScreen />} />
+          <Route path="/cpr/analysis" element={<CPRAnalysisScreen />} />
 
           {/* App routes — require completed onboarding */}
           <Route element={<OnboardingGuard />}>

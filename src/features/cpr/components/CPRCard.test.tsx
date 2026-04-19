@@ -138,10 +138,21 @@ describe('CPRCard', () => {
     const user = userEvent.setup()
     renderCard()
 
-    await waitFor(() => screen.getByRole('button', { name: /re-upload cpr/i }))
-    await user.click(screen.getByRole('button', { name: /re-upload cpr/i }))
+    await waitFor(() => screen.getByRole('button', { name: /^re-upload$/i }))
+    await user.click(screen.getByRole('button', { name: /^re-upload$/i }))
 
     expect(mockNavigate).toHaveBeenCalledWith('/cpr/upload')
+  })
+
+  it('View Full Analysis button routes to /cpr/analysis', async () => {
+    mockGetLatest.mockResolvedValue(sampleReport)
+    const user = userEvent.setup()
+    renderCard()
+
+    await waitFor(() => screen.getByRole('button', { name: /view full analysis/i }))
+    await user.click(screen.getByRole('button', { name: /view full analysis/i }))
+
+    expect(mockNavigate).toHaveBeenCalledWith('/cpr/analysis')
   })
 
   it('does not render anything while loading with no prior latest', () => {
