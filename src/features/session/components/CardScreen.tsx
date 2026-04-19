@@ -23,6 +23,7 @@ import { useDashboardStore } from '@/store/dashboardStore'
 import { useSessionStore } from '@/store/sessionStore'
 import type { DiagnosticResult, SessionSnapshot } from '@/types'
 import { shuffleOptions } from '@/utils/shuffle'
+import { calculateStreak } from '@/utils/streak'
 
 import { AnswerOption } from './AnswerOption'
 import { PearlReveal } from './PearlReveal'
@@ -41,6 +42,7 @@ export function CardScreen() {
   const addSession = useDashboardStore((s) => s.addSession)
   const markCardSeen = useDashboardStore((s) => s.markCardSeen)
   const setDiagnosticResult = useDashboardStore((s) => s.setDiagnosticResult)
+  const setStreak = useDashboardStore((s) => s.setStreak)
   const sessionHistoryLength = useDashboardStore((s) => s.sessionHistory.length)
   const supaStudentId = useAuthStore((s) => s.supaStudentId)
   const { flushPendingUpdates } = useSR()
@@ -143,6 +145,7 @@ export function CardScreen() {
       mode: state.mode,
       date: dateStr,
       categories: categoryList,
+      createdAt: now.toISOString(),
       correct: state.correctCount,
       wrong: state.wrongCount,
       total,
@@ -155,6 +158,10 @@ export function CardScreen() {
     addSession(snapshot)
     state.cards.forEach((c) => markCardSeen(c.title))
 
+    // Recompute streak with the new session included
+    const updatedHistory = [...useDashboardStore.getState().sessionHistory]
+    setStreak(calculateStreak(updatedHistory))
+
     // Fire-and-forget: persist session + SR progress to Supabase
     if (supaStudentId) {
       void saveCompletedSession(supaStudentId, snapshot).catch(() => {
@@ -166,7 +173,8 @@ export function CardScreen() {
     navigate('/session/review')
   }, [
     endSession, isDiagnostic, navigate, sessionHistoryLength, sessionName,
-    addSession, markCardSeen, setDiagnosticResult, supaStudentId, flushPendingUpdates,
+    addSession, markCardSeen, setDiagnosticResult, setStreak,
+    supaStudentId, flushPendingUpdates,
   ])
 
   const handleSubmit = useCallback(() => {

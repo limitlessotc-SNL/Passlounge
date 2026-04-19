@@ -20,6 +20,7 @@ import { loadCardProgress } from '@/features/sr/services/progress.service'
 import { useDashboardStore } from '@/store/dashboardStore'
 import { useSRStore } from '@/store/srStore'
 import type { PLStats, SessionSnapshot } from '@/types'
+import { calculateStreak } from '@/utils/streak'
 
 /**
  * Computes player stats from a list of session snapshots.
@@ -63,11 +64,13 @@ export async function loadUserData(studentId: string): Promise<void> {
     const sessions = sessionsResult.value
     const stats = computePLStats(sessions)
     const seenTitles = buildSeenTitlesMap(sessions)
+    const streakDays = calculateStreak(sessions)
 
     useDashboardStore.setState({
       sessionHistory: sessions,
       plStats: stats,
       seenCardTitles: seenTitles,
+      streakDays,
     })
   }
 

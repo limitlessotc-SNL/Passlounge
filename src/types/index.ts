@@ -211,6 +211,8 @@ export interface SessionSnapshot {
   results: (boolean | undefined)[];
   answers: (number | undefined)[];
   shuffles: (ShuffleResult | undefined)[];
+  /** ISO timestamp when the session was completed (used for streak calculation). */
+  createdAt?: string;
 }
 
 // ─── Diagnostic Types ─────────────────────────────────────────────────────

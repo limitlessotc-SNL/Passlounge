@@ -160,6 +160,33 @@ describe('dataLoader.service', () => {
       expect(stats.sessions).toBe(2)
     })
 
+    it('computes and populates streakDays from sessions', async () => {
+      const today = new Date()
+      const yesterday = new Date()
+      yesterday.setDate(today.getDate() - 1)
+
+      mockSessions.mockResolvedValue([
+        makeSnapshot({ createdAt: today.toISOString() }),
+        makeSnapshot({ createdAt: yesterday.toISOString() }),
+      ])
+      mockDiag.mockResolvedValue(null)
+      mockProgress.mockResolvedValue({})
+
+      await loadUserData('stu-1')
+
+      expect(useDashboardStore.getState().streakDays).toBe(2)
+    })
+
+    it('sets streakDays to 0 when no sessions have createdAt', async () => {
+      mockSessions.mockResolvedValue([makeSnapshot()])
+      mockDiag.mockResolvedValue(null)
+      mockProgress.mockResolvedValue({})
+
+      await loadUserData('stu-1')
+
+      expect(useDashboardStore.getState().streakDays).toBe(0)
+    })
+
     it('populates seenCardTitles from sessions', async () => {
       mockSessions.mockResolvedValue([
         makeSnapshot({

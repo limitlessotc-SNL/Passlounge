@@ -144,6 +144,7 @@ export async function getSessionHistory(studentId: string): Promise<SessionSnaps
       mode: row.mode,
       date: row.date ?? formatDate(row.created_at),
       categories: row.categories ?? '',
+      createdAt: row.created_at,
       correct: row.correct,
       wrong: row.wrong,
       total,
