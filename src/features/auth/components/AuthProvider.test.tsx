@@ -68,7 +68,12 @@ describe('AuthProvider', () => {
           user: {
             id: 'user-123',
             email: 'test@test.com',
-            user_metadata: { nickname: 'Nurse Dev', onboarded: true, daily_cards: 25 },
+            user_metadata: {
+              nickname: 'Nurse Dev',
+              onboarded: true,
+              daily_cards: 25,
+              avatar: 'fire',
+            },
           },
           access_token: 'tok-abc',
         },
@@ -91,6 +96,34 @@ describe('AuthProvider', () => {
     expect(useStudentStore.getState().nickname).toBe('Nurse Dev')
     expect(useStudentStore.getState().onboarded).toBe(true)
     expect(useStudentStore.getState().dailyCards).toBe(25)
+    expect(useStudentStore.getState().avatar).toBe('fire')
+  })
+
+  it('leaves avatar empty when metadata has no avatar', async () => {
+    mockGetSession.mockResolvedValue({
+      data: {
+        session: {
+          user: {
+            id: 'user-xyz',
+            email: 't@t.com',
+            user_metadata: { nickname: 'X', onboarded: true },
+          },
+          access_token: 'tok',
+        },
+      },
+    })
+
+    render(
+      <AuthProvider>
+        <div>App</div>
+      </AuthProvider>,
+    )
+
+    await waitFor(() => {
+      expect(useAuthStore.getState().isAuthenticated).toBe(true)
+    })
+
+    expect(useStudentStore.getState().avatar).toBe('')
   })
 
   it('sets loading to false when no session found', async () => {

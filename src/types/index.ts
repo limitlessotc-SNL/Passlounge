@@ -248,6 +248,8 @@ export interface StudentState {
   testDate: string | null;
   dailyCards: number;
   onboarded: boolean;
+  /** Avatar id from AVATAR_OPTIONS. Empty string = default letter avatar. */
+  avatar: string;
 }
 
 export interface StudentActions {
@@ -257,6 +259,7 @@ export interface StudentActions {
   setTestDate: (date: string | null, days: number) => void;
   setDailyCards: (count: number) => void;
   setOnboarded: (onboarded: boolean) => void;
+  setAvatar: (avatar: string) => void;
   loadFromStudent: (student: Student) => void;
   reset: () => void;
 }

@@ -2,7 +2,7 @@
  * Student Store
  *
  * Zustand store for student profile / onboarding state.
- * State: nickname, testerType, confidence, testDays, dailyCards, onboarded
+ * State: nickname, testerType, confidence, testDays, dailyCards, onboarded, avatar
  *
  * Owner: Junior Engineer 2
  */
@@ -28,6 +28,7 @@ export const useStudentStore = create<StudentState & StudentActions>()(
       testDate: null,
       dailyCards: 35,
       onboarded: false,
+      avatar: '',
 
       setNickname: (nickname: string) => set({ nickname }),
 
@@ -41,6 +42,8 @@ export const useStudentStore = create<StudentState & StudentActions>()(
       setDailyCards: (dailyCards: number) => set({ dailyCards }),
 
       setOnboarded: (onboarded: boolean) => set({ onboarded }),
+
+      setAvatar: (avatar: string) => set({ avatar }),
 
       loadFromStudent: (student: Student) =>
         set({
@@ -61,6 +64,7 @@ export const useStudentStore = create<StudentState & StudentActions>()(
           testDate: null,
           dailyCards: 35,
           onboarded: false,
+          avatar: '',
         }),
     }),
     { name: 'studentStore' },

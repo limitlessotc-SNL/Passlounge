@@ -22,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setNickname = useStudentStore((s) => s.setNickname)
   const setOnboarded = useStudentStore((s) => s.setOnboarded)
   const setDailyCards = useStudentStore((s) => s.setDailyCards)
+  const setAvatar = useStudentStore((s) => s.setAvatar)
 
   useEffect(() => {
     let mounted = true
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (meta.nickname) setNickname(meta.nickname as string)
             if (meta.onboarded) setOnboarded(true)
             if (meta.daily_cards) setDailyCards(meta.daily_cards as number)
+            if (typeof meta.avatar === 'string') setAvatar(meta.avatar)
           }
 
           // Load all user data from Supabase (sessions, diagnostic, progress)
@@ -80,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       mounted = false
       subscription.unsubscribe()
     }
-  }, [setUser, setLoading, logout, setNickname, setOnboarded, setDailyCards])
+  }, [setUser, setLoading, logout, setNickname, setOnboarded, setDailyCards, setAvatar])
 
   return <>{children}</>
 }

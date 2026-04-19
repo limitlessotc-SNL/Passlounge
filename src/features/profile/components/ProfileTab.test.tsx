@@ -142,6 +142,106 @@ describe('ProfileTab', () => {
     expect(screen.getByText('N')).toBeInTheDocument()
   })
 
+  it('renders selected emoji avatar when one is set', () => {
+    useStudentStore.getState().setAvatar('fire')
+    renderTab()
+    expect(screen.getByText('🔥')).toBeInTheDocument()
+  })
+
+  // ── Avatar picker (edit mode) ─────────────────────────────────────
+
+  it('edit mode shows avatar picker with all options', async () => {
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+
+    expect(screen.getByRole('radiogroup', { name: /choose an avatar/i })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /fire/i })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /trophy/i })).toBeInTheDocument()
+  })
+
+  it('edit mode preselects current avatar', async () => {
+    useStudentStore.getState().setAvatar('fire')
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+
+    const fireBtn = screen.getByRole('radio', { name: /fire/i })
+    expect(fireBtn.getAttribute('aria-checked')).toBe('true')
+  })
+
+  it('clicking an avatar option updates the preview', async () => {
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByRole('radio', { name: /trophy/i }))
+
+    expect(screen.getByLabelText(/avatar preview/i).textContent).toBe('🏆')
+  })
+
+  it('Save persists chosen avatar to store', async () => {
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByRole('radio', { name: /rocket/i }))
+    await user.click(screen.getByText('Save Changes'))
+
+    await waitFor(() => {
+      expect(useStudentStore.getState().avatar).toBe('rocket')
+    })
+  })
+
+  it('Save includes avatar in auth metadata', async () => {
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByRole('radio', { name: /star/i }))
+    await user.click(screen.getByText('Save Changes'))
+
+    await waitFor(() => {
+      expect(mockSaveAuth).toHaveBeenCalledWith(
+        expect.objectContaining({ avatar: 'star' }),
+      )
+    })
+  })
+
+  it('Cancel does not persist avatar change', async () => {
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByRole('radio', { name: /crown/i }))
+    await user.click(screen.getByText('Cancel'))
+
+    expect(useStudentStore.getState().avatar).toBe('')
+  })
+
+  it('dev mode saves avatar locally without calling Supabase', async () => {
+    useAuthStore.setState({
+      user: { id: 'dev-user-id', email: 'dev@passlounge.local' },
+      supaStudentId: 'dev-user-id',
+      token: 'dev-mock-token',
+      isAuthenticated: true,
+      isLoading: false,
+    })
+    const user = userEvent.setup()
+    renderTab()
+
+    await user.click(screen.getByText('Edit Profile'))
+    await user.click(screen.getByRole('radio', { name: /brain/i }))
+    await user.click(screen.getByText('Save Changes'))
+
+    await waitFor(() => {
+      expect(useStudentStore.getState().avatar).toBe('brain')
+    })
+    expect(mockSaveAuth).not.toHaveBeenCalled()
+  })
+
   // ── Edit mode toggle ──────────────────────────────────────────────
 
   it('clicking Edit Profile enters edit mode', async () => {

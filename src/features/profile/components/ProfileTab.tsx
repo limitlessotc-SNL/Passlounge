@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { AVATAR_OPTIONS, getAvatarDisplay } from '@/config/avatars'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import {
   saveOnboardingToAuth,
@@ -48,23 +49,28 @@ export function ProfileTab() {
   const testDate = useStudentStore((s) => s.testDate)
   const testerType = useStudentStore((s) => s.testerType)
   const confidence = useStudentStore((s) => s.confidence)
+  const avatar = useStudentStore((s) => s.avatar)
   const setNickname = useStudentStore((s) => s.setNickname)
   const setDailyCards = useStudentStore((s) => s.setDailyCards)
   const setTestDate = useStudentStore((s) => s.setTestDate)
+  const setAvatar = useStudentStore((s) => s.setAvatar)
 
   const [isEditing, setIsEditing] = useState(false)
   const [draftNickname, setDraftNickname] = useState(nickname)
   const [draftDailyCards, setDraftDailyCards] = useState(dailyCards)
   const [draftTestDate, setDraftTestDate] = useState(testDate ?? '')
+  const [draftAvatar, setDraftAvatar] = useState(avatar)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const initial = (nickname || 'N').charAt(0).toUpperCase()
+  const avatarDisplay = getAvatarDisplay(avatar, nickname)
+  const draftAvatarDisplay = getAvatarDisplay(draftAvatar, draftNickname)
 
   const handleEdit = () => {
     setDraftNickname(nickname)
     setDraftDailyCards(dailyCards)
     setDraftTestDate(testDate ?? '')
+    setDraftAvatar(avatar)
     setError(null)
     setIsEditing(true)
   }
@@ -92,6 +98,7 @@ export function ProfileTab() {
       setNickname(trimmedNickname)
       setDailyCards(draftDailyCards)
       setTestDate(newTestDate, newTestDays)
+      setAvatar(draftAvatar)
       setIsEditing(false)
       setSaving(false)
       return
@@ -116,12 +123,14 @@ export function ProfileTab() {
         tester_type: testerType ?? 'first_time',
         confidence: confidence ?? 'unsure',
         daily_cards: draftDailyCards,
+        avatar: draftAvatar,
       })
 
       // Update local stores
       setNickname(trimmedNickname)
       setDailyCards(draftDailyCards)
       setTestDate(newTestDate, newTestDays)
+      setAvatar(draftAvatar)
 
       setIsEditing(false)
     } catch (err) {
@@ -145,8 +154,8 @@ export function ProfileTab() {
 
       {/* Avatar + name + email */}
       <div className="anim" style={{ animationDelay: '0.05s', display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 16, marginBottom: 20 }}>
-        <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg,#053571,#0a4d99)', border: '2px solid rgba(245,197,24,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 900, color: '#F5C518', flexShrink: 0 }}>
-          {initial}
+        <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg,#053571,#0a4d99)', border: '2px solid rgba(245,197,24,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 900, color: '#F5C518', flexShrink: 0 }}>
+          {avatarDisplay}
         </div>
         <div>
           <div style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>Nurse {nickname || 'Nurse'}</div>
@@ -188,6 +197,60 @@ export function ProfileTab() {
       {/* Settings card — EDIT MODE */}
       {isEditing && (
         <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(245,197,24,0.2)', borderRadius: 16, padding: 16, marginBottom: 16 }}>
+          {/* Avatar preview + picker */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 8 }}>
+              Avatar
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+              <div
+                aria-label="Avatar preview"
+                style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg,#053571,#0a4d99)', border: '2px solid rgba(245,197,24,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 900, color: '#F5C518', flexShrink: 0 }}
+              >
+                {draftAvatarDisplay}
+              </div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+                Tap an option below to change.
+              </div>
+            </div>
+            <div
+              role="radiogroup"
+              aria-label="Choose an avatar"
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}
+            >
+              {AVATAR_OPTIONS.map((opt) => {
+                const selected = draftAvatar === opt.id
+                const content = opt.emoji ?? (draftNickname || 'N').charAt(0).toUpperCase()
+                return (
+                  <button
+                    key={opt.id || 'default'}
+                    role="radio"
+                    aria-checked={selected}
+                    aria-label={opt.label}
+                    type="button"
+                    onClick={() => setDraftAvatar(opt.id)}
+                    style={{
+                      aspectRatio: '1 / 1',
+                      borderRadius: 12,
+                      background: selected ? 'rgba(245,197,24,0.12)' : 'rgba(255,255,255,0.04)',
+                      border: selected ? '2px solid rgba(245,197,24,0.8)' : '1.5px solid rgba(255,255,255,0.08)',
+                      color: opt.emoji ? '#fff' : '#F5C518',
+                      fontSize: 22,
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      padding: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {content}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           {/* Nickname */}
           <label style={{ display: 'block', marginBottom: 14 }}>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 6 }}>

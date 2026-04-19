@@ -20,6 +20,7 @@ describe('studentStore', () => {
     expect(state.testDays).toBe(0)
     expect(state.dailyCards).toBe(35)
     expect(state.onboarded).toBe(false)
+    expect(state.avatar).toBe('')
   })
 
   it('setNickname updates nickname', () => {
@@ -59,6 +60,12 @@ describe('studentStore', () => {
     expect(useStudentStore.getState().onboarded).toBe(true)
   })
 
+  it('setAvatar updates avatar', () => {
+    useStudentStore.getState().setAvatar('fire')
+
+    expect(useStudentStore.getState().avatar).toBe('fire')
+  })
+
   it('loadFromStudent populates all fields', () => {
     useStudentStore.getState().loadFromStudent({
       id: 'abc-123',
@@ -82,11 +89,13 @@ describe('studentStore', () => {
   it('reset clears all fields', () => {
     useStudentStore.getState().setNickname('Test')
     useStudentStore.getState().setOnboarded(true)
+    useStudentStore.getState().setAvatar('fire')
 
     useStudentStore.getState().reset()
 
     const state = useStudentStore.getState()
     expect(state.nickname).toBe('')
     expect(state.onboarded).toBe(false)
+    expect(state.avatar).toBe('')
   })
 })
