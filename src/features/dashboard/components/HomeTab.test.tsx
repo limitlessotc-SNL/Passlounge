@@ -25,6 +25,10 @@ vi.mock('@/features/cpr/services/cpr.service', () => ({
   insertCPRReport: vi.fn(),
 }))
 
+vi.mock('@/features/onboarding/services/student.service', () => ({
+  upsertStudent: vi.fn().mockResolvedValue({ id: 'stu-1' }),
+}))
+
 function renderTab() {
   return render(
     <MemoryRouter>

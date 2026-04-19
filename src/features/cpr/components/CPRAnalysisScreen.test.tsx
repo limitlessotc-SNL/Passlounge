@@ -22,6 +22,10 @@ vi.mock('../services/cpr.service', () => ({
   insertCPRReport: vi.fn(),
 }))
 
+vi.mock('@/features/onboarding/services/student.service', () => ({
+  upsertStudent: vi.fn().mockResolvedValue({ id: 'stu-1' }),
+}))
+
 import { getLatestCPRReport } from '../services/cpr.service'
 import { CPRAnalysisScreen } from './CPRAnalysisScreen'
 

@@ -13,12 +13,31 @@
 
 import { useCallback } from 'react'
 
+import { upsertStudent } from '@/features/onboarding/services/student.service'
 import { useAuthStore } from '@/store/authStore'
 import { useCPRStore } from '@/store/cprStore'
+import { useStudentStore } from '@/store/studentStore'
 import type { CPRReport } from '@/types'
 import { isDevSession } from '@/utils/devMode'
 
 import { getLatestCPRReport, insertCPRReport } from '../services/cpr.service'
+
+/**
+ * Supabase (and Postgres) errors often aren't plain Error instances.
+ * Peel off the most useful human-readable field we can find so the UI
+ * doesn't fall back to "Failed to save CPR report" for actionable
+ * failures (FK / RLS / NOT NULL / CHECK violations).
+ */
+function extractError(err: unknown, fallback: string): string {
+  if (err instanceof Error) return err.message
+  if (err && typeof err === 'object') {
+    const obj = err as Record<string, unknown>
+    if (typeof obj.message === 'string' && obj.message) return obj.message
+    if (typeof obj.details === 'string' && obj.details) return obj.details
+    if (typeof obj.hint === 'string' && obj.hint) return obj.hint
+  }
+  return fallback
+}
 
 export function useCPR() {
   const supaStudentId = useAuthStore((s) => s.supaStudentId)
@@ -46,8 +65,7 @@ export function useCPR() {
       setLatest(row)
       return row
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to load CPR report'
-      setError(msg)
+      setError(extractError(err, 'Failed to load CPR report'))
       return null
     } finally {
       setIsLoading(false)
@@ -79,13 +97,28 @@ export function useCPR() {
         return fake
       }
 
+      // The CPR insert has a foreign key to students(id). During
+      // onboarding that row isn't created until completeOnboarding,
+      // so we upsert a minimal student profile here with whatever
+      // we've collected so far. Second-run uploads (post-onboarding)
+      // just no-op since the row already exists.
+      const student = useStudentStore.getState()
+      await upsertStudent({
+        id: supaStudentId,
+        nickname: student.nickname || 'Nurse',
+        tester_type: student.testerType ?? 'repeat',
+        confidence: student.confidence ?? 'unsure',
+        test_date: student.testDate,
+        daily_cards: student.dailyCards,
+        onboarded: student.onboarded,
+      })
+
       const row = await insertCPRReport(supaStudentId, { ...draft, image_path: null })
       setLatest(row)
       resetDraft()
       return row
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save CPR report'
-      setError(msg)
+      setError(extractError(err, 'Failed to save CPR report'))
       return null
     } finally {
       setIsSaving(false)

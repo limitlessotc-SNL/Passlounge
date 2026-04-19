@@ -14,11 +14,18 @@ vi.mock('../services/cpr.service', () => ({
   insertCPRReport: vi.fn(),
 }))
 
+vi.mock('@/features/onboarding/services/student.service', () => ({
+  upsertStudent: vi.fn().mockResolvedValue({ id: 'stu-1' }),
+}))
+
+import { upsertStudent } from '@/features/onboarding/services/student.service'
+
 import { getLatestCPRReport, insertCPRReport } from '../services/cpr.service'
 import { useCPR } from './useCPR'
 
 const mockGetLatest = vi.mocked(getLatestCPRReport)
 const mockInsert = vi.mocked(insertCPRReport)
+const mockUpsertStudent = vi.mocked(upsertStudent)
 
 const sampleReport: CPRReport = {
   id: 'r-1',
@@ -125,6 +132,30 @@ describe('useCPR', () => {
         expect.objectContaining({ image_path: null }),
       )
       expect(useCPRStore.getState().latest).toEqual(sampleReport)
+    })
+
+    it('upserts a student row before inserting (ensures FK to students)', async () => {
+      mockInsert.mockResolvedValue(sampleReport)
+      const { result } = renderHook(() => useCPR())
+
+      await act(async () => {
+        await result.current.saveDraft()
+      })
+
+      expect(mockUpsertStudent).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'stu-1' }),
+      )
+    })
+
+    it('surfaces a non-Error supabase failure message', async () => {
+      mockInsert.mockRejectedValue({ message: 'violates foreign key', details: '' })
+      const { result } = renderHook(() => useCPR())
+
+      await act(async () => {
+        await result.current.saveDraft()
+      })
+
+      expect(useCPRStore.getState().error).toBe('violates foreign key')
     })
 
     it('resets the draft after a successful save', async () => {
