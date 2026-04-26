@@ -62,3 +62,13 @@ CREATE POLICY "Admins can update NGN cards"
       WHERE id = auth.uid() AND is_admin = true
     )
   );
+
+DROP POLICY IF EXISTS "Admins can delete NGN cards" ON ngn_cards;
+CREATE POLICY "Admins can delete NGN cards"
+  ON ngn_cards FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM students
+      WHERE id = auth.uid() AND is_admin = true
+    )
+  );
