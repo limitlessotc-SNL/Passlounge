@@ -12,6 +12,7 @@ import { SignupScreen } from '@/features/auth/components/SignupScreen'
 import { HomeTab } from '@/features/dashboard/components/HomeTab'
 import { DiagInfoScreen } from '@/features/diagnostic/components/DiagInfoScreen'
 import { DiagResultsScreen } from '@/features/diagnostic/components/DiagResultsScreen'
+import { CATTab } from '@/features/cat/CATTab'
 import { CPRAnalysisScreen } from '@/features/cpr/components/CPRAnalysisScreen'
 import { CPREntryScreen } from '@/features/cpr/components/CPREntryScreen'
 import { CPRReviewScreen } from '@/features/cpr/components/CPRReviewScreen'
@@ -41,16 +42,6 @@ import { ReviewScreen } from '@/features/session/components/ReviewScreen'
  */
 
 /* ─── Placeholder screens (replaced in later phases) ──────────────────── */
-
-function CATPlaceholder() {
-  return (
-    <div className="placeholder-screen">
-      <div className="placeholder-icon">🐱</div>
-      <div className="placeholder-title">CAT Mode</div>
-      <div className="placeholder-sub">150-question NCLEX CAT simulation<br />coming soon.</div>
-    </div>
-  )
-}
 
 function CompetePlaceholder() {
   return (
@@ -117,7 +108,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route index element={<HomeTab />} />
               <Route path="/study" element={<StudyTab />} />
-              <Route path="/cat" element={<CATPlaceholder />} />
+              <Route path="/cat" element={<CATTab />} />
               <Route path="/compete" element={<CompetePlaceholder />} />
               <Route path="/lounge" element={<LoungePlaceholder />} />
               <Route path="/profile" element={<ProfileTab />} />
