@@ -1,11 +1,22 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { Particles } from '@/components/animations/Particles'
 import { DevSkipButton } from '@/components/DevSkipButton'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 import { AuthGuard } from '@/components/guards/AuthGuard'
 import { OnboardingGuard } from '@/components/guards/OnboardingGuard'
 import { PublicGuard } from '@/components/guards/PublicGuard'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { AdminAuthScreen } from '@/features/admin/AdminAuthScreen'
+import { AdminDashboard } from '@/features/admin/AdminDashboard'
+import { AdminGuard } from '@/features/admin/AdminGuard'
+import { AdminProgressScreen } from '@/features/admin/AdminProgressScreen'
+import { DesktopOnlyGate } from '@/features/admin/DesktopOnlyGate'
+import { NGNBatchScreen } from '@/features/admin/NGNBatchScreen'
+import { NGNCreateScreen } from '@/features/admin/NGNCreateScreen'
+import { CoachDashboard } from '@/features/coach/CoachDashboard'
+import { CoachGuard } from '@/features/coach/CoachGuard'
+import { CoachLoginScreen } from '@/features/coach/CoachLoginScreen'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
 import { LoginScreen } from '@/features/auth/components/LoginScreen'
 import { SignupScreen } from '@/features/auth/components/SignupScreen'
@@ -64,12 +75,24 @@ function LoungePlaceholder() {
 }
 
 function App() {
+  const location = useLocation()
+  // Admin routes use a full-width shell (the .app-shell mobile clamp would
+  // crush admin tables) and skip the student-app decorations.
+  const isAdmin = location.pathname.startsWith('/admin')
+  const isCoach = location.pathname.startsWith('/coach')
+  const isStaffArea = isAdmin || isCoach
+
   return (
-    <div className="app-shell">
-      <div className="orb orb1" />
-      <div className="orb orb2" />
-      <Particles />
-      <DevSkipButton />
+    <div className={isStaffArea ? 'admin-shell' : 'app-shell'}>
+      {!isStaffArea && (
+        <>
+          <div className="orb orb1" />
+          <div className="orb orb2" />
+          <Particles />
+          <DevSkipButton />
+        </>
+      )}
+      <PWAInstallPrompt />
       <Routes>
         {/* Public auth routes — redirect to app if already signed in */}
         <Route path="/login" element={<PublicGuard><LoginScreen /></PublicGuard>} />
@@ -113,6 +136,29 @@ function App() {
               <Route path="/lounge" element={<LoungePlaceholder />} />
               <Route path="/profile" element={<ProfileTab />} />
             </Route>
+          </Route>
+        </Route>
+
+        {/* Admin routes — outside AuthGuard. AdminAuthScreen handles its
+            own "must be signed in" redirect; AdminGuard wraps the rest
+            and enforces is_admin + valid in-memory session. */}
+        <Route element={<DesktopOnlyGate />}>
+          <Route path="/admin/auth" element={<AdminAuthScreen />} />
+          <Route element={<AdminGuard />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/progress" element={<AdminProgressScreen />} />
+            <Route path="/admin/ngn/create" element={<NGNCreateScreen />} />
+            <Route path="/admin/ngn/batch" element={<NGNBatchScreen />} />
+          </Route>
+        </Route>
+
+        {/* Coach (SNL Educator) routes — entirely separate from the student
+            app. /coach/login is public; everything else is wrapped by
+            CoachGuard which checks the coaches table via Supabase. */}
+        <Route element={<DesktopOnlyGate />}>
+          <Route path="/coach/login" element={<CoachLoginScreen />} />
+          <Route element={<CoachGuard />}>
+            <Route path="/coach" element={<CoachDashboard />} />
           </Route>
         </Route>
 
