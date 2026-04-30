@@ -193,8 +193,8 @@ export function CATResultsScreen({ result, onRetake, onBack }: Props) {
                 }}
                 labelStyle={{ color: 'rgba(255,255,255,0.5)' }}
                 itemStyle={{ color: GOLD }}
-                formatter={(val) => [`Level ${val}`, 'Difficulty'] as [string, string]}
-                labelFormatter={(q) => `Q${q}`}
+                formatter={(value) => [`Level ${value}`, 'Difficulty']}
+                labelFormatter={(label) => `Q${label}`}
               />
               <ReferenceLine
                 y={PASSING_LINE}
