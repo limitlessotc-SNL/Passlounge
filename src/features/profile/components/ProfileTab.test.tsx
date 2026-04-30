@@ -2,7 +2,7 @@
  * ProfileTab unit tests
  */
 
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -19,10 +19,23 @@ vi.mock('@/features/auth/hooks/useAuth', () => ({
   }),
 }))
 
+// Mock useNavigate so the avatar-trigger test can assert the destination.
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom')
+  return { ...actual, useNavigate: () => mockNavigate }
+})
+
 // Mock student.service for edit mode
 vi.mock('@/features/onboarding/services/student.service', () => ({
   upsertStudent: vi.fn().mockResolvedValue({ id: 'u1' }),
   saveOnboardingToAuth: vi.fn().mockResolvedValue(undefined),
+}))
+
+// Mock coach.service so the cohort-membership panel doesn't hit real supabase
+vi.mock('@/features/coach/coach.service', () => ({
+  getStudentCohort: vi.fn().mockResolvedValue(null),
+  joinCohortByCode: vi.fn(),
 }))
 
 import {
@@ -46,6 +59,7 @@ function renderTab() {
 describe('ProfileTab', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockNavigate.mockReset()
     useAuthStore.setState({
       user: { id: 'u1', email: 'nurse@test.com' },
       supaStudentId: 'u1',
@@ -576,5 +590,71 @@ describe('ProfileTab', () => {
       expect(useStudentStore.getState().dailyCards).toBe(50)
     })
     expect(mockUpsert).not.toHaveBeenCalled()
+  })
+
+  // ── Hidden /admin trigger (7 quick taps on the avatar) ────────────
+
+  describe('hidden admin trigger', () => {
+    it('does not navigate on a single tap', () => {
+      renderTab()
+      fireEvent.click(screen.getByTestId('profile-avatar'))
+      expect(mockNavigate).not.toHaveBeenCalled()
+    })
+
+    it('does not navigate on 6 quick taps', () => {
+      renderTab()
+      const avatar = screen.getByTestId('profile-avatar')
+      for (let i = 0; i < 6; i++) fireEvent.click(avatar)
+      expect(mockNavigate).not.toHaveBeenCalled()
+    })
+
+    it('navigates to /admin/auth on the 7th quick tap', async () => {
+      vi.useFakeTimers()
+      try {
+        renderTab()
+        const avatar = screen.getByTestId('profile-avatar')
+        for (let i = 0; i < 7; i++) {
+          fireEvent.click(avatar)
+        }
+        // The 7th tap shows a brief flash, then navigates after 180ms.
+        act(() => { vi.advanceTimersByTime(200) })
+        expect(mockNavigate).toHaveBeenCalledWith('/admin/auth')
+        expect(mockNavigate).toHaveBeenCalledTimes(1)
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+
+    it('resets the counter when more than 2s passes between taps', () => {
+      vi.useFakeTimers()
+      try {
+        renderTab()
+        const avatar = screen.getByTestId('profile-avatar')
+        // 6 fast taps...
+        for (let i = 0; i < 6; i++) fireEvent.click(avatar)
+        // ...then a 2.5s pause (counter auto-resets after 2s)...
+        act(() => { vi.advanceTimersByTime(2500) })
+        // ...then one more tap. With reset, counter is 1, not 7.
+        fireEvent.click(avatar)
+        act(() => { vi.advanceTimersByTime(300) })
+        expect(mockNavigate).not.toHaveBeenCalled()
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+
+    it('clears the pending reset timer on unmount', () => {
+      vi.useFakeTimers()
+      try {
+        const { unmount } = renderTab()
+        fireEvent.click(screen.getByTestId('profile-avatar'))
+        unmount()
+        // If the reset timer survived, this would throw "setState on unmounted".
+        act(() => { vi.advanceTimersByTime(3000) })
+        expect(mockNavigate).not.toHaveBeenCalled()
+      } finally {
+        vi.useRealTimers()
+      }
+    })
   })
 })

@@ -8,11 +8,16 @@
  * Owner: Junior Engineer 2
  */
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { AVATAR_OPTIONS, getAvatarDisplay } from '@/config/avatars'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  getStudentCohort,
+  joinCohortByCode,
+  type StudentCohortMembership,
+} from '@/features/coach/coach.service'
 import {
   saveOnboardingToAuth,
   upsertStudent,
@@ -62,6 +67,94 @@ export function ProfileTab() {
   const [draftAvatar, setDraftAvatar] = useState(avatar)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Cohort membership panel state
+  const [cohortMembership, setCohortMembership] = useState<StudentCohortMembership | null>(null)
+  const [cohortLoaded, setCohortLoaded]         = useState(false)
+  const [cohortCodeInput, setCohortCodeInput]   = useState('')
+  const [joinSubmitting, setJoinSubmitting]     = useState(false)
+  const [joinError, setJoinError]               = useState<string | null>(null)
+
+  // Load current cohort membership on mount.
+  useEffect(() => {
+    if (!supaStudentId || isDevSession()) {
+      setCohortLoaded(true)
+      return
+    }
+    let cancelled = false
+    getStudentCohort(supaStudentId)
+      .then(m => { if (!cancelled) setCohortMembership(m) })
+      .catch(() => { /* ignore — empty state handles missing data */ })
+      .finally(() => { if (!cancelled) setCohortLoaded(true) })
+    return () => { cancelled = true }
+  }, [supaStudentId])
+
+  async function handleJoinCohort() {
+    if (!supaStudentId || !cohortCodeInput.trim()) return
+    setJoinSubmitting(true)
+    setJoinError(null)
+    try {
+      const cohort = await joinCohortByCode(cohortCodeInput.trim(), supaStudentId)
+      // Re-fetch to get coach name + cohort row from authoritative source.
+      const fresh = await getStudentCohort(supaStudentId)
+      setCohortMembership(fresh ?? { cohort, coachName: 'Coach' })
+      setCohortCodeInput('')
+    } catch (e) {
+      const msg = (e as Error).message
+      setJoinError(/Invalid code|not found/i.test(msg) ? 'Invalid code' : msg)
+    } finally {
+      setJoinSubmitting(false)
+    }
+  }
+
+  // Hidden /admin/auth trigger: 7 taps within 2s of each other on the
+  // avatar circle. Refs (not state) so taps never re-render. Timer is
+  // cleared on unmount and after a successful navigation. The trigger is
+  // intentionally undiscoverable — no aria-label, role, cursor hint, or
+  // tooltip pointing at admin.
+  const tapCountRef   = useRef(0)
+  const lastTapAtRef  = useRef(0)
+  const resetTimerRef = useRef<number | null>(null)
+  const [trigFlash, setTrigFlash] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current !== null) {
+        window.clearTimeout(resetTimerRef.current)
+        resetTimerRef.current = null
+      }
+    }
+  }, [])
+
+  const handleSecretTap = () => {
+    const now = Date.now()
+    if (now - lastTapAtRef.current > 2000) {
+      tapCountRef.current = 0
+    }
+    tapCountRef.current += 1
+    lastTapAtRef.current = now
+
+    if (resetTimerRef.current !== null) window.clearTimeout(resetTimerRef.current)
+    resetTimerRef.current = window.setTimeout(() => {
+      tapCountRef.current = 0
+      lastTapAtRef.current = 0
+      resetTimerRef.current = null
+    }, 2000)
+
+    if (tapCountRef.current >= 7) {
+      tapCountRef.current = 0
+      lastTapAtRef.current = 0
+      if (resetTimerRef.current !== null) {
+        window.clearTimeout(resetTimerRef.current)
+        resetTimerRef.current = null
+      }
+      setTrigFlash(true)
+      window.setTimeout(() => {
+        setTrigFlash(false)
+        navigate('/admin/auth')
+      }, 180)
+    }
+  }
 
   const avatarDisplay = getAvatarDisplay(avatar, nickname)
   const draftAvatarDisplay = getAvatarDisplay(draftAvatar, draftNickname)
@@ -154,7 +247,26 @@ export function ProfileTab() {
 
       {/* Avatar + name + email */}
       <div className="anim" style={{ animationDelay: '0.05s', display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 16, marginBottom: 20 }}>
-        <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg,#053571,#0a4d99)', border: '2px solid rgba(245,197,24,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 900, color: '#F5C518', flexShrink: 0 }}>
+        <div
+          data-testid="profile-avatar"
+          onClick={handleSecretTap}
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg,#053571,#0a4d99)',
+            border: trigFlash ? '2px solid rgba(245,197,24,1)' : '2px solid rgba(245,197,24,0.4)',
+            boxShadow: trigFlash ? '0 0 14px rgba(245,197,24,0.7)' : 'none',
+            transition: 'box-shadow 140ms ease, border-color 140ms ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 26,
+            fontWeight: 900,
+            color: '#F5C518',
+            flexShrink: 0,
+          }}
+        >
           {avatarDisplay}
         </div>
         <div>
@@ -348,6 +460,89 @@ export function ProfileTab() {
           >
             Update CPR Report
           </button>
+        </div>
+      )}
+
+      {/* Cohort membership */}
+      {!isEditing && cohortLoaded && (
+        <div
+          data-testid="cohort-section"
+          className="anim"
+          style={{
+            animationDelay: '0.14s',
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 16,
+            padding: '14px 16px',
+            marginBottom: 12,
+          }}
+        >
+          <div style={{
+            fontSize: 11,
+            color: 'rgba(255,255,255,0.5)',
+            textTransform: 'uppercase' as const,
+            letterSpacing: 1,
+            marginBottom: 8,
+            fontWeight: 700,
+          }}>
+            Cohort
+          </div>
+          {cohortMembership ? (
+            <div data-testid="cohort-membership" style={{ fontSize: 14, color: '#fff' }}>
+              You are in:{' '}
+              <strong style={{ color: '#F5C518' }}>{cohortMembership.cohort.name}</strong>
+              {' — '}
+              <span style={{ color: 'rgba(255,255,255,0.7)' }}>
+                {cohortMembership.coachName}
+              </span>
+            </div>
+          ) : (
+            <>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 10 }}>
+                Have a cohort code from your educator? Enter it to join.
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  type="text"
+                  className="pl-input"
+                  value={cohortCodeInput}
+                  onChange={(e) => setCohortCodeInput(e.target.value.toUpperCase().slice(0, 6))}
+                  placeholder="ABC123"
+                  maxLength={6}
+                  aria-label="Cohort code"
+                  style={{
+                    flex: 1,
+                    marginBottom: 0,
+                    fontFamily: 'monospace',
+                    letterSpacing: 3,
+                    textTransform: 'uppercase' as const,
+                  }}
+                />
+                <button
+                  type="button"
+                  className="btn-gold"
+                  onClick={() => void handleJoinCohort()}
+                  disabled={joinSubmitting || cohortCodeInput.trim().length < 4}
+                  data-testid="join-cohort-btn"
+                  style={{ marginBottom: 0, paddingLeft: 18, paddingRight: 18 }}
+                >
+                  {joinSubmitting ? 'Joining…' : 'Join'}
+                </button>
+              </div>
+              {joinError && (
+                <div
+                  data-testid="cohort-join-error"
+                  style={{
+                    marginTop: 8,
+                    fontSize: 12,
+                    color: 'rgba(248,113,113,0.95)',
+                  }}
+                >
+                  {joinError}
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 
