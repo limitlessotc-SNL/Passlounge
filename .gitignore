@@ -29,3 +29,8 @@ supabase/cards_export.json
 .env.staging
 .env.production
 .env*.local
+
+# Tooling artifacts
+.claude/
+supabase/.temp/
+tsconfig.tsbuildinfo
