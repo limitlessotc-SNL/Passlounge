@@ -15,6 +15,7 @@ import {
   fetchNGNCardTitlesAndScenarios,
   insertNGNCard,
 } from '@/features/ngn/ngn.service';
+import { trackEvent } from '@/services/analytics';
 import type { NGNQuestionType } from '@/features/ngn/ngn.types';
 import { useAuthStore } from '@/store/authStore';
 
@@ -121,6 +122,11 @@ export function NGNBatchScreen() {
     }
 
     setIsGenerating(false);
+
+    trackEvent('ngn_batch_generated', {
+      requested: total,
+      generated: collected.length,
+    });
   }
 
   // ─── Item mutators ───
@@ -181,6 +187,12 @@ export function NGNBatchScreen() {
     }
 
     setIsSaving(false);
+
+    trackEvent('ngn_batch_saved', {
+      approved: approved.length,
+      saved,
+      failed: failures.length,
+    });
 
     if (failures.length === 0) {
       navigate('/admin');

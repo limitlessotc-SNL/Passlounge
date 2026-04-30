@@ -31,4 +31,9 @@ export const env = {
    */
   adminPassword,
   adminRateLimit: Number.isFinite(adminRateLimit) && adminRateLimit > 0 ? adminRateLimit : 5,
+  // ─── Analytics ────────────────────────────────────────────────────
+  // Empty key disables PostHog entirely (calls become no-ops). We never
+  // throw here — analytics should fail silently on misconfig.
+  posthogKey: (import.meta.env.VITE_POSTHOG_KEY as string | undefined) ?? '',
+  posthogHost: (import.meta.env.VITE_POSTHOG_HOST as string | undefined) ?? 'https://app.posthog.com',
 } as const

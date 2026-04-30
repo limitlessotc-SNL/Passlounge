@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { trackEvent } from '@/services/analytics';
 import { useCoachStore } from '@/store/coachStore';
 
 import { CohortManageModal } from './CohortManageModal';
@@ -44,6 +45,11 @@ export function CoachDashboard() {
   const [error, setError]                   = useState<string | null>(null);
   const [openStudent, setOpenStudent]       = useState<StudentMetrics | null>(null);
   const [modalMode, setModalMode]           = useState<'create' | 'edit' | null>(null);
+
+  // Fire coach_dashboard_viewed once per mount.
+  useEffect(() => {
+    trackEvent('coach_dashboard_viewed');
+  }, []);
 
   // Initial cohort list load
   useEffect(() => {
@@ -114,6 +120,7 @@ export function CoachDashboard() {
     });
     if (modalMode === 'create') {
       setActiveCohortId(c.id);
+      trackEvent('cohort_created', { cohort_id: c.id });
     }
   }
 
@@ -363,7 +370,13 @@ export function CoachDashboard() {
               with students to invite them.
             </div>
           ) : (
-            <StudentList students={sortedStudents} onOpen={setOpenStudent} />
+            <StudentList
+              students={sortedStudents}
+              onOpen={(s) => {
+                trackEvent('student_detail_viewed', { student_id: s.student_id });
+                setOpenStudent(s);
+              }}
+            />
           )}
         </>
       )}

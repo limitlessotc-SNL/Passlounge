@@ -2,6 +2,7 @@
 
 import { useCallback, useReducer, useRef } from 'react';
 import type { StudyCard } from '@/types';
+import { trackEvent } from '@/services/analytics';
 import {
   adaptDifficulty,
   calculateCATLevel,
@@ -207,6 +208,8 @@ export function useCATSession(studentId: string): UseCATSessionReturn {
     allCardsRef.current = cards;
     startTimeRef.current = Date.now();
 
+    trackEvent('cat_session_started');
+
     const firstCard = selectNextCard(
       cards,
       CAT_START_DIFFICULTY,
@@ -283,7 +286,16 @@ export function useCATSession(studentId: string): UseCATSessionReturn {
         };
 
         saveCATResult(result)
-          .then(() => dispatch({ type: 'COMPLETE', result: result as CATResult }))
+          .then(() => {
+            trackEvent('cat_session_completed', {
+              cat_level: result.cat_level,
+              pass_probability: result.pass_probability,
+              duration_seconds: result.duration_seconds,
+              correct_count: result.correct_count,
+              total_questions: result.total_questions,
+            });
+            dispatch({ type: 'COMPLETE', result: result as CATResult });
+          })
           .catch((err: Error) =>
             dispatch({ type: 'ERROR', message: `Failed to save result: ${err.message}` })
           );
@@ -317,6 +329,10 @@ export function useCATSession(studentId: string): UseCATSessionReturn {
       dispatch({ type: 'RESET' });
       return;
     }
+
+    trackEvent('cat_session_abandoned', {
+      questions_answered: state.trace.length,
+    });
 
     dispatch({ type: 'SAVING' });
 

@@ -1,8 +1,10 @@
+import { useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { Particles } from '@/components/animations/Particles'
 import { DevSkipButton } from '@/components/DevSkipButton'
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
+import { trackPageView } from '@/services/analytics'
 import { AuthGuard } from '@/components/guards/AuthGuard'
 import { OnboardingGuard } from '@/components/guards/OnboardingGuard'
 import { PublicGuard } from '@/components/guards/PublicGuard'
@@ -52,6 +54,16 @@ import { ReviewScreen } from '@/features/session/components/ReviewScreen'
  * Owner: Senior Engineer
  */
 
+/* ─── Analytics ─────────────────────────────────────────────────────── */
+
+function PageViewTracker() {
+  const location = useLocation()
+  useEffect(() => {
+    trackPageView(location.pathname)
+  }, [location.pathname])
+  return null
+}
+
 /* ─── Placeholder screens (replaced in later phases) ──────────────────── */
 
 function CompetePlaceholder() {
@@ -93,6 +105,7 @@ function App() {
         </>
       )}
       <PWAInstallPrompt />
+      <PageViewTracker />
       <Routes>
         {/* Public auth routes — redirect to app if already signed in */}
         <Route path="/login" element={<PublicGuard><LoginScreen /></PublicGuard>} />

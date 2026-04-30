@@ -8,6 +8,7 @@
  */
 
 import { supabase } from '@/config/supabase'
+import { trackEvent } from '@/services/analytics'
 
 import type { LoginCredentials, SignupCredentials } from '@/types'
 
@@ -18,6 +19,7 @@ export async function loginWithEmail({ email, password }: LoginCredentials) {
   })
 
   if (error) throw error
+  trackEvent('user_logged_in')
   return data
 }
 
@@ -28,6 +30,7 @@ export async function signupWithEmail({ email, password }: SignupCredentials) {
   })
 
   if (error) throw error
+  trackEvent('user_signed_up')
   return data
 }
 

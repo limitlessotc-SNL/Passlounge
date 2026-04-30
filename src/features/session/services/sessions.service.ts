@@ -7,6 +7,7 @@
  */
 
 import { supabase } from '@/config/supabase'
+import { trackEvent } from '@/services/analytics'
 import type { SessionMode, SessionSnapshot, ShuffleResult, StudyCard } from '@/types'
 
 export interface CreateSessionParams {
@@ -44,6 +45,10 @@ export async function createSession(params: CreateSessionParams): Promise<string
     .single()
 
   if (error) throw error
+  trackEvent('study_session_started', {
+    mode: params.mode,
+    card_count: params.cardCount,
+  })
   return data?.id ?? null
 }
 
@@ -98,6 +103,12 @@ export async function saveCompletedSession(
     })
 
   if (error) throw error
+  trackEvent('study_session_completed', {
+    mode: snapshot.mode,
+    correct_count: snapshot.correct,
+    total_count: snapshot.total,
+    pct: snapshot.pct,
+  })
 }
 
 interface RawSessionRow {

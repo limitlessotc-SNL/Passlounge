@@ -17,6 +17,7 @@ import {
   fetchNGNCardTitlesAndScenarios,
   insertNGNCard,
 } from '@/features/ngn/ngn.service';
+import { trackEvent } from '@/services/analytics';
 import type {
   BowTieContent,
   ClozeContent,
@@ -168,6 +169,7 @@ export function NGNCreateScreen() {
       setActiveType(result.type);
       setFormSeed({ id: 'new', ...result } as NGNCard);
       setFormKey(k => k + 1);
+      trackEvent('ngn_card_generated', { type: result.type, category });
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -203,6 +205,7 @@ export function NGNCreateScreen() {
         created_by:       studentId ?? undefined,
       });
       await logAdminAction('admin.ngn_create', { card_id: card.id, type: activeType });
+      trackEvent('ngn_card_saved', { type: activeType, category });
       navigate('/admin');
     } catch (e) {
       setError((e as Error).message);

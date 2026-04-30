@@ -5,7 +5,10 @@ import { BrowserRouter } from 'react-router-dom'
 
 import App from './App'
 import { AuthProvider } from './features/auth/components/AuthProvider'
+import { initAnalytics } from './services/analytics'
 import './styles/globals.css'
+
+initAnalytics()
 
 const queryClient = new QueryClient({
   defaultOptions: {
