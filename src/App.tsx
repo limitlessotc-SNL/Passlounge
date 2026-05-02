@@ -19,6 +19,7 @@ import { NGNCreateScreen } from '@/features/admin/NGNCreateScreen'
 import { CoachDashboard } from '@/features/coach/CoachDashboard'
 import { CoachGuard } from '@/features/coach/CoachGuard'
 import { CoachLoginScreen } from '@/features/coach/CoachLoginScreen'
+import { InboxTab } from '@/features/messaging/InboxTab'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
 import { LoginScreen } from '@/features/auth/components/LoginScreen'
 import { SignupScreen } from '@/features/auth/components/SignupScreen'
@@ -65,16 +66,6 @@ function PageViewTracker() {
 }
 
 /* ─── Placeholder screens (replaced in later phases) ──────────────────── */
-
-function CompetePlaceholder() {
-  return (
-    <div className="placeholder-screen">
-      <div className="placeholder-icon">⚔️</div>
-      <div className="placeholder-title">Compete</div>
-      <div className="placeholder-sub">PvP Duels, Tournaments and Leaderboard<br />being built here.</div>
-    </div>
-  )
-}
 
 function LoungePlaceholder() {
   return (
@@ -145,7 +136,7 @@ function App() {
               <Route index element={<HomeTab />} />
               <Route path="/study" element={<StudyTab />} />
               <Route path="/cat" element={<CATTab />} />
-              <Route path="/compete" element={<CompetePlaceholder />} />
+              <Route path="/inbox" element={<InboxTab />} />
               <Route path="/lounge" element={<LoungePlaceholder />} />
               <Route path="/profile" element={<ProfileTab />} />
             </Route>

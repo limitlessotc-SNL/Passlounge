@@ -337,4 +337,4 @@ export interface DashboardActions {
 
 // ─── Tab Navigation ───────────────────────────────────────────────────────
 
-export type AppTab = 'home' | 'study' | 'cat' | 'compete' | 'lounge' | 'profile';
+export type AppTab = 'home' | 'study' | 'cat' | 'inbox' | 'lounge' | 'profile';

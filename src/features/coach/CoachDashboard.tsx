@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { CoachInbox } from '@/features/messaging/CoachInbox';
 import { trackEvent } from '@/services/analytics';
 import { useCoachStore } from '@/store/coachStore';
 
@@ -45,6 +46,8 @@ export function CoachDashboard() {
   const [error, setError]                   = useState<string | null>(null);
   const [openStudent, setOpenStudent]       = useState<StudentMetrics | null>(null);
   const [modalMode, setModalMode]           = useState<'create' | 'edit' | null>(null);
+  const [inboxOpen, setInboxOpen]           = useState(false);
+  const [inboxFocusId, setInboxFocusId]     = useState<string | null>(null);
 
   // Fire coach_dashboard_viewed once per mount.
   useEffect(() => {
@@ -163,6 +166,24 @@ export function CoachDashboard() {
           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
             {coach?.name ?? 'Coach'}
           </span>
+          <button
+            type="button"
+            onClick={() => { setInboxFocusId(null); setInboxOpen(true); }}
+            data-testid="coach-messages-btn"
+            style={{
+              padding: '8px 14px',
+              borderRadius: 10,
+              background: 'rgba(245,197,24,0.10)',
+              border: `1px solid ${GOLD}`,
+              color: GOLD,
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: 'pointer',
+              fontFamily: "'Outfit', sans-serif",
+            }}
+          >
+            💬 Messages
+          </button>
           <button
             type="button"
             onClick={handleSignOut}
@@ -400,6 +421,20 @@ export function CoachDashboard() {
           coachId={coach.id}
           cohortId={activeCohortId}
           onClose={() => setOpenStudent(null)}
+          onOpenMessages={(studentId) => {
+            setInboxFocusId(studentId);
+            setInboxOpen(true);
+          }}
+        />
+      )}
+
+      {/* CoachInbox — slide-in messaging panel */}
+      {inboxOpen && coach && (
+        <CoachInbox
+          coachAuthId={coach.auth_id}
+          cohorts={cohorts}
+          focusStudentId={inboxFocusId}
+          onClose={() => setInboxOpen(false)}
         />
       )}
     </div>

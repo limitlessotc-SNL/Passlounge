@@ -39,6 +39,13 @@ interface Props {
   coachId:  string;
   cohortId: string;
   onClose:  () => void;
+  /**
+   * Optional. When supplied, the "📧 Message" button hands off to the parent
+   * (typically CoachDashboard) to open the full CoachInbox focused on this
+   * student instead of using the inline composer. The inline composer is the
+   * fallback when this prop isn't provided.
+   */
+  onOpenMessages?: (studentId: string) => void;
 }
 
 const RISK_COLOR: Record<RiskLevel, string> = {
@@ -55,7 +62,7 @@ const INTERVENTION_TYPES: Array<{ value: InterventionType; label: string }> = [
   { value: 'other',    label: 'Other' },
 ];
 
-export function StudentDetailPanel({ metrics, coachId, cohortId, onClose }: Props) {
+export function StudentDetailPanel({ metrics, coachId, cohortId, onClose, onOpenMessages }: Props) {
   const [notes, setNotes]                 = useState<CoachNote[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [outcomes, setOutcomes]           = useState<NCLEXOutcome[]>([]);
@@ -266,7 +273,14 @@ export function StudentDetailPanel({ metrics, coachId, cohortId, onClose }: Prop
         <div style={{ display: 'flex', gap: 8 }}>
           <button
             type="button"
-            onClick={() => setMsgOpen(o => !o)}
+            onClick={() => {
+              if (onOpenMessages) {
+                onOpenMessages(metrics.student_id);
+                onClose();
+                return;
+              }
+              setMsgOpen(o => !o);
+            }}
             data-testid="open-message-btn"
             style={btnStyle(GOLD, '#053571')}
           >
