@@ -103,6 +103,24 @@ export type NGNContent =
   | DragDropContent
   | TrendContent;
 
+// ─── Case study (NCSBN tabbed presentation) ───────────────────────────
+
+export interface CaseStudyTab {
+  /** Tab header label, e.g. "Health History", "Nurses' Notes". */
+  label: string;
+  /** Free-text body shown when the tab is active. Newlines preserved. */
+  body: string;
+}
+
+/** The four tabs NCSBN ships with on every case-study item. Used as the
+ *  default seed when an admin first turns on case-study mode for a card. */
+export const DEFAULT_CASE_STUDY_TABS: CaseStudyTab[] = [
+  { label: 'Health History',     body: '' },
+  { label: "Nurses' Notes",      body: '' },
+  { label: 'Vital Signs',        body: '' },
+  { label: 'Laboratory Results', body: '' },
+];
+
 // ─── Card row from ngn_cards ──────────────────────────────────────────
 
 export interface NGNCard {
@@ -120,6 +138,12 @@ export interface NGNCard {
   source: string;
   created_by?: string;
   created_at?: string;
+  /**
+   * Optional. When present and non-empty, the player wraps this card in
+   * NCSBN-style case-study chrome (purple banner + tabbed case file).
+   * Scoring is unchanged — the inner `type` still drives scoring.
+   */
+  case_study_tabs?: CaseStudyTab[];
 }
 
 // ─── Answer shapes per type ───────────────────────────────────────────

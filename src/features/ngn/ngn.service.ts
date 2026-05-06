@@ -6,7 +6,12 @@
 
 import { supabase } from '@/config/supabase';
 
-import type { NGNCard, NGNContent, NGNQuestionType } from './ngn.types';
+import type {
+  CaseStudyTab,
+  NGNCard,
+  NGNContent,
+  NGNQuestionType,
+} from './ngn.types';
 
 // ─── Row → NGNCard mapper ─────────────────────────────────────────────
 
@@ -16,6 +21,21 @@ function parseContent(val: unknown): NGNContent {
     try { return JSON.parse(val) as NGNContent; } catch { /* fall through */ }
   }
   return {} as NGNContent;
+}
+
+function parseCaseStudyTabs(val: unknown): CaseStudyTab[] | undefined {
+  // Supabase returns JSONB as either a parsed array or a stringified one.
+  let parsed: unknown = val;
+  if (typeof val === 'string') {
+    try { parsed = JSON.parse(val); } catch { return undefined; }
+  }
+  if (!Array.isArray(parsed)) return undefined;
+  const tabs: CaseStudyTab[] = parsed
+    .filter((t): t is { label: unknown; body: unknown } =>
+      !!t && typeof t === 'object' && 'label' in t && 'body' in t,
+    )
+    .map(t => ({ label: String(t.label ?? ''), body: String(t.body ?? '') }));
+  return tabs.length > 0 ? tabs : undefined;
 }
 
 function mapRow(row: Record<string, unknown>): NGNCard {
@@ -34,6 +54,7 @@ function mapRow(row: Record<string, unknown>): NGNCard {
     source:           String(row.source ?? ''),
     created_by:       row.created_by ? String(row.created_by) : undefined,
     created_at:       row.created_at ? String(row.created_at) : undefined,
+    case_study_tabs:  parseCaseStudyTabs(row.case_study_tabs),
   };
 }
 
@@ -111,6 +132,7 @@ export async function insertNGNCard(
       rationale:        card.rationale,
       source:           card.source,
       created_by:       card.created_by,
+      case_study_tabs:  card.case_study_tabs ?? null,
     })
     .select()
     .single();

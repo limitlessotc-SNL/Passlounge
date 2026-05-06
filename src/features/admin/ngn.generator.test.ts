@@ -79,6 +79,7 @@ describe('generateSingleCard', () => {
         difficulty: 4,
         hint: 'sepsis hint',
         existingCards: [],
+        case_study: false,
       },
     });
   });

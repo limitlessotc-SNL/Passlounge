@@ -9,6 +9,7 @@
 import { useState } from 'react';
 
 import { BowTieCard } from './BowTieCard';
+import { CaseStudyChrome } from './CaseStudyChrome';
 import { ClozeCard } from './ClozeCard';
 import { DragDropCard } from './DragDropCard';
 import { ExtendedMRCard } from './ExtendedMRCard';
@@ -39,6 +40,62 @@ export function NGNCardScreen({ card, onAnswer, mode }: Props) {
     const result = scoreNGNAnswer(card, answer);
     setScoreResult(result);
     onAnswer(result);
+  }
+
+  const useCaseStudy =
+    Array.isArray(card.case_study_tabs) && card.case_study_tabs.length > 0;
+
+  const rationaleBlock = mode === 'study' && scoreResult && card.rationale ? (
+    <div style={{
+      marginTop: 4,
+      background: 'rgba(245,197,24,0.08)',
+      border: '1px solid rgba(245,197,24,0.3)',
+      borderRadius: 12,
+      padding: '14px 16px',
+    }}>
+      <div style={{
+        fontSize: 11, textTransform: 'uppercase', letterSpacing: 1,
+        color: GOLD, fontWeight: 800, marginBottom: 6,
+      }}>
+        Rationale
+      </div>
+      <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>
+        {card.rationale}
+      </div>
+    </div>
+  ) : null;
+
+  // Case-study mode: chrome owns scenario + question + body. Rationale
+  // still renders below the chrome on study-mode submit.
+  if (useCaseStudy) {
+    return (
+      <div
+        data-testid="ngn-card-screen"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
+          padding: '16px 20px 100px',
+          color: '#fff',
+          fontFamily: "'Outfit', 'Inter', sans-serif",
+        }}
+      >
+        <CaseStudyChrome
+          type={card.type}
+          tabs={card.case_study_tabs ?? []}
+          scenario={card.scenario}
+          question={card.question}
+        >
+          <Body
+            card={card}
+            mode={mode}
+            scoreResult={scoreResult}
+            onAnswer={handleSubAnswer}
+          />
+        </CaseStudyChrome>
+        {rationaleBlock}
+      </div>
+    );
   }
 
   return (
@@ -84,26 +141,7 @@ export function NGNCardScreen({ card, onAnswer, mode }: Props) {
         onAnswer={handleSubAnswer}
       />
 
-      {/* Rationale — only revealed in study mode after scoring. */}
-      {mode === 'study' && scoreResult && card.rationale && (
-        <div style={{
-          marginTop: 4,
-          background: 'rgba(245,197,24,0.08)',
-          border: '1px solid rgba(245,197,24,0.3)',
-          borderRadius: 12,
-          padding: '14px 16px',
-        }}>
-          <div style={{
-            fontSize: 11, textTransform: 'uppercase', letterSpacing: 1,
-            color: GOLD, fontWeight: 800, marginBottom: 6,
-          }}>
-            Rationale
-          </div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>
-            {card.rationale}
-          </div>
-        </div>
-      )}
+      {rationaleBlock}
     </div>
   );
 }

@@ -7,6 +7,7 @@
 
 import { supabase } from '@/config/supabase';
 import type {
+  CaseStudyTab,
   NGNCard,
   NGNContent,
   NGNQuestionType,
@@ -22,6 +23,9 @@ export interface GenerateRequest {
   difficulty:     number;
   hint?:          string;
   existingCards:  Array<{ title: string; scenario: string }>;
+  /** When true, asks the Edge Function to also produce 4 case-study tabs
+   *  (Health History / Nurses' Notes / Vital Signs / Lab Results). */
+  case_study?:    boolean;
 }
 
 export interface GeneratedCard extends Omit<NGNCard, 'id' | 'created_at'> {
@@ -42,9 +46,13 @@ export async function generateSingleCard(
   difficulty: number,
   existingCards: Array<{ title: string; scenario: string }>,
   hint?: string,
+  caseStudy = false,
 ): Promise<GeneratedCard> {
   const { data, error } = await supabase.functions.invoke<{ card: unknown }>(FUNCTION_NAME, {
-    body: { type, category, difficulty, hint, existingCards } satisfies GenerateRequest,
+    body: {
+      type, category, difficulty, hint, existingCards,
+      case_study: caseStudy,
+    } satisfies GenerateRequest,
   });
   if (error) throw new Error(`Edge function error: ${error.message}`);
   if (!data?.card) throw new Error('Edge function returned no card');
@@ -128,6 +136,16 @@ function validateCardShape(raw: unknown): Omit<NGNCard, 'id' | 'created_at'> {
   for (const k of required) {
     if (!(k in c)) throw new Error(`Generated card missing required field: ${k}`);
   }
+  let tabs: CaseStudyTab[] | undefined;
+  if (Array.isArray(c.case_study_tabs)) {
+    tabs = c.case_study_tabs
+      .filter((t): t is { label: unknown; body: unknown } =>
+        !!t && typeof t === 'object' && 'label' in t && 'body' in t,
+      )
+      .map(t => ({ label: String(t.label ?? ''), body: String(t.body ?? '') }));
+    if (tabs.length === 0) tabs = undefined;
+  }
+
   return {
     title:            String(c.title),
     scenario:         String(c.scenario),
@@ -140,6 +158,7 @@ function validateCardShape(raw: unknown): Omit<NGNCard, 'id' | 'created_at'> {
     content:          c.content as NGNContent,
     rationale:        String(c.rationale),
     source:           String(c.source),
+    case_study_tabs:  tabs,
   };
 }
 

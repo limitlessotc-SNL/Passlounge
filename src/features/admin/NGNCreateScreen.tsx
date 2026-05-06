@@ -18,18 +18,20 @@ import {
   insertNGNCard,
 } from '@/features/ngn/ngn.service';
 import { trackEvent } from '@/services/analytics';
-import type {
-  BowTieContent,
-  ClozeContent,
-  DragDropContent,
-  ExtendedMRAllContent,
-  ExtendedMRNContent,
-  MatrixContent,
-  NGNCard,
-  NGNContent,
-  NGNQuestionType,
-  NGNScoringRule,
-  TrendContent,
+import {
+  DEFAULT_CASE_STUDY_TABS,
+  type BowTieContent,
+  type CaseStudyTab,
+  type ClozeContent,
+  type DragDropContent,
+  type ExtendedMRAllContent,
+  type ExtendedMRNContent,
+  type MatrixContent,
+  type NGNCard,
+  type NGNContent,
+  type NGNQuestionType,
+  type NGNScoringRule,
+  type TrendContent,
 } from '@/features/ngn/ngn.types';
 import { useAuthStore } from '@/store/authStore';
 
@@ -138,6 +140,12 @@ export function NGNCreateScreen() {
   const [error, setError]               = useState<string | null>(null);
   const [genResult, setGenResult]       = useState<GeneratedCard | null>(null);
 
+  // Case-study toggle + tabs
+  const [caseStudyEnabled, setCaseStudyEnabled] = useState(false);
+  const [caseStudyTabs, setCaseStudyTabs]       = useState<CaseStudyTab[]>(
+    () => DEFAULT_CASE_STUDY_TABS.map(t => ({ ...t })),
+  );
+
   // Form seeding — the form remounts on `formKey` change, picking up new initialData.
   const [formSeed, setFormSeed] = useState<NGNCard | undefined>(undefined);
   const [formKey, setFormKey]   = useState(0);
@@ -159,6 +167,7 @@ export function NGNCreateScreen() {
     try {
       const result = await generateSingleCard(
         type, category, difficulty, existing, hint || undefined,
+        caseStudyEnabled,
       );
       setGenResult(result);
       setTitle(result.title);
@@ -169,6 +178,11 @@ export function NGNCreateScreen() {
       setActiveType(result.type);
       setFormSeed({ id: 'new', ...result } as NGNCard);
       setFormKey(k => k + 1);
+      // If the AI returned tabs, pull them into the form so the admin can edit.
+      if (Array.isArray(result.case_study_tabs) && result.case_study_tabs.length > 0) {
+        setCaseStudyTabs(result.case_study_tabs);
+        setCaseStudyEnabled(true);
+      }
       trackEvent('ngn_card_generated', { type: result.type, category });
     } catch (e) {
       setError((e as Error).message);
@@ -203,6 +217,9 @@ export function NGNCreateScreen() {
         rationale,
         source,
         created_by:       studentId ?? undefined,
+        case_study_tabs:  caseStudyEnabled
+          ? caseStudyTabs.filter(t => t.label.trim() || t.body.trim())
+          : undefined,
       });
       await logAdminAction('admin.ngn_create', { card_id: card.id, type: activeType });
       trackEvent('ngn_card_saved', { type: activeType, category });
@@ -437,6 +454,130 @@ export function NGNCreateScreen() {
           }}
         >
           <div style={sectionTitleStyle}>Card details</div>
+
+          {/* Case study toggle + tabs editor */}
+          <div
+            data-testid="case-study-section"
+            style={{
+              border: '1px solid rgba(91,54,145,0.4)',
+              borderRadius: 12,
+              background: 'rgba(91,54,145,0.06)',
+              padding: 12,
+              marginBottom: 6,
+            }}
+          >
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              cursor: 'pointer',
+              fontSize: 13,
+              color: '#fff',
+              fontWeight: 700,
+            }}>
+              <input
+                type="checkbox"
+                checked={caseStudyEnabled}
+                onChange={(e) => setCaseStudyEnabled(e.target.checked)}
+                aria-label="Wrap as case study"
+                data-testid="case-study-toggle"
+                style={{ accentColor: '#5b3691' }}
+              />
+              📋 Wrap this question as a case study (NCSBN tabbed layout)
+            </label>
+            {caseStudyEnabled && (
+              <div style={{
+                marginTop: 10,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+              }}>
+                {caseStudyTabs.map((tab, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      borderRadius: 10,
+                      padding: 10,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 6,
+                    }}
+                  >
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <input
+                        type="text"
+                        value={tab.label}
+                        onChange={(e) =>
+                          setCaseStudyTabs(prev => prev.map((t, i) =>
+                            i === idx ? { ...t, label: e.target.value } : t,
+                          ))
+                        }
+                        placeholder="Tab label (e.g. Health History)"
+                        aria-label={`Case study tab ${idx + 1} label`}
+                        style={{ ...inputStyle, flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCaseStudyTabs(prev => prev.filter((_, i) => i !== idx))
+                        }
+                        disabled={caseStudyTabs.length <= 1}
+                        aria-label={`Remove tab ${idx + 1}`}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: 8,
+                          background: 'rgba(248,113,113,0.10)',
+                          border: '1px solid rgba(248,113,113,0.4)',
+                          color: 'rgba(248,113,113,0.95)',
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: caseStudyTabs.length <= 1 ? 'not-allowed' : 'pointer',
+                          opacity: caseStudyTabs.length <= 1 ? 0.5 : 1,
+                          fontFamily: "'Outfit', sans-serif",
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <textarea
+                      value={tab.body}
+                      onChange={(e) =>
+                        setCaseStudyTabs(prev => prev.map((t, i) =>
+                          i === idx ? { ...t, body: e.target.value } : t,
+                        ))
+                      }
+                      placeholder="Tab content shown when this tab is active. Newlines preserved."
+                      aria-label={`Case study tab ${idx + 1} body`}
+                      style={{ ...textareaStyle, minHeight: 70 }}
+                    />
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCaseStudyTabs(prev => [...prev, { label: '', body: '' }])
+                  }
+                  data-testid="case-study-add-tab"
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: 8,
+                    background: 'rgba(91,54,145,0.15)',
+                    border: '1px solid rgba(91,54,145,0.5)',
+                    color: '#fff',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontFamily: "'Outfit', sans-serif",
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  + Add tab
+                </button>
+              </div>
+            )}
+          </div>
 
           <Field label="Title">
             <input

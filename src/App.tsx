@@ -20,6 +20,7 @@ import { CoachDashboard } from '@/features/coach/CoachDashboard'
 import { CoachGuard } from '@/features/coach/CoachGuard'
 import { CoachLoginScreen } from '@/features/coach/CoachLoginScreen'
 import { InboxTab } from '@/features/messaging/InboxTab'
+import { NGNPreviewScreen } from '@/features/ngn/NGNPreviewScreen'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
 import { LoginScreen } from '@/features/auth/components/LoginScreen'
 import { SignupScreen } from '@/features/auth/components/SignupScreen'
@@ -165,6 +166,10 @@ function App() {
             <Route path="/coach" element={<CoachDashboard />} />
           </Route>
         </Route>
+
+        {/* TEMP — NGN player preview, no guards. Remove route + import + file
+            (src/features/ngn/NGNPreviewScreen.tsx) when you're done previewing. */}
+        <Route path="/ngn-preview" element={<NGNPreviewScreen />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />

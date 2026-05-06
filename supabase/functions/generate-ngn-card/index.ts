@@ -45,6 +45,9 @@ interface RequestBody {
   difficulty:     number
   hint?:          string
   existingCards?: Array<{ title: string; scenario: string }>
+  /** When true, the prompt asks the model to also produce 4 case-study
+   *  tabs (Health History / Nurses' Notes / Vital Signs / Lab Results). */
+  case_study?:    boolean
 }
 
 serve(async (req: Request) => {
@@ -223,6 +226,22 @@ condition + question type combination, the same primary diagnosis, or
 the same clinical setting as any of these:
 ${existing || '  (no existing cards yet)'}
 
+${body.case_study ? `
+CASE STUDY MODE — IMPORTANT:
+Also produce a "case_study_tabs" array with EXACTLY these four tabs (in
+this order). Each tab.body should be 2–6 sentences of plausible chart
+content matching the scenario. The student will read these in a tabbed
+case file alongside the question:
+
+  1. "Health History"     — relevant past medical history, allergies,
+                            current medications, social history.
+  2. "Nurses' Notes"      — chronological clinical notes describing the
+                            current event, with timestamps if useful.
+  3. "Vital Signs"        — recent vitals (BP, HR, RR, SpO2, Temp) and
+                            any pain score. Include trend if relevant.
+  4. "Laboratory Results" — pertinent labs (CBC, BMP, ABG, lactate, etc.)
+                            with units, framed as recent results.
+` : ''}
 OUTPUT:
 Return ONLY a single JSON object matching this schema (no markdown, no
 preamble, no explanation):
@@ -237,7 +256,13 @@ preamble, no explanation):
   "max_points":       number,
   "content":          object matching the schema for the type above,
   "rationale":        string,
-  "source":           "Saunders 8th Ed."
+  "source":           "Saunders 8th Ed."${body.case_study ? `,
+  "case_study_tabs":  [
+    { "label": "Health History",     "body": string },
+    { "label": "Nurses' Notes",      "body": string },
+    { "label": "Vital Signs",        "body": string },
+    { "label": "Laboratory Results", "body": string }
+  ]` : ''}
 }
 
 max_points must equal the maximum points the scoring rule can yield for
