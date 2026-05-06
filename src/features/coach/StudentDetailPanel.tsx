@@ -9,6 +9,8 @@
 import { useEffect, useState } from 'react';
 
 import { supabase } from '@/config/supabase';
+import { sendMessageToStudent } from '@/features/messaging/messaging.service';
+import { trackEvent } from '@/services/analytics';
 
 import {
   addCoachNote,
@@ -18,10 +20,20 @@ import {
   logIntervention,
   recordNCLEXOutcome,
 } from './coach.service';
+import {
+  computeCohortHealth,
+  generateCoachingSuggestion,
+  getInterventionOutcomes,
+  getPreviousSuggestions,
+  getStudyPattern,
+  recordInterventionOutcome,
+} from './coaching.service';
 import type {
   CategoryAccuracy,
+  CoachingSuggestion,
   CoachNote,
   Intervention,
+  InterventionOutcome,
   InterventionType,
   NCLEXOutcome,
   NCLEXResult,
@@ -46,6 +58,10 @@ interface Props {
    * fallback when this prop isn't provided.
    */
   onOpenMessages?: (studentId: string) => void;
+  /** All cohort student metrics — used to compute cohort health for the AI prompt. */
+  cohortMetrics?: StudentMetrics[];
+  /** Cohort name — passed to the AI as part of the prompt context. */
+  cohortName?: string;
 }
 
 const RISK_COLOR: Record<RiskLevel, string> = {
@@ -62,7 +78,10 @@ const INTERVENTION_TYPES: Array<{ value: InterventionType; label: string }> = [
   { value: 'other',    label: 'Other' },
 ];
 
-export function StudentDetailPanel({ metrics, coachId, cohortId, onClose, onOpenMessages }: Props) {
+export function StudentDetailPanel({
+  metrics, coachId, cohortId, onClose, onOpenMessages,
+  cohortMetrics, cohortName,
+}: Props) {
   const [notes, setNotes]                 = useState<CoachNote[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [outcomes, setOutcomes]           = useState<NCLEXOutcome[]>([]);
@@ -82,6 +101,25 @@ export function StudentDetailPanel({ metrics, coachId, cohortId, onClose, onOpen
   const [msgBody, setMsgBody]                       = useState('');
   const [msgOpen, setMsgOpen]                       = useState(false);
   const [savingMsg, setSavingMsg]                   = useState(false);
+
+  // ─── AI suggestion + intervention outcomes (Phase D5) ────────────
+  const [aiSuggestion, setAiSuggestion]   = useState<CoachingSuggestion | null>(null);
+  const [aiLoading, setAiLoading]         = useState(false);
+  const [aiError, setAiError]             = useState<string | null>(null);
+  const [suggestionMsg, setSuggestionMsg] = useState('');
+  const [interventionOutcomes, setInterventionOutcomes] = useState<InterventionOutcome[]>([]);
+  const [outcomeNotes, setOutcomeNotes]   = useState<Record<string, string>>({});
+  const [savingOutcomeId, setSavingOutcomeId] = useState<string | null>(null);
+
+  // Auto-fetch the AI suggestion for RED-risk students; AMBER/GREEN wait
+  // for the coach to click the button. Manual refresh always re-fetches.
+  useEffect(() => {
+    if (metrics.risk_level === 'red') {
+      void fetchSuggestion('auto');
+    }
+    void getInterventionOutcomes(metrics.student_id).then(setInterventionOutcomes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metrics.student_id]);
 
   // Fetch notes / interventions / outcomes for this student.
   useEffect(() => {
@@ -157,6 +195,100 @@ export function StudentDetailPanel({ metrics, coachId, cohortId, onClose, onOpen
       setError((e as Error).message);
     } finally {
       setSavingOutcome(false);
+    }
+  }
+
+  async function fetchSuggestion(triggeredBy: 'auto' | 'manual') {
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const [previousSuggestions, studyPattern] = await Promise.all([
+        getPreviousSuggestions(metrics.student_id),
+        getStudyPattern(metrics.student_id),
+      ]);
+      const cohortHealth = computeCohortHealth(cohortMetrics ?? [metrics]);
+      const interventionsForPrompt = interventions;
+      const outcomesForPrompt      = interventionOutcomes;
+      const result = await generateCoachingSuggestion(
+        metrics,
+        interventionsForPrompt,
+        outcomesForPrompt,
+        previousSuggestions,
+        studyPattern,
+        cohortName ?? 'Cohort',
+        cohortHealth,
+      );
+      setAiSuggestion(result);
+      setSuggestionMsg(result.suggested_message);
+      trackEvent('coaching_suggestion_generated', {
+        student_id: metrics.student_id,
+        urgency: result.urgency,
+        is_celebration: result.celebration ?? false,
+        triggered_by: triggeredBy,
+      });
+    } catch (e) {
+      setAiError((e as Error).message);
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
+  async function handleSendSuggestionMessage() {
+    if (!suggestionMsg.trim() || !aiSuggestion) return;
+    setSavingMsg(true);
+    setError(null);
+    try {
+      await sendMessageToStudent({
+        recipient_id: metrics.student_id,
+        body: suggestionMsg.trim(),
+        cohort_id: cohortId,
+      });
+      // Also log it as an intervention so future AI prompts know we tried it.
+      await logIntervention({
+        coach_id: coachId,
+        student_id: metrics.student_id,
+        type: 'message',
+        notes: suggestionMsg.trim().slice(0, 500),
+        outcome: null,
+      });
+      const fresh = await getInterventions(coachId, metrics.student_id);
+      setInterventions(fresh);
+      trackEvent('coaching_message_sent_from_suggestion', {
+        student_id: metrics.student_id,
+        urgency: aiSuggestion.urgency,
+      });
+      setSuggestionMsg('');
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setSavingMsg(false);
+    }
+  }
+
+  async function handleMarkOutcome(intervention: Intervention, wasEffective: boolean) {
+    setSavingOutcomeId(intervention.id);
+    setError(null);
+    try {
+      await recordInterventionOutcome(
+        intervention.id,
+        metrics.student_id,
+        coachId,
+        metrics.cat_level_previous,
+        metrics.cat_level,
+        wasEffective,
+        outcomeNotes[intervention.id] ?? '',
+      );
+      const fresh = await getInterventionOutcomes(metrics.student_id);
+      setInterventionOutcomes(fresh);
+      trackEvent('intervention_outcome_recorded', {
+        was_effective: wasEffective,
+        intervention_type: intervention.type,
+      });
+      setOutcomeNotes(prev => ({ ...prev, [intervention.id]: '' }));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setSavingOutcomeId(null);
     }
   }
 
@@ -428,6 +560,54 @@ export function StudentDetailPanel({ metrics, coachId, cohortId, onClose, onOpen
           )}
         </Section>
 
+        {/* AI COACHING SUGGESTION (Phase D5) */}
+        <Section title="AI coaching suggestion">
+          {aiLoading && !aiSuggestion ? (
+            <div data-testid="ai-suggestion-loading" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', padding: 8 }}>
+              Generating recommendation…
+            </div>
+          ) : aiError ? (
+            <div data-testid="ai-suggestion-error" style={{
+              padding: 10, borderRadius: 10,
+              background: 'rgba(248,113,113,0.10)',
+              border: '1px solid rgba(248,113,113,0.4)',
+              color: RED, fontSize: 12,
+            }}>
+              {aiError}
+              <div style={{ marginTop: 6 }}>
+                <button
+                  type="button"
+                  onClick={() => fetchSuggestion('manual')}
+                  data-testid="ai-suggestion-retry"
+                  style={{ ...btnStyle(GOLD, '#053571'), flex: 'none', padding: '4px 10px' }}
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
+          ) : !aiSuggestion ? (
+            <button
+              type="button"
+              data-testid="ai-suggestion-fetch"
+              onClick={() => fetchSuggestion('manual')}
+              disabled={aiLoading}
+              style={{ ...btnStyle(GOLD, '#053571'), flex: 'none', padding: '8px 14px' }}
+            >
+              ✨ Get AI Recommendation
+            </button>
+          ) : (
+            <SuggestionDisplay
+              s={aiSuggestion}
+              suggestionMsg={suggestionMsg}
+              onMsgChange={setSuggestionMsg}
+              onSend={handleSendSuggestionMessage}
+              onRegenerate={() => fetchSuggestion('manual')}
+              loading={aiLoading}
+              sending={savingMsg}
+            />
+          )}
+        </Section>
+
         {/* COACH NOTES */}
         <Section title="Coach notes">
           {loading ? (
@@ -487,30 +667,100 @@ export function StudentDetailPanel({ metrics, coachId, cohortId, onClose, onOpen
             <Empty>No interventions logged.</Empty>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {interventions.map(i => (
-                <div key={i.id} style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  borderRadius: 10,
-                  padding: 10,
-                  fontSize: 13,
-                  lineHeight: 1.5,
-                }}>
-                  <div style={{
-                    fontSize: 11,
-                    color: GOLD,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.5,
+              {interventions.map(i => {
+                const outcome = interventionOutcomes.find(o => o.intervention_id === i.id);
+                return (
+                  <div key={i.id} style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: 10,
+                    padding: 10,
+                    fontSize: 13,
+                    lineHeight: 1.5,
                   }}>
-                    {i.type}
+                    <div style={{
+                      fontSize: 11,
+                      color: GOLD,
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: 0.5,
+                    }}>
+                      {i.type}
+                    </div>
+                    <div>{i.notes || <em style={{ color: 'rgba(255,255,255,0.4)' }}>(no notes)</em>}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
+                      {formatTs(i.created_at)}
+                    </div>
+                    {outcome ? (
+                      <div
+                        data-testid={`outcome-${i.id}`}
+                        style={{
+                          marginTop: 8,
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: '4px 8px',
+                          borderRadius: 6,
+                          display: 'inline-block',
+                          background: outcome.was_effective
+                            ? 'rgba(74,222,128,0.10)'
+                            : 'rgba(248,113,113,0.10)',
+                          border: `1px solid ${outcome.was_effective ? GREEN : RED}`,
+                          color: outcome.was_effective ? GREEN : RED,
+                        }}
+                      >
+                        {outcome.was_effective ? '✓ Worked' : '✗ Did not work'}
+                      </div>
+                    ) : (
+                      <div style={{
+                        marginTop: 8,
+                        padding: 8,
+                        borderTop: '1px solid rgba(255,255,255,0.06)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 6,
+                      }}>
+                        <textarea
+                          value={outcomeNotes[i.id] ?? ''}
+                          onChange={(e) =>
+                            setOutcomeNotes(prev => ({ ...prev, [i.id]: e.target.value }))
+                          }
+                          placeholder="Outcome notes (optional)"
+                          aria-label={`Outcome notes for ${i.type}`}
+                          style={{ ...inputStyle(), minHeight: 40, fontSize: 12 }}
+                        />
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <button
+                            type="button"
+                            data-testid={`mark-effective-${i.id}`}
+                            onClick={() => handleMarkOutcome(i, true)}
+                            disabled={savingOutcomeId === i.id}
+                            style={{
+                              ...btnStyle('rgba(74,222,128,0.12)', GREEN, true),
+                              borderColor: GREEN,
+                              flex: 1,
+                            }}
+                          >
+                            ✓ Effective
+                          </button>
+                          <button
+                            type="button"
+                            data-testid={`mark-not-effective-${i.id}`}
+                            onClick={() => handleMarkOutcome(i, false)}
+                            disabled={savingOutcomeId === i.id}
+                            style={{
+                              ...btnStyle('rgba(248,113,113,0.12)', RED, true),
+                              borderColor: RED,
+                              flex: 1,
+                            }}
+                          >
+                            ✗ Not effective
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div>{i.notes || <em style={{ color: 'rgba(255,255,255,0.4)' }}>(no notes)</em>}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
-                    {formatTs(i.created_at)}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -764,6 +1014,178 @@ function Empty({ children }: { children: React.ReactNode }) {
       fontStyle: 'italic' as const,
     }}>
       {children}
+    </div>
+  );
+}
+
+// ─── AI Suggestion display ───────────────────────────────────────────
+
+interface SuggestionDisplayProps {
+  s: CoachingSuggestion;
+  suggestionMsg: string;
+  onMsgChange: (v: string) => void;
+  onSend: () => void;
+  onRegenerate: () => void;
+  loading: boolean;
+  sending: boolean;
+}
+
+function SuggestionDisplay({
+  s, suggestionMsg, onMsgChange, onSend, onRegenerate, loading, sending,
+}: SuggestionDisplayProps) {
+  const urgencyTone =
+    s.urgency === 'high'   ? RED :
+    s.urgency === 'medium' ? AMBER :
+    GREEN;
+  const urgencyEmoji =
+    s.urgency === 'high'   ? '🔴' :
+    s.urgency === 'medium' ? '🟡' :
+    '🟢';
+
+  return (
+    <div data-testid="ai-suggestion" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {s.celebration && s.milestone && (
+        <div
+          data-testid="ai-suggestion-celebration"
+          style={{
+            padding: 10,
+            borderRadius: 10,
+            background: 'rgba(245,197,24,0.12)',
+            border: `1px solid ${GOLD}`,
+            color: GOLD,
+            fontSize: 13,
+            fontWeight: 700,
+          }}
+        >
+          🎉 {s.milestone}
+        </div>
+      )}
+
+      <span
+        data-testid={`urgency-${s.urgency}`}
+        style={{
+          fontSize: 11, fontWeight: 800,
+          padding: '4px 10px', borderRadius: 8,
+          background: urgencyTone.replace('0.9', '0.10'),
+          border: `1px solid ${urgencyTone}`,
+          color: urgencyTone,
+          alignSelf: 'flex-start',
+          textTransform: 'uppercase',
+        }}
+      >
+        {urgencyEmoji} {s.urgency === 'high' ? 'URGENT' : s.urgency === 'medium' ? 'WATCH' : 'ON TRACK'}
+      </span>
+
+      <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', lineHeight: 1.55 }}>
+        {s.recommendation}
+      </div>
+
+      {s.countdown_alert && (
+        <div data-testid="ai-suggestion-countdown" style={{
+          fontSize: 12,
+          color: AMBER,
+          background: 'rgba(245,158,11,0.08)',
+          border: `1px solid ${AMBER}`,
+          padding: '6px 10px',
+          borderRadius: 8,
+        }}>
+          ⏰ {s.countdown_alert}
+        </div>
+      )}
+
+      {s.study_pattern_insight && (
+        <div data-testid="ai-suggestion-pattern" style={{
+          fontSize: 12,
+          color: 'rgba(255,255,255,0.75)',
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          padding: '6px 10px',
+          borderRadius: 8,
+        }}>
+          📅 {s.study_pattern_insight}
+        </div>
+      )}
+
+      {s.focus_categories.length > 0 && (
+        <div>
+          <div style={{
+            fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 700,
+            textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 4,
+          }}>
+            Focus categories
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {s.focus_categories.map(c => (
+              <span key={c} style={{
+                fontSize: 12, fontWeight: 600,
+                padding: '4px 10px', borderRadius: 8,
+                background: 'rgba(245,197,24,0.10)',
+                border: `1px solid ${GOLD}`,
+                color: GOLD,
+              }}>
+                {c}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {s.weekly_actions.length > 0 && (
+        <div>
+          <div style={{
+            fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 700,
+            textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 4,
+          }}>
+            Weekly actions
+          </div>
+          <ol data-testid="ai-suggestion-actions" style={{
+            margin: 0, paddingLeft: 20,
+            fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6,
+          }}>
+            {s.weekly_actions.map((a, i) => <li key={i}>{a}</li>)}
+          </ol>
+        </div>
+      )}
+
+      <div>
+        <div style={{
+          fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 700,
+          textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 4,
+        }}>
+          Suggested message
+        </div>
+        <textarea
+          value={suggestionMsg}
+          onChange={(e) => onMsgChange(e.target.value)}
+          aria-label="Suggested message"
+          data-testid="ai-suggestion-message"
+          style={{ ...inputStyle(), minHeight: 80 }}
+        />
+        <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
+          <button
+            type="button"
+            data-testid="ai-suggestion-send"
+            onClick={onSend}
+            disabled={sending || !suggestionMsg.trim()}
+            style={{ ...btnStyle(GOLD, '#053571'), flex: 2 }}
+          >
+            {sending ? 'Sending…' : 'Send to student'}
+          </button>
+          <button
+            type="button"
+            data-testid="ai-suggestion-regenerate"
+            onClick={onRegenerate}
+            disabled={loading}
+            style={{ ...btnStyle('rgba(255,255,255,0.06)', '#fff', true), flex: 1 }}
+          >
+            {loading ? 'Refreshing…' : 'Regenerate'}
+          </button>
+        </div>
+      </div>
+
+      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>
+        Generated by AI · {formatTs(s.generated_at)}
+      </div>
     </div>
   );
 }

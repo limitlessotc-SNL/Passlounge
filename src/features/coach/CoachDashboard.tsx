@@ -17,11 +17,17 @@ import {
   fetchCohortSummary,
   getCoachCohorts,
 } from './coach.service';
+import {
+  buildWeeklyDigest,
+  generateCountdownAlert,
+} from './coaching.service';
 import type {
   Cohort,
   CohortSummary,
+  CountdownAlertLevel,
   RiskLevel,
   StudentMetrics,
+  WeeklyDigest,
 } from './coach.types';
 import { StudentDetailPanel } from './StudentDetailPanel';
 
@@ -48,6 +54,7 @@ export function CoachDashboard() {
   const [modalMode, setModalMode]           = useState<'create' | 'edit' | null>(null);
   const [inboxOpen, setInboxOpen]           = useState(false);
   const [inboxFocusId, setInboxFocusId]     = useState<string | null>(null);
+  const [digestRefreshKey, setDigestRefreshKey] = useState(0);
 
   // Fire coach_dashboard_viewed once per mount.
   useEffect(() => {
@@ -107,6 +114,58 @@ export function CoachDashboard() {
   }, [students]);
 
   const activeCohort = cohorts.find(c => c.id === activeCohortId) ?? null;
+
+  // Weekly digest + countdown banner are recomputed whenever metrics
+  // change, OR when the coach hits "Refresh digest" (digestRefreshKey).
+  const digest: WeeklyDigest | null = useMemo(() => {
+    if (!activeCohortId || students.length === 0) return null;
+    return buildWeeklyDigest(activeCohortId, students);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCohortId, students, digestRefreshKey]);
+
+  // Cohort-level countdown banner: triggers any time any student in the
+  // active cohort is within 30 days, regardless of the digest's per-student
+  // most-urgent. Pulls the lowest days_to_test as the cohort countdown.
+  const countdownBanner = useMemo(() => {
+    if (students.length === 0) return null;
+    let nearest: number | null = null;
+    let totalReadiness = 0;
+    let n = 0;
+    for (const m of students) {
+      if (m.days_to_test != null && (nearest === null || m.days_to_test < nearest)) {
+        nearest = m.days_to_test;
+      }
+      totalReadiness += m.readiness_score;
+      n++;
+    }
+    if (nearest == null || nearest > 30) return null;
+    const avg = n > 0 ? Math.round(totalReadiness / n) : 0;
+    return generateCountdownAlert(nearest, avg);
+  }, [students]);
+
+  // Fire telemetry when the digest is computed for a cohort and when the
+  // countdown alert escalates. Two separate effects so refreshes don't
+  // double-fire.
+  useEffect(() => {
+    if (digest && activeCohortId) {
+      trackEvent('weekly_digest_viewed', {
+        cohort_id: activeCohortId,
+        at_risk_count: digest.most_at_risk.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [digest?.generated_at]);
+
+  useEffect(() => {
+    if (countdownBanner) {
+      trackEvent('countdown_alert_triggered', {
+        days_remaining: countdownBanner.days_remaining,
+        alert_level: countdownBanner.alert_level,
+        students_below_passing: digest?.cohort_health.students_below_passing ?? 0,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countdownBanner?.alert_level, countdownBanner?.days_remaining]);
 
   async function handleSignOut() {
     await signOut();
@@ -303,6 +362,17 @@ export function CoachDashboard() {
         </div>
       )}
 
+      {/* Cohort-level countdown banner — appears above everything once
+          any student is within 30 days of test date and the cohort is
+          off pace. Color escalates: amber → red → pulsing red. */}
+      {countdownBanner && (
+        <CountdownBanner
+          level={countdownBanner.alert_level}
+          message={countdownBanner.message}
+          cohortName={activeCohort?.name}
+        />
+      )}
+
       {/* Active cohort body */}
       {activeCohort && (
         <>
@@ -323,6 +393,13 @@ export function CoachDashboard() {
             <SummaryStat label="Avg pass %"       value={summary ? `${summary.avg_pass_probability}%` : '—'} />
             <SummaryStat label="Days to test"     value={summary?.days_to_test != null ? String(summary.days_to_test) : '—'} />
           </section>
+
+          {digest && (
+            <WeeklyDigestCard
+              digest={digest}
+              onRefresh={() => setDigestRefreshKey(k => k + 1)}
+            />
+          )}
 
           {/* Cohort code reminder */}
           <div style={{
@@ -425,6 +502,8 @@ export function CoachDashboard() {
             setInboxFocusId(studentId);
             setInboxOpen(true);
           }}
+          cohortMetrics={students}
+          cohortName={activeCohort?.name}
         />
       )}
 
@@ -636,4 +715,143 @@ function trendIcon(dir: StudentMetrics['trend_direction']): { glyph: string; col
   if (dir === 'declining') return { glyph: '↓', color: RED };
   if (dir === 'stable')    return { glyph: '—', color: 'rgba(255,255,255,0.5)' };
   return { glyph: '·', color: 'rgba(255,255,255,0.4)' };
+}
+
+// ─── Weekly digest card ───────────────────────────────────────────────
+
+function WeeklyDigestCard({
+  digest, onRefresh,
+}: { digest: WeeklyDigest; onRefresh: () => void }) {
+  const h = digest.cohort_health;
+  return (
+    <section
+      data-testid="weekly-digest"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 14,
+        padding: 16,
+        marginBottom: 16,
+      }}
+    >
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+      }}>
+        <div style={{
+          fontSize: 11,
+          textTransform: 'uppercase' as const,
+          letterSpacing: 1,
+          color: 'rgba(255,255,255,0.5)',
+          fontWeight: 800,
+        }}>
+          📋 This week's focus
+        </div>
+        <button
+          type="button"
+          onClick={onRefresh}
+          data-testid="weekly-digest-refresh"
+          style={{
+            padding: '4px 10px',
+            borderRadius: 8,
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: 'rgba(255,255,255,0.7)',
+            fontSize: 11,
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontFamily: "'Outfit', sans-serif",
+          }}
+        >
+          Refresh
+        </button>
+      </div>
+
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {digest.most_improved && digest.most_improved_delta != null && (
+          <li data-testid="digest-most-improved" style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
+            🏆 <strong>Most improved:</strong> {digest.most_improved.name}{' '}
+            <span style={{ color: GREEN }}>
+              +{digest.most_improved_delta.toFixed(2)} levels/wk
+            </span>
+          </li>
+        )}
+        {digest.students_needing_contact.length > 0 && (
+          <li data-testid="digest-need-contact" style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
+            ⚠️ <strong>Needs contact:</strong>{' '}
+            {digest.students_needing_contact.length} student
+            {digest.students_needing_contact.length === 1 ? '' : 's'}{' '}
+            (<span style={{ color: AMBER }}>
+              {digest.students_needing_contact.map(s => s.name).slice(0, 3).join(', ')}
+              {digest.students_needing_contact.length > 3 ? '…' : ''}
+            </span>)
+          </li>
+        )}
+        {digest.cohort_wide_weakness && digest.cohort_wide_weakness_accuracy != null && (
+          <li style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
+            📚 <strong>Cohort weakness:</strong> {digest.cohort_wide_weakness}{' '}
+            <span style={{ color: digest.cohort_wide_weakness_accuracy < 0.55 ? RED : AMBER }}>
+              avg {Math.round(digest.cohort_wide_weakness_accuracy * 100)}%
+            </span>
+          </li>
+        )}
+        {digest.countdown_alert && (
+          <li style={{ fontSize: 13, color: AMBER }}>
+            ⏰ {digest.countdown_alert}
+          </li>
+        )}
+        <li style={{
+          fontSize: 13,
+          color: GOLD,
+          fontWeight: 700,
+          paddingTop: 6,
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          marginTop: 4,
+        }}>
+          🎯 {digest.coach_focus_this_week}
+        </li>
+      </ul>
+
+      <div style={{
+        marginTop: 10,
+        fontSize: 11,
+        color: 'rgba(255,255,255,0.4)',
+      }}>
+        Cohort: {h.total_students} students · {h.students_below_passing} below passing ·{' '}
+        {h.students_not_active_7_days} inactive 7+ days
+      </div>
+    </section>
+  );
+}
+
+// ─── Cohort countdown banner ──────────────────────────────────────────
+
+function CountdownBanner({
+  level, message, cohortName,
+}: { level: CountdownAlertLevel; message: string; cohortName?: string }) {
+  const palette =
+    level === 'critical' ? { bg: 'rgba(248,113,113,0.18)', border: RED,   text: '#fff' } :
+    level === 'urgent'   ? { bg: 'rgba(248,113,113,0.10)', border: RED,   text: RED } :
+                           { bg: 'rgba(245,158,11,0.10)',  border: AMBER, text: AMBER };
+  const pulse = level === 'critical' ? ' pulse' : '';
+  return (
+    <div
+      data-testid={`countdown-banner-${level}`}
+      className={`anim${pulse}`}
+      style={{
+        background: palette.bg,
+        border: `1px solid ${palette.border}`,
+        borderRadius: 12,
+        padding: '10px 14px',
+        marginBottom: 14,
+        color: palette.text,
+        fontSize: 13,
+        fontWeight: 700,
+      }}
+    >
+      ⏰ {cohortName ? `${cohortName}: ` : ''}{message}
+    </div>
+  );
 }

@@ -22,6 +22,28 @@ vi.mock('./coach.service', () => ({
   recordNCLEXOutcome:  vi.fn(),
 }));
 
+// Phase D5 — mock the AI coaching service so the auto-fetch on RED-risk
+// students doesn't hit Supabase during tests.
+vi.mock('./coaching.service', () => ({
+  generateCoachingSuggestion:  vi.fn(),
+  getInterventionOutcomes:     vi.fn(async () => []),
+  getPreviousSuggestions:      vi.fn(async () => []),
+  getStudyPattern:             vi.fn(async () => null),
+  recordInterventionOutcome:   vi.fn(),
+  computeCohortHealth:         vi.fn(() => ({
+    avg_pass_probability: 0,
+    weakest_category: null,
+    weakest_category_avg_accuracy: null,
+    students_not_active_7_days: 0,
+    students_below_passing: 0,
+    total_students: 1,
+  })),
+}));
+
+vi.mock('@/features/messaging/messaging.service', () => ({
+  sendMessageToStudent: vi.fn(),
+}));
+
 import {
   addCoachNote,
   getCoachNotes,

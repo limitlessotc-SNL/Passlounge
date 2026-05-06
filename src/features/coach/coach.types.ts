@@ -179,3 +179,75 @@ export interface CoachAuthState {
   isLoading: boolean;
   isAuthenticated: boolean;
 }
+
+// ─── Phase D5 — AI coaching ───────────────────────────────────────────
+
+export type SuggestionUrgency = 'high' | 'medium' | 'low';
+
+export interface CoachingSuggestion {
+  recommendation: string;
+  urgency: SuggestionUrgency;
+  suggested_message: string;
+  milestone?: string;
+  celebration?: boolean;
+  focus_categories: string[];
+  weekly_actions: string[];
+  study_pattern_insight?: string;
+  countdown_alert?: string;
+  intervention_approach?: string;
+  generated_at: string;
+  student_id: string;
+}
+
+export interface InterventionOutcome {
+  id: string;
+  intervention_id: string;
+  student_id: string;
+  coach_id: string;
+  cat_level_before: number | null;
+  cat_level_after: number | null;
+  was_effective: boolean | null;
+  notes: string;
+  recorded_at: string;
+}
+
+export interface StudyPattern {
+  student_id: string;
+  peak_study_days: string[];
+  peak_study_hours: number[];
+  avg_session_length_mins: number;
+  avg_daily_cards: number;
+  dropout_risk_days: string[];
+  last_computed_at: string;
+}
+
+export interface CohortHealth {
+  avg_pass_probability: number;
+  weakest_category: string | null;
+  weakest_category_avg_accuracy: number | null;
+  students_not_active_7_days: number;
+  students_below_passing: number;
+  total_students: number;
+}
+
+export interface WeeklyDigest {
+  generated_at: string;
+  cohort_id: string;
+  most_improved: StudentMetrics | null;
+  most_improved_delta: number | null;
+  most_at_risk: StudentMetrics[];
+  cohort_wide_weakness: string | null;
+  cohort_wide_weakness_accuracy: number | null;
+  coach_focus_this_week: string;
+  students_needing_contact: StudentMetrics[];
+  cohort_health: CohortHealth;
+  countdown_alert: string | null;
+}
+
+export type CountdownAlertLevel = 'warning' | 'urgent' | 'critical';
+
+export interface CountdownAlert {
+  days_remaining: number;
+  alert_level: CountdownAlertLevel;
+  message: string;
+}
