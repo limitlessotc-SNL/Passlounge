@@ -146,6 +146,20 @@ export interface StudyCard {
   nclex_category?: string;
 }
 
+// ─── Unified card type (Phase 1 NGN integration) ─────────────────────────
+//
+// Discriminated union so the session engine + CAT engine can carry both
+// traditional StudyCards and NGN cards through the same pool. Phase 1
+// only consumes this in the dedicated NGN session screen + the unified
+// fetch helper; Phase 2 will fold it into the main CardScreen and CAT.
+
+export type AnyCard =
+  | (StudyCard & { cardKind: 'traditional' })
+  | (import('@/features/ngn/ngn.types').NGNCard & { cardKind: 'ngn' });
+
+export type TraditionalAnyCard = Extract<AnyCard, { cardKind: 'traditional' }>;
+export type NGNAnyCard         = Extract<AnyCard, { cardKind: 'ngn' }>;
+
 // ─── Shuffle Types ────────────────────────────────────────────────────────
 
 export interface ShuffleResult {

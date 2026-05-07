@@ -9,7 +9,8 @@
 
 import { DIAGNOSTIC_CARDS, STUDY_CARDS } from '@/config/fallback-cards'
 import { supabase } from '@/config/supabase'
-import type { StudyCard } from '@/types'
+import { fetchAllNGNCards } from '@/features/ngn/ngn.service'
+import type { AnyCard, StudyCard } from '@/types'
 
 function parseJsonField<T>(val: unknown): T {
   if (typeof val === 'string') {
@@ -64,6 +65,74 @@ export async function fetchStudyCards(): Promise<StudyCard[]> {
   } catch {
     return STUDY_CARDS
   }
+}
+
+// ─── Unified pool helpers (Phase 1 NGN integration) ──────────────────
+//
+// `fetchAllCardsUnified` and `fetchSessionCards` return AnyCard[] —
+// traditional cards tagged with cardKind: 'traditional', NGN cards with
+// cardKind: 'ngn'. Phase 1 only consumes these from the dedicated NGN
+// session screen; Phase 2 will fold them into the main CardScreen + CAT.
+
+/** Fisher-Yates shuffle (pure, non-mutating). */
+function shuffle<T>(arr: T[]): T[] {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = copy[i]
+    copy[i] = copy[j]
+    copy[j] = tmp
+  }
+  return copy
+}
+
+/**
+ * Fetches every traditional + NGN card from Supabase and returns them as
+ * a single shuffled AnyCard[] pool. Errors fall back to STUDY_CARDS only
+ * (NGN side fails open silently).
+ */
+export async function fetchAllCardsUnified(): Promise<AnyCard[]> {
+  const [traditional, ngn] = await Promise.all([
+    fetchStudyCards(),
+    fetchAllNGNCards().catch(() => []),
+  ])
+  const tagged: AnyCard[] = [
+    ...traditional.map(c => ({ ...c, cardKind: 'traditional' as const })),
+    ...ngn.map(c => ({ ...c, cardKind: 'ngn' as const })),
+  ]
+  return shuffle(tagged)
+}
+
+/**
+ * Fetches a session-ready pool. When `includeNGN` is true (default),
+ * NGN cards are mixed in; when `category` is provided, both traditional
+ * and NGN cards are filtered to the matching NCLEX category.
+ */
+export async function fetchSessionCards(
+  category?: string,
+  includeNGN = true,
+): Promise<AnyCard[]> {
+  const traditional = await fetchStudyCards()
+  const matchedTraditional = category
+    ? traditional.filter(c =>
+        (c.nclex_category && c.nclex_category === category) || c.cat === category,
+      )
+    : traditional
+  const taggedTraditional: AnyCard[] = matchedTraditional.map(c => ({
+    ...c, cardKind: 'traditional' as const,
+  }))
+
+  if (!includeNGN) return shuffle(taggedTraditional)
+
+  const ngn = await fetchAllNGNCards().catch(() => [])
+  const matchedNGN = category
+    ? ngn.filter(c => c.nclex_category === category)
+    : ngn
+  const taggedNGN: AnyCard[] = matchedNGN.map(c => ({
+    ...c, cardKind: 'ngn' as const,
+  }))
+
+  return shuffle([...taggedTraditional, ...taggedNGN])
 }
 
 /**

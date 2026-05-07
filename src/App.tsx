@@ -41,6 +41,7 @@ import { TesterTypeScreen } from '@/features/onboarding/components/TesterTypeScr
 import { ProfileTab } from '@/features/profile/components/ProfileTab'
 import { CardReviewScreen } from '@/features/session/components/CardReviewScreen'
 import { CardScreen } from '@/features/session/components/CardScreen'
+import { NGNSessionScreen } from '@/features/session/components/NGNSessionScreen'
 import { StudyTab } from '@/features/session/components/StudyTab'
 import { ModeSelectScreen } from '@/features/session/components/ModeSelectScreen'
 import { ReviewScreen } from '@/features/session/components/ReviewScreen'
@@ -118,6 +119,7 @@ function App() {
           {/* Session routes (full-screen, no BottomNav) */}
           <Route path="/session/mode" element={<ModeSelectScreen />} />
           <Route path="/session/play" element={<CardScreen />} />
+          <Route path="/session/ngn-play" element={<NGNSessionScreen />} />
           <Route path="/session/review" element={<ReviewScreen />} />
           <Route path="/session/review-card/:cardIdx" element={<CardReviewScreen />} />
 
