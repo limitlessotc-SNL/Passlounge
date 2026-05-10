@@ -6,6 +6,9 @@
 //
 // In study mode, once an answer has been scored the parent passes scoreResult
 // down and we tint each option green/red according to per-option correctness.
+//
+// Mode contract: see ngn.types.ts. Color feedback is gated on
+// 'study' / 'review' only; 'cat' / 'test' suppress it.
 
 import { useState } from 'react';
 
@@ -14,8 +17,10 @@ import type {
   ExtendedMRNContent,
   NGNAnswer,
   NGNCard,
+  NGNMode,
   NGNScoreResult,
 } from './ngn.types';
+import { showNGNFeedback } from './ngn.types';
 
 const GOLD = '#F5C518';
 const GREEN = 'rgba(74,222,128,0.9)';
@@ -24,7 +29,7 @@ const RED   = 'rgba(248,113,113,0.9)';
 interface Props {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
@@ -36,7 +41,8 @@ export function ExtendedMRCard({ card, onAnswer, mode, scoreResult }: Props) {
 
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const submitted = !!scoreResult;
-  const showFeedback = mode === 'study' && submitted;
+  const showFeedback = showNGNFeedback(mode, submitted);
+  const isScoring = mode === 'cat' || mode === 'test';
 
   function toggle(idx: number) {
     if (submitted) return;
@@ -129,7 +135,7 @@ export function ExtendedMRCard({ card, onAnswer, mode, scoreResult }: Props) {
         );
       })}
 
-      {showFeedback && (
+      {showFeedback && scoreResult && (
         <div style={{
           fontSize: 13,
           color: scoreResult.was_correct ? GREEN : RED,
@@ -157,7 +163,7 @@ export function ExtendedMRCard({ card, onAnswer, mode, scoreResult }: Props) {
             cursor: canSubmit ? 'pointer' : 'default',
           }}
         >
-          Submit Answer →
+          {isScoring ? 'Submit Answer & Continue →' : 'Submit Answer →'}
         </button>
       )}
     </div>

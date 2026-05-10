@@ -6,6 +6,10 @@
 //
 // Scoring is delegated to scoreNGNAnswer — left/right are all-or-nothing,
 // center is 0/1.
+//
+// Mode contract: see ngn.types.ts. Color feedback / "X / N points earned"
+// only when mode is 'study' or 'review'. In 'cat' / 'test' the answer
+// is captured silently and the parent is expected to advance.
 
 import { useState } from 'react';
 
@@ -14,8 +18,10 @@ import type {
   BowTieContent,
   NGNAnswer,
   NGNCard,
+  NGNMode,
   NGNScoreResult,
 } from './ngn.types';
+import { showNGNFeedback } from './ngn.types';
 
 const GOLD = '#F5C518';
 const GREEN = 'rgba(74,222,128,0.9)';
@@ -24,7 +30,7 @@ const RED   = 'rgba(248,113,113,0.9)';
 interface Props {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
@@ -33,7 +39,8 @@ type PanelSide = 'left' | 'right';
 export function BowTieCard({ card, onAnswer, mode, scoreResult }: Props) {
   const content = card.content as BowTieContent;
   const submitted = !!scoreResult;
-  const showFeedback = mode === 'study' && submitted;
+  const showFeedback = showNGNFeedback(mode, submitted);
+  const isScoring = mode === 'cat' || mode === 'test';
 
   const [left, setLeft] = useState<Set<number>>(new Set());
   const [center, setCenter] = useState<number | null>(null);
@@ -115,7 +122,7 @@ export function BowTieCard({ card, onAnswer, mode, scoreResult }: Props) {
         />
       </div>
 
-      {showFeedback && (
+      {showFeedback && scoreResult && (
         <div style={{
           fontSize: 13,
           color: scoreResult.was_correct ? GREEN : RED,
@@ -141,7 +148,7 @@ export function BowTieCard({ card, onAnswer, mode, scoreResult }: Props) {
             cursor: isComplete ? 'pointer' : 'default',
           }}
         >
-          Submit Answer →
+          {isScoring ? 'Submit Answer & Continue →' : 'Submit Answer →'}
         </button>
       )}
     </div>

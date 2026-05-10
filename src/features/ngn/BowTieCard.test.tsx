@@ -97,4 +97,31 @@ describe('BowTieCard', () => {
     );
     expect(screen.getByText(/3 \/ 5 points earned/i)).toBeTruthy();
   });
+
+  it.each(['cat', 'test'] as const)(
+    '%s mode hides points-earned line and rationale signal even when scored',
+    (mode) => {
+      render(
+        <BowTieCard
+          card={makeCard()}
+          onAnswer={vi.fn()}
+          mode={mode}
+          scoreResult={{ points_earned: 3, max_points: 5, normalised: 0.6, was_correct: true, breakdown: { left: 2, center: 1, right: 0 } }}
+        />,
+      );
+      expect(screen.queryByText(/points earned/i)).toBeNull();
+    },
+  );
+
+  it('review mode shows points-earned line (post-session learning)', () => {
+    render(
+      <BowTieCard
+        card={makeCard()}
+        onAnswer={vi.fn()}
+        mode="review"
+        scoreResult={{ points_earned: 4, max_points: 5, normalised: 0.8, was_correct: true, breakdown: { left: 2, center: 1, right: 1 } }}
+      />,
+    );
+    expect(screen.getByText(/4 \/ 5 points earned/i)).toBeTruthy();
+  });
 });
