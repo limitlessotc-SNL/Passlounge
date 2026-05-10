@@ -70,9 +70,15 @@ export function BowTieCard({ card, onAnswer, mode, scoreResult }: Props) {
     <div data-testid="bow-tie-card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        // Auto-fit lets the 3 panels sit side-by-side when the container
+        // is wide enough (~840px+) and stack vertically below that. The
+        // `min(260px, 100%)` floor keeps a single panel from overflowing
+        // a narrow container (e.g. the 420px student app shell).
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
         gap: 12,
         alignItems: 'flex-start',
+        width: '100%',
+        minWidth: 0,
       }}>
         <Panel
           label={content.left_label}
@@ -168,6 +174,7 @@ function Panel({ label, opts, picked, correct, isMulti, submitted, showFeedback,
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
+        minWidth: 0,
       }}
     >
       <div style={{
@@ -211,6 +218,10 @@ function Panel({ label, opts, picked, correct, isMulti, submitted, showFeedback,
               textAlign: 'left',
               cursor: submitted ? 'default' : 'pointer',
               fontFamily: "'Outfit', sans-serif",
+              width: '100%',
+              minWidth: 0,
+              wordBreak: 'break-word',
+              whiteSpace: 'normal',
             }}
           >
             {isMulti && isPicked ? '✓ ' : ''}{opt}
