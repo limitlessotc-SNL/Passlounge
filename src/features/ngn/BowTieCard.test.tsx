@@ -124,4 +124,22 @@ describe('BowTieCard', () => {
     );
     expect(screen.getByText(/4 \/ 5 points earned/i)).toBeTruthy();
   });
+
+  // Source-citation gate (showNGNSource contract). No renderer reads
+  // card.source today, so this passes vacuously — but it pins the
+  // contract: if anyone later adds a source render block without going
+  // through showNGNSource, study-mode sessions will start leaking
+  // citations and this test will fail.
+  it('study mode does not leak the source citation into the DOM', () => {
+    const SOURCE = 'Saunders 8th Ed. Ch. 41 p. 1347';
+    render(
+      <BowTieCard
+        card={{ ...makeCard(), source: SOURCE }}
+        onAnswer={vi.fn()}
+        mode="study"
+        scoreResult={{ points_earned: 5, max_points: 5, normalised: 1, was_correct: true, breakdown: { left: 2, center: 1, right: 2 } }}
+      />,
+    );
+    expect(screen.queryByText(SOURCE)).toBeNull();
+  });
 });
