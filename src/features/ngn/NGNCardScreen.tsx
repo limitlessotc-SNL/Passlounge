@@ -18,8 +18,10 @@ import type {
   MCQContent,
   NGNAnswer,
   NGNCard,
+  NGNMode,
   NGNScoreResult,
 } from './ngn.types';
+import { showNGNFeedback } from './ngn.types';
 import { scoreNGNAnswer } from './ngn.scoring';
 import { TrendCard } from './TrendCard';
 
@@ -30,7 +32,9 @@ const RED   = 'rgba(248,113,113,0.9)';
 interface Props {
   card: NGNCard;
   onAnswer: (result: NGNScoreResult) => void;
-  mode: 'study' | 'test';
+  // See NGNMode contract in ngn.types.ts. Renderers MUST suppress
+  // correctness signal (colors / rationale / points) in 'cat' and 'test'.
+  mode: NGNMode;
 }
 
 export function NGNCardScreen({ card, onAnswer, mode }: Props) {
@@ -45,7 +49,7 @@ export function NGNCardScreen({ card, onAnswer, mode }: Props) {
   const useCaseStudy =
     Array.isArray(card.case_study_tabs) && card.case_study_tabs.length > 0;
 
-  const rationaleBlock = mode === 'study' && scoreResult && card.rationale ? (
+  const rationaleBlock = showNGNFeedback(mode, !!scoreResult) && card.rationale ? (
     <div style={{
       marginTop: 4,
       background: 'rgba(245,197,24,0.08)',
@@ -150,7 +154,7 @@ export function NGNCardScreen({ card, onAnswer, mode }: Props) {
 
 interface BodyProps {
   card: NGNCard;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult: NGNScoreResult | null;
   onAnswer: (answer: NGNAnswer) => void;
 }
@@ -191,14 +195,15 @@ function Body({ card, mode, scoreResult, onAnswer }: BodyProps) {
 interface MCQBodyProps {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
 function MCQBody({ card, onAnswer, mode, scoreResult }: MCQBodyProps) {
   const content = card.content as MCQContent;
   const submitted = !!scoreResult;
-  const showFeedback = mode === 'study' && submitted;
+  const showFeedback = showNGNFeedback(mode, submitted);
+  const isScoring = mode === 'cat' || mode === 'test';
 
   const [picked, setPicked] = useState<number | null>(null);
 
@@ -246,7 +251,7 @@ function MCQBody({ card, onAnswer, mode, scoreResult }: MCQBodyProps) {
         );
       })}
 
-      {showFeedback && (
+      {showFeedback && scoreResult && (
         <div style={{
           fontSize: 13,
           color: scoreResult.was_correct ? GREEN : RED,
@@ -273,7 +278,7 @@ function MCQBody({ card, onAnswer, mode, scoreResult }: MCQBodyProps) {
             cursor: picked !== null ? 'pointer' : 'default',
           }}
         >
-          Submit Answer →
+          {isScoring ? 'Submit Answer & Continue →' : 'Submit Answer →'}
         </button>
       )}
     </div>

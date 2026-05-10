@@ -5,10 +5,14 @@
 //
 // Submit gates on every row having a selection. Study-mode feedback tints
 // each row green/red by per-row correctness.
+//
+// Mode contract: see ngn.types.ts. Color feedback is gated on
+// 'study' / 'review' only; 'cat' / 'test' suppress it.
 
 import { useState } from 'react';
 
-import type { MatrixContent, NGNAnswer, NGNCard, NGNScoreResult } from './ngn.types';
+import type { MatrixContent, NGNAnswer, NGNCard, NGNMode, NGNScoreResult } from './ngn.types';
+import { showNGNFeedback } from './ngn.types';
 
 const GOLD = '#F5C518';
 const GREEN = 'rgba(74,222,128,0.9)';
@@ -17,14 +21,15 @@ const RED   = 'rgba(248,113,113,0.9)';
 interface Props {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
 export function MatrixCard({ card, onAnswer, mode, scoreResult }: Props) {
   const content = card.content as MatrixContent;
   const submitted = !!scoreResult;
-  const showFeedback = mode === 'study' && submitted;
+  const showFeedback = showNGNFeedback(mode, submitted);
+  const isScoring = mode === 'cat' || mode === 'test';
 
   const [selections, setSelections] = useState<Array<number | null>>(
     () => content.rows.map(() => null),
@@ -136,7 +141,7 @@ export function MatrixCard({ card, onAnswer, mode, scoreResult }: Props) {
         );
       })}
 
-      {showFeedback && (
+      {showFeedback && scoreResult && (
         <div style={{
           fontSize: 13,
           color: scoreResult.was_correct ? GREEN : RED,
@@ -164,7 +169,7 @@ export function MatrixCard({ card, onAnswer, mode, scoreResult }: Props) {
             cursor: isComplete ? 'pointer' : 'default',
           }}
         >
-          Submit Answer →
+          {isScoring ? 'Submit Answer & Continue →' : 'Submit Answer →'}
         </button>
       )}
     </div>

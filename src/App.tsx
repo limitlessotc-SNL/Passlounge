@@ -19,6 +19,7 @@ import { NGNCreateScreen } from '@/features/admin/NGNCreateScreen'
 import { CoachDashboard } from '@/features/coach/CoachDashboard'
 import { CoachGuard } from '@/features/coach/CoachGuard'
 import { CoachLoginScreen } from '@/features/coach/CoachLoginScreen'
+import { DevCardPreviewScreen } from '@/features/dev/DevCardPreviewScreen'
 import { InboxTab } from '@/features/messaging/InboxTab'
 import { NGNPreviewScreen } from '@/features/ngn/NGNPreviewScreen'
 import { ForgotScreen } from '@/features/auth/components/ForgotScreen'
@@ -85,7 +86,11 @@ function App() {
   // crush admin tables) and skip the student-app decorations.
   const isAdmin = location.pathname.startsWith('/admin')
   const isCoach = location.pathname.startsWith('/coach')
-  const isStaffArea = isAdmin || isCoach
+  // /dev/* is dev-only and benefits from the full-width shell so we can
+  // exercise card layouts at real desktop widths (the student .app-shell
+  // would otherwise clamp to 420px). Excluded from prod builds.
+  const isDev = import.meta.env.DEV && location.pathname.startsWith('/dev/')
+  const isStaffArea = isAdmin || isCoach || isDev
 
   return (
     <div className={isStaffArea ? 'admin-shell' : 'app-shell'}>
@@ -172,6 +177,14 @@ function App() {
         {/* TEMP — NGN player preview, no guards. Remove route + import + file
             (src/features/ngn/NGNPreviewScreen.tsx) when you're done previewing. */}
         <Route path="/ngn-preview" element={<NGNPreviewScreen />} />
+
+        {/* DEV-ONLY — single-card UUID preview. Excluded from prod bundles
+            via the import.meta.env.DEV guard; tree-shaking drops the
+            element factory call, and the component itself is only
+            referenced from this branch. */}
+        {import.meta.env.DEV && (
+          <Route path="/dev/card/:id" element={<DevCardPreviewScreen />} />
+        )}
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />

@@ -3,10 +3,14 @@
 // Renders fill-in-the-blank items where the prompt is a template string with
 // {0}, {1}, {2} placeholders, each backed by a dropdown of options. The
 // student selects one option per dropdown.
+//
+// Mode contract: see ngn.types.ts. Color feedback is gated on
+// 'study' / 'review' only; 'cat' / 'test' suppress it.
 
 import { Fragment, useState } from 'react';
 
-import type { ClozeContent, NGNAnswer, NGNCard, NGNScoreResult } from './ngn.types';
+import type { ClozeContent, NGNAnswer, NGNCard, NGNMode, NGNScoreResult } from './ngn.types';
+import { showNGNFeedback } from './ngn.types';
 
 const GOLD = '#F5C518';
 const GREEN = 'rgba(74,222,128,0.9)';
@@ -15,7 +19,7 @@ const RED   = 'rgba(248,113,113,0.9)';
 interface Props {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
@@ -24,7 +28,8 @@ const PLACEHOLDER = /\{(\d+)\}/g;
 export function ClozeCard({ card, onAnswer, mode, scoreResult }: Props) {
   const content = card.content as ClozeContent;
   const submitted = !!scoreResult;
-  const showFeedback = mode === 'study' && submitted;
+  const showFeedback = showNGNFeedback(mode, submitted);
+  const isScoring = mode === 'cat' || mode === 'test';
 
   const [selections, setSelections] = useState<Array<number | null>>(
     () => content.dropdowns.map(() => null),
@@ -120,7 +125,7 @@ export function ClozeCard({ card, onAnswer, mode, scoreResult }: Props) {
         {segments.map((s, i) => <Fragment key={i}>{s}</Fragment>)}
       </div>
 
-      {showFeedback && (
+      {showFeedback && scoreResult && (
         <div style={{
           fontSize: 13,
           color: scoreResult.was_correct ? GREEN : RED,
@@ -147,7 +152,7 @@ export function ClozeCard({ card, onAnswer, mode, scoreResult }: Props) {
             cursor: isComplete ? 'pointer' : 'default',
           }}
         >
-          Submit Answer →
+          {isScoring ? 'Submit Answer & Continue →' : 'Submit Answer →'}
         </button>
       )}
     </div>

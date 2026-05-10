@@ -8,6 +8,35 @@
 // `NGNAnswer` is the corresponding student-side answer shape — what the
 // player components hand back to the scoring engine.
 
+// ─── Mode contract ────────────────────────────────────────────────────
+//
+// Every NGN renderer (NGNCardScreen + the 7 per-type sub-components)
+// takes a `mode` prop. The contract is:
+//
+//   'study'   — Mid-session learning. Show post-submit color feedback,
+//               rationale, and "X / N points earned". Submit button reads
+//               "Submit Answer →".
+//   'cat'     — Computer-adaptive testing session. Record the answer,
+//               then advance with NO indication of correctness — color
+//               feedback / rationale / points are ALL suppressed. IRT
+//               scoring assumes the student gets no mid-test signal.
+//   'test'    — Test-prep mode (full-length practice exam). Same
+//               suppression as 'cat'; mid-session feedback would break
+//               the simulation.
+//   'review'  — Post-session review screen. The session is over, so it's
+//               safe to surface color feedback and rationale here — this
+//               is when students actually learn from misses.
+//
+// Rule of thumb: feedback is on iff (mode === 'study' || mode === 'review').
+// Use the `showNGNFeedback` helper below rather than re-deriving the
+// predicate so we don't drift.
+
+export type NGNMode = 'study' | 'cat' | 'test' | 'review';
+
+export function showNGNFeedback(mode: NGNMode, submitted: boolean): boolean {
+  return submitted && (mode === 'study' || mode === 'review');
+}
+
 // ─── Question types ───────────────────────────────────────────────────
 
 export type NGNQuestionType =

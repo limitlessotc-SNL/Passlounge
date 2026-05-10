@@ -4,10 +4,14 @@
 // mobile and inaccessible by default; we use the same pattern Trello-on-
 // touch does — click an item to select, click a zone to drop it. Re-clicking
 // an assigned item moves it. Re-clicking a zone with the same item removes it.
+//
+// Mode contract: see ngn.types.ts. Color feedback is gated on
+// 'study' / 'review' only; 'cat' / 'test' suppress it.
 
 import { useMemo, useState } from 'react';
 
-import type { DragDropContent, NGNAnswer, NGNCard, NGNScoreResult } from './ngn.types';
+import type { DragDropContent, NGNAnswer, NGNCard, NGNMode, NGNScoreResult } from './ngn.types';
+import { showNGNFeedback } from './ngn.types';
 
 const GOLD = '#F5C518';
 const GREEN = 'rgba(74,222,128,0.9)';
@@ -16,14 +20,15 @@ const RED   = 'rgba(248,113,113,0.9)';
 interface Props {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
 export function DragDropCard({ card, onAnswer, mode, scoreResult }: Props) {
   const content = card.content as DragDropContent;
   const submitted = !!scoreResult;
-  const showFeedback = mode === 'study' && submitted;
+  const showFeedback = showNGNFeedback(mode, submitted);
+  const isScoring = mode === 'cat' || mode === 'test';
 
   /** itemIndex (string) → zone name. Items not yet assigned are absent. */
   const [mapping, setMapping] = useState<Record<string, string>>({});
@@ -199,7 +204,7 @@ export function DragDropCard({ card, onAnswer, mode, scoreResult }: Props) {
         })}
       </div>
 
-      {showFeedback && (
+      {showFeedback && scoreResult && (
         <div style={{
           fontSize: 13,
           color: scoreResult.was_correct ? GREEN : RED,
@@ -225,7 +230,7 @@ export function DragDropCard({ card, onAnswer, mode, scoreResult }: Props) {
             cursor: allAssigned ? 'pointer' : 'default',
           }}
         >
-          Submit Answer →
+          {isScoring ? 'Submit Answer & Continue →' : 'Submit Answer →'}
         </button>
       )}
     </div>

@@ -4,14 +4,17 @@
 // timestamps) and a Matrix-style response below. The response shape is
 // identical to MatrixCard, so we delegate to a thin reuse: render the
 // exhibit, then fan out to MatrixCard with a synthesized matrix card.
+//
+// Mode contract: see ngn.types.ts. The `mode` prop is forwarded verbatim
+// to MatrixCard, which handles the feedback-suppression rules.
 
-import type { MatrixContent, NGNAnswer, NGNCard, NGNScoreResult, TrendContent } from './ngn.types';
+import type { MatrixContent, NGNAnswer, NGNCard, NGNMode, NGNScoreResult, TrendContent } from './ngn.types';
 import { MatrixCard } from './MatrixCard';
 
 interface Props {
   card: NGNCard;
   onAnswer: (answer: NGNAnswer) => void;
-  mode: 'study' | 'test';
+  mode: NGNMode;
   scoreResult?: NGNScoreResult;
 }
 
