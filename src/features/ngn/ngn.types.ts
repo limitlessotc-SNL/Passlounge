@@ -11,30 +11,58 @@
 // ─── Mode contract ────────────────────────────────────────────────────
 //
 // Every NGN renderer (NGNCardScreen + the 7 per-type sub-components)
-// takes a `mode` prop. The contract is:
+// takes a `mode` prop. Display rules per field, by mode:
 //
-//   'study'   — Mid-session learning. Show post-submit color feedback,
-//               rationale, and "X / N points earned". Submit button reads
-//               "Submit Answer →".
+//                       study   cat   test   review   (dev*)
+//   color feedback        ✓      —     —      ✓        ✓
+//   rationale             ✓      —     —      ✓        ✓
+//   points line           ✓      —     —      ✓        ✓
+//   source citation       —      —     —      ✓        ✓
+//
+//   * dev = admin/dev preview routes (DevCardPreviewScreen,
+//     NGNPreviewScreen, admin form previews). These render outside a
+//     student session and educators need provenance to verify content,
+//     so source is shown there explicitly via the isDev flag on
+//     showNGNSource — not by setting mode='review'.
+//
+// Source is gated tighter than feedback: 'study' surfaces color +
+// rationale + points but NOT source, because citation text inside a
+// study session breaks the illusion that the rationale is clinical
+// reasoning rather than a textbook excerpt.
+//
+//   'study'   — Mid-session learning. Show feedback / rationale / points
+//               on submit. Submit button reads "Submit Answer →".
 //   'cat'     — Computer-adaptive testing session. Record the answer,
-//               then advance with NO indication of correctness — color
-//               feedback / rationale / points are ALL suppressed. IRT
+//               then advance with NO indication of correctness. IRT
 //               scoring assumes the student gets no mid-test signal.
 //   'test'    — Test-prep mode (full-length practice exam). Same
-//               suppression as 'cat'; mid-session feedback would break
-//               the simulation.
-//   'review'  — Post-session review screen. The session is over, so it's
-//               safe to surface color feedback and rationale here — this
-//               is when students actually learn from misses.
+//               suppression as 'cat'.
+//   'review'  — Post-session review screen. Surfaces feedback, rationale,
+//               points, AND source — students learn from misses here and
+//               the educator-context citation is appropriate.
 //
-// Rule of thumb: feedback is on iff (mode === 'study' || mode === 'review').
-// Use the `showNGNFeedback` helper below rather than re-deriving the
-// predicate so we don't drift.
+// Use the helpers below rather than re-deriving these predicates so we
+// don't drift.
 
 export type NGNMode = 'study' | 'cat' | 'test' | 'review';
 
 export function showNGNFeedback(mode: NGNMode, submitted: boolean): boolean {
   return submitted && (mode === 'study' || mode === 'review');
+}
+
+/**
+ * Whether the textbook/source citation should render for this view.
+ * Tighter than `showNGNFeedback` — only review and explicit dev/admin
+ * preview surfaces should show it. Pass `isDev=true` from
+ * DevCardPreviewScreen / NGNPreviewScreen / admin form previews; leave
+ * it false in student-facing renderers.
+ *
+ * Note: as of this commit no renderer actually writes `card.source` to
+ * the DOM, so this helper guards a future addition. Wire it in when
+ * source rendering lands so study-mode sessions can't leak citations.
+ */
+export function showNGNSource(mode: NGNMode, isDev = false): boolean {
+  return isDev || mode === 'review';
 }
 
 // ─── Question types ───────────────────────────────────────────────────
