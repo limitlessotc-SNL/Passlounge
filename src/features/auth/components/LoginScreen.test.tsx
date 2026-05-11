@@ -7,6 +7,12 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom')
+  return { ...actual, useNavigate: () => mockNavigate }
+})
+
 // ─── Mock useAuth ─────────────────────────────────────────────────────────
 
 const mockLogin = vi.fn()
@@ -23,9 +29,9 @@ vi.mock('../hooks/useAuth', () => ({
 
 import { LoginScreen } from './LoginScreen'
 
-function renderLogin() {
+function renderLogin(initialEntry = '/login') {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <LoginScreen />
     </MemoryRouter>,
   )
@@ -36,6 +42,7 @@ function renderLogin() {
 describe('LoginScreen', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockNavigate.mockReset()
     mockError = null
     mockIsSubmitting = false
   })
@@ -85,5 +92,41 @@ describe('LoginScreen', () => {
     expect(screen.getByRole('button', { name: /signing in/i })).toBeDisabled()
     expect(screen.getByPlaceholderText(/email address/i)).toBeDisabled()
     expect(screen.getByPlaceholderText(/password/i)).toBeDisabled()
+  })
+
+  it('navigates to ?next= path on success when it is a safe in-app path', async () => {
+    mockLogin.mockResolvedValue(true)
+    const user = userEvent.setup()
+    renderLogin('/login?next=/dev/card/abc-123')
+
+    await user.type(screen.getByPlaceholderText(/email address/i), 't@t.com')
+    await user.type(screen.getByPlaceholderText(/password/i), 'pw')
+    await user.click(screen.getByRole('button', { name: /sign in/i }))
+
+    expect(mockNavigate).toHaveBeenCalledWith('/dev/card/abc-123')
+  })
+
+  it('falls back to / when ?next= is missing', async () => {
+    mockLogin.mockResolvedValue(true)
+    const user = userEvent.setup()
+    renderLogin('/login')
+
+    await user.type(screen.getByPlaceholderText(/email address/i), 't@t.com')
+    await user.type(screen.getByPlaceholderText(/password/i), 'pw')
+    await user.click(screen.getByRole('button', { name: /sign in/i }))
+
+    expect(mockNavigate).toHaveBeenCalledWith('/')
+  })
+
+  it('rejects protocol-relative ?next= to prevent open redirect', async () => {
+    mockLogin.mockResolvedValue(true)
+    const user = userEvent.setup()
+    renderLogin('/login?next=//evil.com/steal')
+
+    await user.type(screen.getByPlaceholderText(/email address/i), 't@t.com')
+    await user.type(screen.getByPlaceholderText(/password/i), 'pw')
+    await user.click(screen.getByRole('button', { name: /sign in/i }))
+
+    expect(mockNavigate).toHaveBeenCalledWith('/')
   })
 })
