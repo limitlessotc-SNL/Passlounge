@@ -8,12 +8,25 @@
  */
 
 import { type FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { useAuth } from '../hooks/useAuth'
 
+/**
+ * Same-origin safety: only honor `?next=` values that look like an
+ * in-app path. Reject protocol-relative (`//evil.com`), absolute URLs,
+ * and bare `?` so we can't be tricked into an open redirect via a
+ * crafted login link.
+ */
+function safeNext(raw: string | null): string {
+  if (!raw) return '/'
+  if (!raw.startsWith('/') || raw.startsWith('//')) return '/'
+  return raw
+}
+
 export function LoginScreen() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { login, error, isSubmitting } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,7 +35,7 @@ export function LoginScreen() {
     e.preventDefault()
     const success = await login({ email, password })
     if (success) {
-      navigate('/')
+      navigate(safeNext(searchParams.get('next')))
     }
   }
 

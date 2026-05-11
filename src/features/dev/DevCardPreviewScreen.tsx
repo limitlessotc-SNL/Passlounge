@@ -6,15 +6,24 @@
 // import.meta.env.DEV is true (route excluded from prod bundles).
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 
 import { supabase } from '@/config/supabase'
 import { NGNCardScreen } from '@/features/ngn/NGNCardScreen'
 import type { NGNCard, NGNScoreResult } from '@/features/ngn/ngn.types'
+import { useAuthStore } from '@/store/authStore'
+
+type NotFoundReason =
+  /** RLS-shaped: zero cards visible on this env at all. */
+  | 'no-cards-visible'
+  /** Cards exist but this specific UUID isn't among them. */
+  | 'uuid-missing'
+  /** Couldn't determine which of the above; treat as plain not-found. */
+  | 'unknown'
 
 type State =
   | { status: 'loading' }
-  | { status: 'error'; message: string }
+  | { status: 'error'; message: string; reason?: NotFoundReason }
   | { status: 'ready'; card: NGNCard }
 
 function mapRow(row: Record<string, unknown>): NGNCard {
@@ -76,10 +85,21 @@ function envFromSupabaseUrl(url: string | undefined): { label: string; host: str
 
 export function DevCardPreviewScreen() {
   const { id = '' } = useParams<{ id: string }>()
+  const location = useLocation()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const isAuthLoading = useAuthStore((s) => s.isLoading)
   const [state, setState] = useState<State>({ status: 'loading' })
   const [copied, setCopied] = useState(false)
 
+  // Auth gate. ngn_cards has RLS that only authenticated users can read,
+  // so without a session every preview returns zero rows and looks like
+  // "not found" regardless of the UUID. Redirect to /login with ?next=
+  // so we land back on this exact URL after sign-in.
+  const needsAuthRedirect = !isAuthLoading && !isAuthenticated
+  const next = encodeURIComponent(location.pathname + location.search)
+
   useEffect(() => {
+    if (needsAuthRedirect) return
     let cancelled = false
     setState({ status: 'loading' })
     ;(async () => {
@@ -93,14 +113,36 @@ export function DevCardPreviewScreen() {
         setState({ status: 'error', message: error.message })
         return
       }
-      if (!data) {
-        setState({ status: 'error', message: 'No card found with that id.' })
+      if (data) {
+        setState({ status: 'ready', card: mapRow(data as Record<string, unknown>) })
         return
       }
-      setState({ status: 'ready', card: mapRow(data as Record<string, unknown>) })
+      // No row for this UUID — disambiguate RLS-blocked from genuinely
+      // not-found by checking whether ANY ngn_cards rows are visible.
+      // `head: true` skips the body for cheapness; we only need the count.
+      const { count, error: countError } = await supabase
+        .from('ngn_cards')
+        .select('id', { count: 'exact', head: true })
+      if (cancelled) return
+      if (countError || count === null) {
+        setState({ status: 'error', message: 'No card found with that id.', reason: 'unknown' })
+        return
+      }
+      setState({
+        status: 'error',
+        message: 'No card found with that id.',
+        reason: count === 0 ? 'no-cards-visible' : 'uuid-missing',
+      })
     })()
     return () => { cancelled = true }
-  }, [id])
+  }, [id, needsAuthRedirect])
+
+  if (needsAuthRedirect) {
+    return <Navigate to={`/login?next=${next}`} replace />
+  }
+  if (isAuthLoading) {
+    return null
+  }
 
   const env = envFromSupabaseUrl(import.meta.env.VITE_SUPABASE_URL as string | undefined)
 
@@ -238,6 +280,44 @@ export function DevCardPreviewScreen() {
           >
             <div><b>Requested id:</b> <span style={{ fontFamily: 'monospace' }}>{id || '(empty)'}</span></div>
             <div style={{ marginTop: 6 }}><b>Error:</b> {state.message}</div>
+            {state.reason === 'no-cards-visible' && (
+              <div
+                data-testid="dev-card-error-no-cards"
+                style={{
+                  marginTop: 10,
+                  padding: 10,
+                  borderRadius: 8,
+                  background: 'rgba(245,197,24,0.08)',
+                  border: '1px solid rgba(245,197,24,0.3)',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: 12,
+                }}
+              >
+                <b>Hint:</b> No NGN cards are readable on this env. Likely
+                not authenticated (RLS) or wrong project. Confirm sign-in
+                and that the env badge above (<span style={{ fontFamily: 'monospace' }}>{env.host}</span>)
+                is the project where you authored the card.
+              </div>
+            )}
+            {state.reason === 'uuid-missing' && (
+              <div
+                data-testid="dev-card-error-uuid-missing"
+                style={{
+                  marginTop: 10,
+                  padding: 10,
+                  borderRadius: 8,
+                  background: 'rgba(245,197,24,0.08)',
+                  border: '1px solid rgba(245,197,24,0.3)',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: 12,
+                }}
+              >
+                <b>Hint:</b> Other NGN cards are visible on this env, but
+                this UUID isn't among them. Verify you copied the id from
+                this project's database (env: <span style={{ fontFamily: 'monospace' }}>{env.host}</span>),
+                not a different one.
+              </div>
+            )}
           </div>
         </div>
       )}
